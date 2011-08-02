@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+<head_merge>
+    <script>function clearForm() {
+        document.getElementById('frm2').reset()
+    }
+    function setData(ele0) {
+        ele = ele0.firstChild
+        document.getElementById('id').value = ele.innerHTML
+        ele = ele.nextSibling
+        document.getElementById('name').value = ele.innerHTML
+    }
+    function validateForm() {
+            var name = $('#name');
+            name.val(jQuery.trim(shotname.val()));
+            var errors = false;
+            if (name.val().length > 40) {
+                errors = true;
+                massage += "Nazwa nie może mieć więcej niż 40 znaków. "
+            }
+            if (errors) { $('#notice').text(message);
+                return false;
+            }
+            else return true;
+        }
+    </script>
+</head_merge>
+    
+<div class="menuside">
+<h3>Administracja stronami:</h3>
+<div class="lift:Menu.builder?group=admin;i_item:id="></div>
+<a href="/">Powrót</a>
+</div>
+
+<div class="right">
+
+<form class="lift:AdminPagesSn.addForumDep?form=POST" id="frm2"><br />
+<h3>Edycja działów na Forum.</h3><br />
+<table><tr><td>Id</td><td><input id=""id" /></td></tr>
+<tr><td>Nazwa</td> <td><input id="name" /></td> </tr>
+<tr><td></td><td><input id="submitadd" /><input id="submitdel" /><input type="button" onclick="clearForm()" value="Czyść!" /> </td></tr></table>
+<p id="notice"></p>
+</form>
+
+<hr />
+<table><thead><tr><th>Id</th><th>Nazwa</th></tr></thead>
+    <tbody class="lift:AdminPagesSn.forumDepartments"> </tbody>
+</table>
+</div>
+
+<br class="spacer" />
+
+</div>
+</body></html>

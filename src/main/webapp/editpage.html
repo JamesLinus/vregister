@@ -1,0 +1,76 @@
+<html>
+
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+ <head_merge>
+<script type="text/javascript" src="/jquery/jquery.js" ></script>
+<script type="text/javascript" src="/wymeditor/jquery.wymeditor.js" ></script>
+
+<script type="text/javascript" >
+
+jQuery(function() {
+    jQuery('.wymeditor').wymeditor({lang:'pl'});
+});
+
+function isValid() {
+  var title = document.getElementById('title').value;
+  var short = document.getElementById('short').value;
+  var dep = document.getElementsByTagName('select')[0].selectedIndex;
+  var bool = true;
+  var info = 'Uzupełnij najpierw:';
+  if (title == '' || isWhite(title)) {
+    bool = false;
+    info = info + ' pełen tytuł,';
+  }
+  if (short == '' || isWhite(short)) {
+    bool = false;
+    info = info + ' krótki tytuł,';
+  }
+  if (dep == 0) {
+    bool = false;
+    info = info + ' wybierz dział,';
+  }
+  if (!bool) {
+    info = info.substring(0,info.length -1) + '.';
+    alert(info);
+    return false;
+  } else {
+    return true;
+  }
+}
+function isWhite(str) {
+	for (i = 0; i < str.length; i++) {
+		if (str.charAt[i] != ' ') return false;
+	}
+	return true;
+}
+</script>
+<title>Edycja postów</title>
+</head_merge>
+<div id="alerts" >
+		<noscript>
+			<p>
+				<strong>Aby korzystać ze strony musisz włączyć JavaScript</strong>
+			</p>
+		</noscript>
+</div>
+
+
+<form id="form" class="lift:EditSn.addPage" method="POST">
+    <fieldset>
+        <legend>Edycja stron</legend>
+        <input id="id" type="hidden" />
+    <label for="title">Tytuł:</label> <input id="title" type="text"/> <br/>
+    <label for="shorttitle">Krótki tytuł:</label> <input id="shorttitle" /> <label for="departs">Dział:</label> <input type="text" id="departs" /><br />
+		<input type="text" id="editor" />
+
+		<p>
+			<input type="submit" id="save"/>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="delete" />&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="discard" />
+		</p>
+                </fieldset>
+	</form>
+
+
+</div>
+</body>
+</html>

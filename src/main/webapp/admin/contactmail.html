@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">	
+    <head_merge>
+        <script>function clearForm() {
+			document.getElementById('frm2').reset()
+			}
+			function setData(ele0) {
+			ele = ele0.firstChild
+			document.getElementById('id').value = ele.innerHTML
+			ele = ele.nextSibling
+			document.getElementById('mail').value = ele.innerHTML
+			ele = ele.nextSibling
+			document.getElementById('descript').value = ele.innerHTML
+			}
+		</script>
+    </head_merge>
+    
+	<div class="menuside">
+		<h3>Administracja stronami:</h3>
+		
+                <div class="lift:Menu.builder?group=admin;i_item:id="> </div>
+		
+		<a href="/">Powrót</a>
+	</div>
+	
+	<div class="right">
+		
+		<form class="lift:AdminPagesSn.addContactMail?form=POST" method="POST" id="frm2"><br />
+			<h3>Maile kontaktowe</h3><br />
+			<table><tr><td>Id</td><td><input id="id" /></td></tr>
+				<tr><td>Adres e-mail</td> <td><input id="mail" /> </td></tr>
+				<tr><td>Opis</td><td><input id="descript" /></td></tr>
+				 <tr><td></td><td> <input id="submitadd" /> <input id="submitdel" /><input type="button" onclick="clearForm()" value="Czyść!" /> </td></tr></table>
+				<p id="notice" />
+	
+		
+		<hr />
+		<table><thead><tr><th>Id</th><th>Adres e-mail</th><th>Opis</th></tr></thead>
+                    <tbody class="lift:AdminPagesSn.contactMails"></tbody>
+		</table>
+	</div>
+	<br class="spacer" />
+	
+	
+</div>
+</body></html>

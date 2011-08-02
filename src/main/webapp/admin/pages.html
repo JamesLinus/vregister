@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+    <head_merge>
+        <script>function clearForm() {
+            document.getElementById('frm1').reset()
+        }
+        function setData(ele0) {
+            var ele = ele0.firstChild
+            document.getElementById('id').value = ele.innerHTML
+            ele = ele.nextSibling
+            document.getElementById('shortname').value = ele.innerHTML
+            ele = ele.nextSibling
+            document.getElementById('fullname').value = ele.innerHTML
+        }
+        function validateForm() {
+            var shortname = $('#shortname');
+            shortname.val(jQuery.trim(shotname.val()));
+            var fullname = $('#fullname');
+            fullname.val(jQuery.trim(fullname.val()));
+            var massage = "";
+            var errors = false;
+            if (shortname.val().length > 20) {
+                errors = true;
+                massage += "Krótka nazwa nie może mieć więcej niż 20 znaków. "
+            }
+            if (fullname.val().length > 120) {
+                errors = true;
+                massage += "Pełna nazwa nie może mieć więcej niż 120 znaków. "
+            }
+            if (errors) { $('#notice').text(message);
+                return false;
+            }
+            else return true;
+        }
+        </script>
+    </head_merge>
+
+<div class="menuside">
+<h3>Administracja stronami:</h3>
+<div class="lift:Menu.builder?group=admin;i_item:id="></div>
+<a href="/">Powrót</a>
+</div>
+
+<div class="right">
+
+<form class="lift:AdminPagesSn.addDepartment?form=POST" id="frm1" onsubmit="validateForm()"><br />
+<h3>Edycja działów w aktualnościach szkoły.</h3><br />
+<table><tr><td>Id: </td><td><input id="id" /></td></tr>
+<tr><td>Krótka nazwa: </td><td><input id="shortname" /></td></tr> 
+<tr><td>Długa nazwa: </td><td><input id="fullname" /> </td></tr> 
+<tr><td></td><td><input id="submitadd" /><input id="submitdel" />
+ <input type="button" onclick="clearForm()" value="Czyść!" /> </td></tr>
+</table>
+<p id="notice"></p>
+</form>
+<hr />
+<table><thead><tr><th>Id</th><th>Krótka nazwa</th><th>Pełna nazwa</th></tr></thead>
+    <tbody class="lift:AdminPagesSn.departments"> </tbody>
+</table>
+</div>
+<br class="spacer" />
+
+
+</div>
+</body></html>

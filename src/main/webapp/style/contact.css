@@ -1,0 +1,14 @@
+/* -- strona kontaktowa -- */
+
+.contact {
+	padding: 20px 21px 20px 21px; }
+.contact textarea {
+	width: 400px; height: 200px;}
+.contact input {
+	width: 250px; }
+.contact h2 {
+	font:bold  20px/25px Arial, Helvetica, sans-serif; color:#337BA6;
+	padding:0 0 2px 0; }
+.contact h2 span {
+	font: bold 25px/28px  Arial, Helvetica, sans-serif; color:#F50B04;
+	padding: 0 2px 0 0;  }

@@ -1,0 +1,11 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:lift="http://liftweb.net/">
+<body>
+<h4>Wczytywanie pliku:</h4>
+	<lift:filesSn.uploadFile form="POST" multipart="true" >
+	<F:file /><br />
+	<F:submit /><br /><hr />
+	<p><em>link do skopiowania: </em> <F:linking /> </p>
+	<lift:msgs/>
+	</lift:filesSn.uploadFile><br />
+</body>
+</html>
