@@ -1,0 +1,43 @@
+<lift:surround with="secretary" at="content">
+<head><script type="text/javascript" src="/scripts/addpupil.js" /></head>
+
+
+<div id="centrum">
+ <table><tr><td><b>Status zmian: &nbsp;&nbsp;</b></td><td>nowych</td><td><input id="newRows" type="text" readonly="true" value="0" size="2" /></td><td>edytowanych</td><td><input id="editedRows" type="text" readonly="true" value="0" size="2" /></td><td>do usunięcia</td><td><input id="deletedRows"  type="text" readonly="true" value="0" size="2" /></td><td>
+            <lift:pupilSn.formItem form="POST">
+     <entry:dataE /><entry:dataN /><entry:dataD /><entry:submit/>
+            </lift:pupilSn.formItem>
+            </td></tr></table>
+                <br  />
+<table  border="0" cellpadding="2" cellspacing="2">
+<thead>
+<tr><th>Nazwisko</th><th>Pierwsze imię</th><th>Nr księgi</th><th>Klasa</th></tr>
+</thead>  
+<tbody>
+<tr><td ><input id="sureAdd" /></td><td ><input id="firstAdd" /></td><td ><input id="schoolidAdd" /></td><td><lift:PupilSn.classes /></td></tr></tbody></table>
+<table><tr>
+<td><button name="dodaj"  onclick="addUser()">Dodaj!</button></td>
+<td><button name="clear" onclick="clearForm()">Wyczyść!</button></td>
+</tr>
+</table><br />
+<p>Wybierz klasę do wyświetlenia: //ukrywanie pozostałych klas w ajax//<lift:PupilSn.classes /></p>
+
+<hr />
+	<h4>Przegląd uczniów wpisanych  do klasy 2c</h4>
+	
+	<table id="waiting"  cellspacing="2" cellpadding="2" >
+		<thead><tr bgcolor="Teal"><th>Nr</th><th width="100">Nazwisko</th><th width="100">Imię</th><th width="100">Nr księgi</th><th>Klasa</th><th>Edytuj</th></tr></thead>
+        <lift:PupilSn.pupilList>
+	</lift:PupilSn.pupilList></table>
+
+<div id="kolejnosc">
+<h1>Automatyczne uporządkowanie numerów uczniów w klasie</h1>
+
+<lift:PupilSn.orderForm form="POST" > 
+Wybierz klasę: <F:classmenu /> <F:submit />
+</lift:PupilSn.orderForm>
+</div>
+                   
+</div>
+
+</lift:surround>

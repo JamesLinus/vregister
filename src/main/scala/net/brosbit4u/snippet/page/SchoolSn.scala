@@ -23,26 +23,26 @@ import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
 import net.brosbit4u.model._
 import net.brosbit4u.lib._
-import _root_.net.liftweb.mapper.{OrderBy,By,Descending}
+import _root_.net.liftweb.mapper.{OrderBy,By,Descending, Ascending}
 import _root_.net.liftweb.http.{S}
 import Helpers._
 
 class SchoolSn extends UsersOperations {
 
   /** formuje menu szkoły wypisując tytuły strony - dodać linki*/
-  def submenu(n:NodeSeq):NodeSeq = {
+  def submenu() = {
     var departs = Department.findAll()
-    var node:NodeSeq = <div><ul><li><a href="index?w=a">Aktualności</a></li></ul>
-      {for (d <- departs) yield{<div><h4>{d.shortName.is}</h4>
-                         {insertPages(d)}</div>}}
-      <hr />
-      <ul>
+    val linksDep = LinkDepartment.findAll()
+
+    "#linksmenu" #> <div> {for(linkDep <- linksDep ) yield <div><h4> {linkDep.name.is}</h4>
+                        <ul>{linkDep.links.all.map(link => <li><a href={link.url.is} target="_blank"> {link.name.is} </a></li> )} </ul> </div>} </div> &
+    "#pagemenu" #> <div> {for(department <- departs ) yield <div><h4> {department.shortName.is}</h4>
+                        <ul>{department.pages.all.map(page => <li><a href={"/index?w=p&id=" +page.id.is.toString}> {page.shortTitle.is} </a></li> )} </ul> </div>} </div> &
+    "#adminmenu" #>  <ul>
       {if(isTeacher) <li><a href="editpost?id=0"><span>Dodaj post</span></a></li>}
       {if(isAdmin) <li ><a href="editpage"><span>Dodaj stronę</span></a></li>}
       {if(isAdmin) <li><a href="admin/pages"><span>Adminstracja</span></a></li>}
-    </ul>
-    </div>
-    node
+      </ul>
   }
 
   def insertPages(department:Department):NodeSeq = {
@@ -102,7 +102,7 @@ class SchoolSn extends UsersOperations {
    for (news <- newsList) yield {
      <a href={"index?w=w&id=" + news.id.toString }><h2>{news.title}</h2></a>
      <p class="info">  <img src="style/images/author_mini.png" />
-{news.author.obj.get.getFullName }
+{ news.author.obj.get.getFullName }
     <img src="style/images/data_mini.png" /> {Formater.formatTime(news.createdAt.is)}
     </p>
     <br class="spacer" />

@@ -1,0 +1,42 @@
+<lift:surround with="secretary" at="content">
+
+<head><script type="text/javascript" src="/scripts/addsubject.js" ></script></head>		
+
+			<div id="centrum">
+            <h3>Edycja przedmiotów</h3>
+            
+            <table><tr><td><b>Status zmian: &nbsp;&nbsp;</b></td><td>nowych</td><td><input id="newRows" type="text" readonly="true" value="0" size="2" /></td><td>edytowanych</td><td><input id="editedRows" type="text" readonly="true" value="0" size="2" /></td><td>do usunięcia</td><td><input id="deletedRows"  type="text" readonly="true" value="0" size="2" /></td><td>
+            <lift:SubjectSn.formItem form="POST">
+     <entry:dataE /><entry:dataN /><entry:dataD /><entry:submit />
+            </lift:SubjectSn.formItem>
+            </td></tr></table>
+                <br  />
+        <form>
+                <table  border="0" cellpadding="2" cellspacing="2">
+			<thead>
+        		<tr><th>Nr</th><th>Nazwa przedmiotu</th><th>Skrót przedmiotu</th></tr>
+			</thead>  
+			<tbody>   
+            	<tr><td><input type="text" maxlength="2" size="2" id="nrAdd" /></td>
+		<td><input type="text"  maxlength="20" size="15" id="nameAdd"/></td><td><input type="text"  maxlength="5" size="4" id="shortAdd" /></td></tr>
+                        </tbody>
+                </table>
+                <table align="center"><tr><td><button  name="add" onclick="return addSubject();">Nowa klasa!</button></td><td ><input name="clear" type="reset"/></td></tr>
+		</table>
+	</form>
+		<br />
+       
+	<hr  />
+		<h4>Lista przedmiotów: </h4>
+		<table  border="0" cellpadding="2" cellspacing="2" >
+		
+            		<thead>
+        		<tr><th>Nr</th><th>Nazwa przedmiotu</th><th>Skrót przedmiotu</th><th>Edycja</th></tr>
+			</thead>  
+		  <lift:SubjectSn.subjectList></lift:SubjectSn.subjectList>
+		</table>
+                
+              
+	</div>
+								
+</lift:surround>

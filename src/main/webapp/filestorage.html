@@ -1,11 +1,22 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:lift="http://liftweb.net/">
-<body>
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript">
+            function copyLink() {
+                var link = document.getElementById("linking").innerHTML;
+                var topDoc = window.top.document;
+                var urlElem = topDoc.getElementById('urlLink');
+                if (urlElem) urlElem.value = link;
+            }
+        </script>
+    </head>
+<body onload="copyLink()">
 <h4>Wczytywanie pliku:</h4>
-	<lift:filesSn.uploadFile form="POST" multipart="true" >
-	<F:file /><br />
-	<F:submit /><br /><hr />
-	<p><em>link do skopiowania: </em> <F:linking /> </p>
-	<lift:msgs/>
-	</lift:filesSn.uploadFile><br />
+	<form class="lift:FilesSn.uploadFile" method="POST" enctype="multipart/form-data" >
+	<input id="file" /><br />
+	<input id="submit" /><br /><hr />
+	<p><em>link do skopiowania: </em> <br /><span id="linking" ></span> </p>
+        <lift:msgs/>
+	</form><br />
 </body>
 </html>

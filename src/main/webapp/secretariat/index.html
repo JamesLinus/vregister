@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=secret;at=content">
+<head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
+<script type="text/javascript" src="/jquery/jquery.js" ></script>
+<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				$('#datatable').dataTable();
+			} );
+ </script>
+<script type="text/javascript">
+    
+</script>
+</head_merge>
+
+  <div id="centrum">
+          <span class="lift:Users.loggedInUser">
+            
+      <fieldset>
+          <legend>Status zmian</legend>
+          <label for="newRows">nowych:</label><input id="newRows" type="text" readonly="true" value="0" size="2" />
+          <label for="editedRows">edytowanych:</label><input id="editedRows" type="text" readonly="true" value="0" size="2" />
+          <label for="deleteRows">do usunięcia:</label><input id="deletedRows"  type="text" readonly="true" value="0" size="2" />
+          <form class="lift:AddTeacherSn.formItem" method="POST">
+              <input id="dataEdit" /><input id="dataNew" /><input id="dataDelete"/><input id="submit"/>
+          </form>
+      </fieldset>
+
+      <hr  />
+      <h3>Dodaj nowych:</h3>
+      <div id="formAdd" >
+      <table id="datatable"><thead>
+        <tr><th>Nazwisko</th><th>Imię</th><th>E-Mail</th><th>Telefon</th></tr></thead>
+           <tbody><tr id="inputsAdd"><td><input id="surenameAdd" /></td>
+                   <td ><input id="firstnameAdd" /> </td> <td><input id="mailAdd"  /></td>
+                   <td><input id="phoneAdd" size="9" maxlength="9"  /></td> </tr></tbody> </table>
+		  <table id="newButtons" > <tr> <td> Dodawanie: </td>
+                          <td><button  name="add" onclick="addTeacher(this)"> Dodaj!</button> </td>
+                          <td><button  name="add" onclick="clearForms()">Czyść!</button> </td></tr></table>
+      </div>
+      <hr  />
+    <h4>Przegląd i edycja nauczycieli wpisanych: </h4>
+    <table id="fullList" border="0" cellpadding="2" cellspacing="2" >
+        <thead>
+            <tr><th>Nazwisko</th><th>Imię</th><th>Hasło</th>
+                <th>E-Mail</th><th>Telefon</th><th>Akcje</th>
+            </tr>
+        </thead>
+		   
+                <tbody class="lift:addTeacherSn.teacherList">
+                    <tr><td class="firstname"></td><td  class="lastname"></td>
+                        <td class="password"></td><td class="email"></td>
+                        <td class="phone"></td>
+                        <td class="actions"><button  name="edit" onclick="addEditInputs(this)">Edytuj!</button></td>
+                    </tr>
+                </tbody
+           </table>
+	 </div> <!-- koniec dodawania -->
+ 
+      
+</div>
+</body>
+</html>
+

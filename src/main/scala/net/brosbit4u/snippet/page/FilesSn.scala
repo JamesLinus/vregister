@@ -34,12 +34,13 @@ import javax.imageio.ImageIO
 import java.io.{File,ByteArrayInputStream,FileOutputStream}
 /** snipet ma dostarczać grafikę na stronę oraz obsługiwać zapis zdjęć i dostarczenie
  ich do edytora - w przysłości obsługa plików statycznych */
-class FilesSn extends UsersOperations {
+class FilesSn  {
 
       object linkpath extends RequestVar[String]("")
-      val pathRoot = "/home/pageFiles"
+      val pathRootImages = "/home/ms/imagesApp"
+      val pathRootFiles = "/home/ms/filesApp"
 
-      def addImg(n:NodeSeq):NodeSeq = {
+      def addImg() = {
       var fileHold:Box[FileParamHolder] = Empty
       var mimeType = ""
         def isCorrect = fileHold match {
@@ -60,9 +61,9 @@ class FilesSn extends UsersOperations {
 
         def save() {
          
-          if (isCorrect && isLoged) {
+          if (isCorrect) {
           
-            val dirRoot:File = new File(pathRoot)
+            val dirRoot:File = new File(pathRootImages)
             val img = model.FileStore.create
             img.path("empty").save //potrzebuje id do wyliczenia hashu
             val subDirPath = ((img.id.is / 200) + 1).toString
@@ -101,8 +102,8 @@ class FilesSn extends UsersOperations {
             //zapisx$1
             if (ImageIO.write( imBox.get, "png",new File(imgDir, img.id.toString + mimeType ))){
               img.path(link).save
-              linkpath(link)
-              S.notice("Plik został zapisany")
+              linkpath(serverPath + "/imgdata/" + img.id.toString + mimeType)
+              //S.notice("Plik został zapisany")
             }
             else {
               img.delete_!
@@ -111,51 +112,56 @@ class FilesSn extends UsersOperations {
           }
         }
 
-        bind("F",n,"file"-> SHtml.fileUpload(x => fileHold = Full(x)),
-                    "submit"-> SHtml.submit("Dodaj!", save),
-                    "linkimg" -> Text(linkpath.is)
-               )
+       "#file"#> SHtml.fileUpload(x => fileHold = Full(x)) &
+       "#submit" #> SHtml.submit("Dodaj!", save) &
+       "#linkimg" #> <span id="linking">{linkpath.is}</span>
+               
   }
   /* ładownie pliku na serwer -- dokończyć*/
-  def uploadFile(n:NodeSeq):NodeSeq = {
-    if (!isAdmin) <div></div>
+  def uploadFile() = {
     var fileHold:Box[FileParamHolder] = Empty
-    def save() {
-      if (!isAdmin) return
-      
-      val dirRoot:File = new File(pathRoot)
-      val fileSt = model.FileStore.create
-      fileSt.path("empty").save //potrzebuje id do wyliczenia hashu
-      val subDirPath = ((fileSt.id.is / 200) + 1).toString
-      val imgDir = new File(dirRoot,subDirPath)
-      //sprawdzam czy katalog do którego pasuje hash istnieje
-      if (!imgDir.exists) {
-          imgDir.mkdir
-      }
 
-      if (fileHold.isEmpty) {
-        fileSt.delete_!
-        S.notice("Zapis nieudany")
-      }
-      else {
-        //S.notice(file.get.fileName)
-        val extension = fileHold.get.fileName.split('.').last  //jakiś błąd
-        val link = imgDir.getAbsolutePath + "/" + fileSt.id.toString + "." + extension
-        val fileOut = new FileOutputStream(new File(imgDir, fileSt.id.toString + "." + extension ))
-        fileOut.write(fileHold.get.file)
-        fileSt.path(link).save
-        linkpath(link)
-        S.notice("Plik został zapisany")
-      }
+        def save() {
+
+          if (fileHold.isEmpty) {
+            S.notice("Zapis nieudany")
+          }
+          else {
+            val dirRoot:File = new File(pathRootFiles)
+            val fileSt = model.FileStore.create
+            fileSt.path("empty").save //potrzebuje id do wyliczenia hashu
+            val subDirPath = ((fileSt.id.is / 200) + 1).toString
+            val imgDir = new File(dirRoot,subDirPath)
+            //sprawdzam czy katalog do którego pasuje hash istnieje
+            if (!imgDir.exists) {
+              imgDir.mkdir
+            }
+            S.notice(fileHold.get.fileName)
+            val extension = fileHold.get.fileName.split('.').last  //jakiś błąd
+            val link = imgDir.getAbsolutePath + "/" + fileSt.id.toString + "." + extension
+            val filename = fileSt.id.toString + "." + extension
+            val fileOut = new FileOutputStream(new File(imgDir, filename))
+            fileOut.write(fileHold.get.file)
+            fileSt.path(link).save   
+            linkpath(serverPath + "/filedata/" + filename)
+            //S.notice("Plik został zapisany")
+          }
 
 
     }
-    bind("F",n,"file"->SHtml.fileUpload(x=> fileHold = Full(x)),
-        "submit"-> SHtml.submit("Dodaj!",save),
-        "linking" -> Text("Dodaj link: " + linkpath.is))
+    "#file" #> SHtml.fileUpload(x=> fileHold = Full(x)) &
+        "#submit" #> SHtml.submit("Dodaj!", save) &
+        "#linking" #> <span id="linking">{linkpath.is}</span>
   }
 
-//niezaimlpementowane!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  lazy val serverPath =  {
+    S.request match {
+     case Full(r) => r.hostAndPath
+     case _ => "add host name"
+    }
+  }
+
+//niezaimlpementowane - zrobić osobny moduł dla crona
   def cleanImages(node:NodeSeq):NodeSeq = {
     //przeszukiwanie wszystkich Post, Page i Comments i wyszukanie wszystkich 
     val n = <h1> Nieużywane obrazki  zostały usunięte</h1>

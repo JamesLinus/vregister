@@ -18,7 +18,8 @@
 package net.brosbit4u {
   package snippet {
 
-    import _root_.scala.xml.{NodeSeq, Text}
+    import java.util.Date
+    import _root_.scala.xml.{NodeSeq, Text, XML}
     import _root_.net.liftweb.util._
     import _root_.net.liftweb.common._
     import net.brosbit4u.model._
@@ -210,14 +211,101 @@ package net.brosbit4u {
         "#notice" #> Text(notice)
       }
 
+      ///dodawanie linków
+      def addLinks() = {
+        var xmlDataStr = ""
+        def add() {
+          //usuwam wszystkie dane
+          LinkDepartment.findAll().map(ld => {ld.links ;ld.delete_!})
+          var xmlData = XML.loadString(xmlDataStr)
+          (xmlData \ "links").foreach(links => {
+              val nameDep = (links \ "@name").toString
+              val linkDep = LinkDepartment.create.name(nameDep)
+              (links \ "link").foreach(link => {
+                  val title = (link \ "@title").toString
+                  val url = (link \ "@src").toString
+                  linkDep.links += LinkItem.create.name(title).url(url)
+                })             
+              linkDep.save
+              linkDep.links.save
+            })
+
+          S.redirectTo("/admin/links")
+        }
+        "#xmlData" #> SHtml.text(xmlDataStr, xmlDataStr = _, "style" -> "display:none;") &
+        "#submit" #> SHtml.submit("ZAPISZ",add, "onclick" -> "return saveAll()")
+      }
+      // wyślietlanie konfiguracji linków
+      def showLinks() = {
+        val linksDep = LinkDepartment.findAll()
+        ".divDepartment" #> linksDep.map(linkDep => {
+            ".nameDep" #> <input value={linkDep.name.is} type="text" /> &
+            ".linkTr" #> linkDep.links.all.map(link => {
+                ".nameLink" #> <td>{link.name.is}</td> &
+                ".urlLink" #> <td>{link.url.is}</td>
+               })
+        })
+      }
+
       def isAdmin_?():Boolean = {
         User.currentUser match {
           case Full(user) => if (user.role.is == "a") true else false
           case _ => false
         }
       }
+   
+
+    def editSecretariat() = {
+      var id = ""
+      var firstName = ""
+      var lastName = ""
+      var email = ""
+      var password = ""
+      def save() {
+        try {
+          val ID = id.toLong
+          if (ID > 0) {
+            val  user =  User.find(id).open_!
+            user.firstName(firstName).lastName(lastName).email(email).password(password).validated(true)
+            if (password != "--------") user.password(password).passStr(password)
+            user.save
+            val userChangeList = UserChangeList.create
+            userChangeList.firstName(user.firstName.is).lastName(user.lastName.is).email(user.email.is)
+                      .passStr(password).user(user).date(new Date()).save
+          }
+          else {
+            val  user =  User.create
+            user.firstName(firstName).lastName(lastName).email(email).password(password).validated(true).save
+          }
+        }
+        catch {case _ => S.error("Nieprawidłowe ID")}
+      }
+      def delete() {
+        User.find(id) match  {
+          case Full(user) =>  user.validated(false).save
+          case _ =>
+        }
+      }
+      "#ID" #> SHtml.text(id, id = _, "style" -> "visible:none;", "id" -> "ID") &
+      "#firstName" #> SHtml.text(firstName, firstName = _, "id" -> "fistName", "maxlength" -> "30") &
+      "#lastName" #> SHtml.text(lastName, lastName = _, "id" -> "lastName", "maxlength" -> "40") &
+      "#email" #> SHtml.text(email, email = _, "id" -> "email", "maxlength" -> "12" ) &
+      "#password" #> SHtml.text(password, password = _, "id" -> "password", "maxlength" -> "12" ) &
+      "#submit" #> SHtml.submit("Dodaj",save) &
+      "#delete" #> SHtml.submit("Usuń",delete)
     }
 
-
+      def showSecretariat() = {
+        val secretariatUsers = User.findAll(By(User.role,"s"), By(User.validated, true))
+        "tr" #> secretariatUsers.map( user => {
+            <tr id={user.id.is.toString}  class={if(user.validated.is) "scratched" else "normal"} onclick="edit(this)">
+              <td>{user.lastName.is}</td>
+              <td>{user.firstName.is}</td>
+              <td>{user.email.is}</td>
+              <td>{user.passStr.is}</td>
+            </tr>
+          })
+      }
+ }
 
   }} //package end

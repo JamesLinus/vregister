@@ -43,7 +43,7 @@ package net.brosbit4u {
             }
 
           //dodaje dwie zmienne
-          def galleryList(node:NodeSeq):NodeSeq = {
+          def galleryList() = {
               var str = "var numGallery = " + gal.length.toString //ilość galerii
               str += "\n var gallerieArr =   ["
               for (g <- gal) {
@@ -55,7 +55,8 @@ package net.brosbit4u {
               }
               str = str.substring(0, str.length - 1)
               str += "]\n"
-              bind("G",node,"galList" -> Text(str))
+              "#data" #> <script>{Text(str)}</script>
+           //bind("g", n, "data" -> Text(str))
            }
     }
 

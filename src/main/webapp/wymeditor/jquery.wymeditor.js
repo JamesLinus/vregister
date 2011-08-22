@@ -520,8 +520,7 @@ jQuery.fn.wymeditor = function(options) {
     dialogFeaturesPreview: "menubar=no,titlebar=no,toolbar=no,resizable=no"
                       + ",scrollbars=yes,width=650,height=450,top=0,left=0",
 
-    dialogHtml:      "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN'"
-                      + " 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>"
+    dialogHtml:      "<!DOCTYPE html>"
                       + "<html dir='"
                       + WYMeditor.DIRECTION
                       + "'><head>"
@@ -540,6 +539,10 @@ jQuery.fn.wymeditor = function(options) {
                       + " src='"
                       + WYMeditor.WYM_PATH
                       + "'></script>"
+                      + "<script type='text/javascript'"
+                      + " src='"
+                      + "/style/fileload.js"
+                      + "'></script>"
                       + "</head>"
                       + WYMeditor.DIALOG_BODY
                       + "</html>",
@@ -555,7 +558,7 @@ jQuery.fn.wymeditor = function(options) {
                + "<legend>{Link}</legend>"
                + "<div class='row'>"
                + "<label>{URL}</label>"
-               + "<input type='text' class='wym_href' value='' size='40' />"
+               + "<input type='text' class='wym_href' id='urlLink' value='' size='40' />"
                + "</div>"
                + "<div class='row'>"
                + "<label>{Title}</label>"
@@ -569,6 +572,7 @@ jQuery.fn.wymeditor = function(options) {
                + "</div>"
                + "</fieldset>"
                + "</form>"
+               + "<iframe src='filestorage.html' width='98%' height='250px'><p>Brak obsługi ifame!</p></iframe>"
                + "</body>",
     
     dialogImageHtml:  "<body class='wym_dialog wym_dialog_image'"
@@ -582,7 +586,7 @@ jQuery.fn.wymeditor = function(options) {
                + "<legend>{Image}</legend>"
                + "<div class='row'>"
                + "<label>{URL}</label>"
-               + "<input type='text' class='wym_src' value='' size='40' />"
+               + "<input type='text' class='wym_src' id='urlLink' value='' size='40' />"
                + "</div>"
                + "<div class='row'>"
                + "<label>{Alternative_Text}</label>"

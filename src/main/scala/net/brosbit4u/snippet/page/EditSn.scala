@@ -88,7 +88,7 @@ def addPage() = {
   }
 
   def disPage() {
-    //S.redirectTo("/index?w=p&id=" + id)
+    S.redirectTo("/index?w=p&id=" + id)
   }
 
 
@@ -100,9 +100,9 @@ def addPage() = {
        "#shorttitle" #> SHtml.text(shortTitle.is, x => shortTitle(x),"maxlength"->"25","id" -> "short") &
        "#departs" #> SHtml.select(depart,if (defltOption.isEmpty) Empty else Full(defltOption),s => depId(s.toLong)) &
        "#editor" #> SHtml.textarea(body.is, x => body(x),"class" ->"wymeditor", "style" -> "width:800px; height:600px","id" -> "wymeditor") &
-       "save" #> SHtml.submit("Zapisz!", savePage,"class" -> "wymupdate","onclick"->"return isValid();") &
-       "delete" #> SHtml.submit("Usuń!", delPage,"onclick" -> "return confirm('Na pewno chcesz usunąć?');") &
-       "discard" #> SHtml.submit("Anuluj!",disPage,"onclick"-> "return confirm('Napewno nie zapisywać?');")
+       "#save" #> SHtml.submit("Zapisz!", savePage,"class" -> "wymupdate","onclick"->"return isValid();") &
+       "#delete" #> SHtml.submit("Usuń!", delPage,"onclick" -> "return confirm('Na pewno chcesz usunąć?');") &
+       "#discard" #> SHtml.submit("Anuluj!",disPage,"onclick"-> "return confirm('Napewno nie zapisywać?');")
   }
   else {
     "#form" #> <h1>Nie masz uprawnień do dodawania postów. Musisz być zalogowany jako nauczyciel.</h1>

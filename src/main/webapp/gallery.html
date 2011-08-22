@@ -53,21 +53,18 @@ jQuery(document).ready(function() {
 
 </script>
 
-<script type="text/javascript">
-     var galMarked = 0  //obecnie wybrana galeria
-     var serie = 0 //zapisuje która porcja galerii
-     <lift:gallerySn.galleryList ><G:galList /></lift:gallerySn.galleryList>
-     
-<![CDATA[
+<script type="text/javascript" >
+     var galMarked = 0;  //obecnie wybrana galeria
+     var serie = 0; //zapisuje która porcja galerii
 
 //rysowanie wybranej galerii
     function draw_Gallery(nr) { 
-    var nrInt = parseInt(nr)
+    var nrInt = parseInt(nr);
     //alert("galeria: " + nr)
 	Shadowbox.clearCache();
 
-    var titleGal = document.getElementById("galTitle")
-    titleGal.innerHTML = "Zdjęcia z galerii:  " + gallerieArr[nrInt][1]
+    var titleGal = document.getElementById("galTitle");
+    titleGal.innerHTML = "Zdjęcia z galerii:  " + gallerieArr[nrInt][1];
 
     delete_Element() //usuwam wszystkie obrazki w galeri aktualnie wyświetlanej
     var thumbCont = document.getElementById("thumbcontainer")
@@ -83,34 +80,35 @@ a_tag.appendChild(div_tag)
 
 Shadowbox.addCache(a_tag);
 
-div_tag.style.backgroundImage = "url("+ urlsArr[nrInt][i][0] +")"
-div_tag.style.backgroundRepeat = "no-repeat"
-div_tag.style.backgroundPosition = "center"
+div_tag.style.backgroundImage = "url("+ urlsArr[nrInt][i][0] +")";
+div_tag.style.backgroundRepeat = "no-repeat";
+div_tag.style.backgroundPosition = "center";
 }
 
 setCointenrWidth(nrOfPhotos);
 }
 //ważne dopasować wielkość kolumny
 function setCointenrWidth(nrOfPhotos) {
-var columns = 6 //ile zdjęć w kolumnie
-var lines = parseInt(nrOfPhotos / columns)
-var margin = parseInt((lines + 1) * 120)
-document.getElementById("thumbcontainer").style.marginBottom = margin.toString() + "px"
+var columns = 6; //ile zdjęć w kolumnie
+var lines = parseInt(nrOfPhotos / columns);
+var margin = parseInt((lines + 1) * 120);
+document.getElementById("thumbcontainer").style.marginBottom = margin.toString() + "px";
 }
 
 function delete_Element(){
-var thumbCont = document.getElementById("thumbcontainer")
-var tabTags = thumbCont.getElementsByTagName("a")
+var thumbCont = document.getElementById("thumbcontainer");
+var tabTags = thumbCont.getElementsByTagName("a");
 while (tabTags.length != 0) {
-thumbCont.removeChild(tabTags[0])
+thumbCont.removeChild(tabTags[0]);
 }
 }
-]]>
   </script>
+
 </head_merge>
 
+    <div class="lift:GallerySn.galleryList"><span id="data"></span></div>
  
-  <div id="wrap" class="lift:gallerySn.drawSlider" /></div> 
+  <div id="wrap" class="lift:GallerySn.drawSlider" ></div>
   <br />
   <div id="galCont" > 
  <div><h3 id="galTitle" style="color: #555555;" >Zdjęcia w galerii: </h3></div>
@@ -121,6 +119,6 @@ thumbCont.removeChild(tabTags[0])
   </div>
  
   </div>
+</div>
 
-</div >
 </body></html>

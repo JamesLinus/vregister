@@ -1,0 +1,41 @@
+
+<lift:surround with="secretary" at="content">
+    <head><script type="text/javascript" src="/scripts/addclass.js" /></head>
+    
+      
+        <div id="centrum">
+            <h3>Edycja klas:</h3>
+            
+            <table><tr><td><b>Status zmian: &nbsp;&nbsp;</b></td><td>nowych</td><td><input id="newRows" type="text" readonly="true" value="0" size="2" /></td><td>edytowanych</td><td><input id="editedRows" type="text" readonly="true" value="0" size="2" /></td><td>do usunięcia</td><td><input id="deletedRows"  type="text" readonly="true" value="0" size="2" /></td><td>
+            <lift:ClassSn.formItem form="POST">
+     <entry:dataE /><entry:dataN /><entry:dataD /><entry:submit/>
+            </lift:ClassSn.formItem>
+            </td></tr></table>
+                <br  />
+                
+                <table  border="0" cellpadding="2" cellspacing="2">
+			<thead>
+        <tr><th>Poziom</th><th>Oddział</th><th>Opis</th><th>Wychowawca</th></tr>
+			</thead>  
+			<tbody>   
+            <tr><td><select id="levelAdd"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></td>
+<td><input type="text" id="lettersAdd"/></td><td><input type="text" id="descriptionAdd" /></td><td><lift:ClassSn.teachers /></td></tr>
+                        </tbody>
+                </table>
+                <table align="center"><tr><td><button  name="add" onclick="addClass();">Nowa klasa!</button></td><td ><button name="clear" onclick="clearForms();">Wyczyść formularz!</button></td></tr>
+		</table>
+		<br />
+       
+	<hr  />
+		<h4>Lista wpisanych klas: </h4>
+		<table  border="0" cellpadding="2" cellspacing="2" >
+		
+            <thead>       <tr><td>Poziom</td><td>Oddział</td><td>Opis</td><td>Wychowawca</td><td>Usuń!</td></tr>
+            </thead>  
+		  <lift:ClassSn.classList></lift:ClassSn.classList>
+		</table>
+                
+              
+	</div>
+    
+ </lift:surround>

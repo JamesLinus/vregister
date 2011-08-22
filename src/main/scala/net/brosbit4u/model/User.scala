@@ -46,7 +46,9 @@ class User extends MegaProtoUser[User] {
 
  object role extends MappedString(this, 1)
  object gen extends MappedBoolean(this)
- object timePass extends MappedLong(this)
+ object phone extends MappedString(this, 12)
+ object passStr extends MappedString(this, 12)
+ object timePass extends MappedDateTime(this)
  
  def getFullName = firstName.is + " " + lastName.is
 

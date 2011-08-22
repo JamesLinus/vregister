@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 <html>
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
 <head_merge><link rel="stylesheet" type="text/css" href="/style/forum.css" />
-<script type="text/javascript" src="/jquery/jquery.js" />
-<script type="text/javascript" src="/wymeditor/jquery.wymeditor.js" />
+<script type="text/javascript" src="/jquery/jquery.js" ></script>
+<script type="text/javascript" src="/wymeditor/jquery.wymeditor.js" ></script>
 
 <script type="text/javascript" >
 jQuery(function() {
@@ -45,14 +46,14 @@ jQuery(function() {
 		<table class="lift:ForumPostSn.departments" ></table>
 		<br class="spacer" />	
 	</div>
-        <div class="ForumPostSn.showThread"> </div>
+        <div class="lift:ForumPostSn.showThread"> </div>
 		
-	<form class="lift:ForumPostSn.newComment formatka" method="POST" >
+	<form class="lift:ForumPostSn.newComment formatka" method="POST" id="forms" >
             <fieldset>
-		<legend>Dodaj komentarz:</legend>
+		<legend>Dodaj komentarz</legend>
 		  <input id="idThread" />
                 <label>Treść</label><input id="content" /><br />
-		<input id="submit" />
+		<input id="add" />
 	</fieldset></form>
 	<br class="spacer" />
 

@@ -1,19 +1,21 @@
-/*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
- *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *
- *   VRegister is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
- *   as published by the Free Software Foundation
- *
- *   VRegister is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
- *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
- */
+///*
+// * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
+// *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
+// *
+// *   VRegister is free software: you can redistribute it and/or modify
+// *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
+// *   as published by the Free Software Foundation
+// *
+// *   VRegister is distributed in the hope that it will be useful,
+// *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// *   GNU General Public License for more details.
+// *
+// *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
+// *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
+// */
+//
+
 
 package bootstrap.liftweb
 
@@ -25,7 +27,7 @@ import net.liftweb.sitemap._
 import net.liftweb.sitemap.Loc._
 //import net.brosbit4u.model.User
 import Helpers._
-import net.liftweb.mapper.{DB, ConnectionManager, ConnectionIdentifier, Schemifier, DefaultConnectionIdentifier}
+import net.liftweb.mapper.{DB, By, ConnectionManager, ConnectionIdentifier, Schemifier, DefaultConnectionIdentifier}
 import java.sql.{Connection, DriverManager }
 import net.brosbit4u.model._
 
@@ -51,27 +53,37 @@ object DBVendor extends ConnectionManager {
 
 class Boot {
   def boot {
-      
+
 //    if (!DB.jndiJdbcConnAvailable_?) {
       DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
       println("db added")
- 
-    
+
+
     // where to search snippet
     LiftRules.addToPackages("net.brosbit4u")
-    
-    Schemifier.schemify(true, Schemifier.infoF _, User, Post, Page, 
-                        Department, ForumDep, FileStore, ContactMail, ForumCom,
-                        ForumThread, Gallery, ExtraData)
 
-   
+    Schemifier.schemify(true, Schemifier.infoF _, User, Post, Page,
+                        Department, ForumDep, FileStore, ContactMail, ForumCom,
+                        ForumThread, Gallery, ExtraData, LinkItem, LinkDepartment,
+                        ClassModel, UserChangeList, MarkMap, Pupil, SubjectName)
+
+//    val adminList = User.findAll(By(User.role, "a"))
+//    if (adminList.length == 0) {
+//      val u  = User.create
+//      u.lastName("Administrator").email("mail@mail.org").password("123qwerty").validated(true).save
+//    }
+
     if(DB.runQuery("select * from users where lastname = 'Administrator'")._2.isEmpty) {
     val u = User.create
-    u.lastName("Administrator").role("a").password("123test456").email("mail@mail.org").validated(true).save
+    u.lastName("Administrator").role("a").password("123qwerty").email("mail@mail.org").validated(true).save
     }
-//
-//      DB.runQuery("insert into users( email ,firstname ,lastname ,locale, timezone, role_c, password_pw, password_slt, superuser , validated) values('mail@mail.org', '', 'Administrator', 'pl_PL', 'Europe/Belgrade', 'a', 'VfcD1VY4vyJPY/+y1QbbEH65Xg8=', 'LPAIVSPXS31WCLSM', false, true);")
-// nie działa! blokuje wszystko
+
+    val loggedIn = If(() => User.loggedIn_? && User.currentUser.open_!.validated.is,
+      () => RedirectResponse("/"))
+    val isAdmin = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "a"),
+     () => RedirectResponse("/"))
+    val isSecretariat = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "s"),
+      () => RedirectResponse("/"))
 
     // Build SiteMap::
     def sitemap() = SiteMap(
@@ -84,13 +96,19 @@ class Boot {
         Menu("Dziennik") / "vregister" >> LocGroup("public"),
         Menu("Edytor postów") / "editpost" >> LocGroup("extra"),
         Menu("Editor stron") / "editpage" >> LocGroup("extra"),
-        Menu("Stałe strony") / "admin" / "pages" >> LocGroup("admin"),
-        Menu("Działy forum") / "admin" / "forum" >> LocGroup("admin"),
-        Menu("Zmiana hasła") / "admin" / "password" >> LocGroup("admin"),
-        Menu("Maile kontaktowe") / "admin" / "contactmail" >> LocGroup("admin"),
-        Menu("Indeksowanie Picasa") / "admin" / "picasaindex" >> LocGroup("admin"),
+        Menu("Stałe strony") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
+        Menu("Działy forum") / "admin" / "forum" >> LocGroup("admin") >> isAdmin,
+        Menu("Zmiana hasła") / "admin" / "password" >> LocGroup("admin")  >> isAdmin,
+        Menu("Sekretariat") / "admin" / "secretariat" >> LocGroup("admin")  >> isAdmin,
+        Menu("Maile kontaktowe") / "admin" / "contactmail" >> LocGroup("admin") >> isAdmin,
+        Menu("Indeksowanie Picasa") / "admin" / "picasaindex" >> LocGroup("admin")  >> isAdmin,
         Menu("Img") / "imgstorage" >> LocGroup("extra"),
         Menu("File") / "filestorage" >> LocGroup("extra"),
+        Menu("Nauczyciele") / "secretariat" / "index" >> LocGroup("secretariat")  >> isSecretariat ,
+        Menu("Klasy") / "secretariat" / "classes" >> LocGroup("secretariat") >> isSecretariat,
+        Menu("Wychowawcy") / "secretariat" / "bringup" >> LocGroup("secretariat") >> isSecretariat,
+        Menu("Uczniowie") / "secretariat" / "pupils" >> LocGroup("secretariat") >> isSecretariat,
+        Menu("Przydział klas") / "secretariat" / "pupiltoclass" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Test") / "test" >> LocGroup("extra") ) :::
 // Menu entries for the User management stuff
       User.sitemap :_*)
@@ -100,6 +118,7 @@ class Boot {
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))
 
+    
 
     LiftRules.early.append(makeUtf8)
 
