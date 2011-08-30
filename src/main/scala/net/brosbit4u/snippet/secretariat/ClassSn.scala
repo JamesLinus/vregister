@@ -18,19 +18,19 @@
 package net.brosbit4u {
 package snippet {
 
- import _root_.scala.xml.{NodeSeq, Text}
+ import _root_.scala.xml.{NodeSeq, Text, XML}
     import _root_.net.liftweb.util._
     import _root_.net.liftweb.http.{SHtml,S}
     import _root_.net.liftweb.common._
-    import _root_.java.util.{Date,Random}
+    import _root_.java.util.{Date,Random, GregorianCalendar, TimeZone}
     //import net.brosbit4u.lib._
-    import net.brosbit4u.model.{User,ClassModel}
+    import net.brosbit4u.model._
     import _root_.net.liftweb.mapper.{By,OrderBy,Ascending}
     import Helpers._
 
-class ClassSn {
+class ClassSn extends  {
   
-  /** zwraca zawrtość seclect z nauczycielami*/
+  /** zwraca zawrtość seclect z nauczycielami*/ //do przydzielania wychowawców 
   def teachers(in:NodeSeq):NodeSeq = {
     val teacherList:List[User] = User.findAll(By(User.role, "n"))
     val option = <select id="teachersAdd" >{for (teacher <- teacherList) yield {
@@ -41,86 +41,62 @@ class ClassSn {
     option
   }
   
+  def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName)
+      
+  
    /** zwraca listę klas w tabeli*/   
-  def classList(in:NodeSeq):NodeSeq = {
+  def classList() = {
     
         //var out:NodeSeq = NodeSeq.Empty
         val classList:List[ClassModel] = ClassModel.findAll(OrderBy(ClassModel.level,Ascending))
         //val user:List[User] = User.find(class.id.is).get
-        val cont = <tbody id="list">{for (classObj <- classList) yield {
-              <tr id={classObj.id.is.toString} >
-                <td >{classObj.level.is.toString}</td>
-                <td >{classObj.letters.is}</td>
-                <td>{classObj.description.is}</td>
-                <td>{classObj.teacher.obj.get.getFullName}</td>
-                <td><button  name="edit" onclick="addEditInputs(this)">Edytuj!</button></td>
-              </tr> //nieprawidłowe id w cudzysłowiu
-            }
-          } </tbody>
-        cont
+        "tr" #> classList.map(theClass => {
+            "tr [class]" #> {if(theClass.validated.is) "" else "scratched"} &
+            ".iduser" #>  <td>{theClass.id.is.toString}</td> &
+            ".level" #> <td>{theClass.level.is.toString}</td> &
+            ".division" #> <td>{theClass.division.is}</td> &
+            ".descript" #> <td>{theClass.descript.is}</td>            
+          }) 
   }
      
 
  /** dodanie formatki i obsługa */
-      def formItem(in:NodeSeq):NodeSeq = {
-        var dataStrE = ""
-        var dataStrD = ""
-        var dataStrN = ""
+      def formItem() = {
+        var dataStr = ""
 
         def processEntry() {
+          //println(dataStr);
           //zakłądam że  przyjdzie prawidłowy string lub go nie ma
          //S.notice(dataStrEA)
-
-          val lines1 = dataStrN.split(";")
-          for (line <- lines1) {
-            if (line.size > 5) {
-              val data = line.split(",")
-              val id = data(0).toInt
-              if (id < 0) {
-                val c = ClassModel.create
-                c.level(data(1).toInt)
-                c.letters(data(2))
-                c.description(data(3))
-                c.teacher(data(4).split("\\(")(1).split("\\)")(0).toLong) //t??????
-                c.save
+         //val date = new Date()
+         val date = new GregorianCalendar(TimeZone.getTimeZone("Europe/Warsaw")).getTime
+         val xml = XML.loadString(dataStr)
+          (xml \ "user").map(userXml => {
+              val id = (userXml \ "@id").toString
+              //println("Found id ::::::::::: " + id)
+              val validated = if ((userXml \ "@scratch").toString == "t") false else true;
+              val level = (userXml \ "level").text.toInt
+              val division = (userXml \ "division").text
+              val descript = (userXml \ "descript").text
+              val idInt = try{ id.toInt} catch {case _ => 0}
+              val theClass = ClassModel.find(id).openOr(ClassModel.create)
+              if (validated) {
+                if (idInt > 0 && (level != theClass.level.is || division != theClass.division.is) ) {
+                  val ccl = ClassChangeList.create
+                  ccl.level(theClass.level).descript(theClass.descript).division(theClass.division).
+                    date(date).save
+                }
+                 theClass.level(level).descript(descript).division(division).
+                    validated(true).save
               }
-            }
-          }
-
-
-          val lines2 = dataStrE.split(";")
-          for (line <- lines2) {
-            if (line.size > 5) {
-              val data = line.split(",")
-              val id = data(0).toInt
-              if (id > 0) {
-                val c = ClassModel.find(id).get
-                //S.notice(c.sureName.is)
-                c.level(data(1).toInt)
-                c.letters(data(2))
-                c.description(data(4))        
-                c.teacher(data(4).split("\\(")(1).split("\\)")(0).toLong) //t??????
-                c.save
+              else {
+                if (idInt > 0) theClass.validated(false).save
               }
-            }
+            })          
           }
-
-          val idToDel = dataStrD.split(';')
-
-          for(id <- idToDel) {
-            if (id.size > 0) {
-              val c = ClassModel.find(id.toInt).get
-              c.delete_!
-            }
-          }
-
-
-        }
-        Helpers.bind("entry",in,
-                     "dataE" -> SHtml.text(dataStrE,(x) => dataStrE = x, "id" -> "dataE", "type" -> "hidden" ),
-                     "dataN" -> SHtml.text(dataStrN,(x) => dataStrN = x, "id" -> "dataN", "type" -> "hidden"),
-                     "dataD" -> SHtml.text(dataStrD, (x) => dataStrD = x, "id"-> "dataD","type"-> "hidden"),
-                     "submit" -> SHtml.submit("Zapisz zmiany!", processEntry, "onclick" -> "createData()"))
+        
+            "#dataEdit" #> SHtml.text(dataStr,(x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
+            "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
 
       }
 }

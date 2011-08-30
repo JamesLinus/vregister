@@ -65,7 +65,8 @@ class Boot {
     Schemifier.schemify(true, Schemifier.infoF _, User, Post, Page,
                         Department, ForumDep, FileStore, ContactMail, ForumCom,
                         ForumThread, Gallery, ExtraData, LinkItem, LinkDepartment,
-                        ClassModel, UserChangeList, MarkMap, Pupil, SubjectName)
+                        ClassModel, UserChangeList, MarkMap, Pupil, SubjectName,
+                        ClassChangeList )
 
 //    val adminList = User.findAll(By(User.role, "a"))
 //    if (adminList.length == 0) {

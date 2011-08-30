@@ -261,44 +261,43 @@ package net.brosbit4u {
       var lastName = ""
       var email = ""
       var password = ""
-      def save() {
-        try {
-          val ID = id.toLong
-          if (ID > 0) {
-            val  user =  User.find(id).open_!
-            user.firstName(firstName).lastName(lastName).email(email).password(password).validated(true)
-            if (password != "--------") user.password(password).passStr(password)
-            user.save
+        def save() {
+          val  user =  User.find(id).openOr(User.create)
+          if (id != "0" && id != "") {
             val userChangeList = UserChangeList.create
             userChangeList.firstName(user.firstName.is).lastName(user.lastName.is).email(user.email.is)
-                      .passStr(password).user(user).date(new Date()).save
+            .passStr(password).user(user).date(new Date()).save
           }
-          else {
-            val  user =  User.create
-            user.firstName(firstName).lastName(lastName).email(email).password(password).validated(true).save
-          }
+          user.firstName(firstName).lastName(lastName).email(email).password(password).role("s").validated(true)
+          if (password != "--------") user.password(password).passStr(password)
+          user.save
         }
-        catch {case _ => S.error("Nieprawidłowe ID")}
-      }
-      def delete() {
+        def delete() {
         User.find(id) match  {
           case Full(user) =>  user.validated(false).save
           case _ =>
         }
       }
-      "#ID" #> SHtml.text(id, id = _, "style" -> "visible:none;", "id" -> "ID") &
-      "#firstName" #> SHtml.text(firstName, firstName = _, "id" -> "fistName", "maxlength" -> "30") &
+      "#ID" #> SHtml.text(id, id = _, "readonly" -> "readonly", "id" -> "ID") &
+      "#firstName" #> SHtml.text(firstName, firstName = _, "id" -> "firstName", "maxlength" -> "30") &
       "#lastName" #> SHtml.text(lastName, lastName = _, "id" -> "lastName", "maxlength" -> "40") &
-      "#email" #> SHtml.text(email, email = _, "id" -> "email", "maxlength" -> "12" ) &
-      "#password" #> SHtml.text(password, password = _, "id" -> "password", "maxlength" -> "12" ) &
-      "#submit" #> SHtml.submit("Dodaj",save) &
-      "#delete" #> SHtml.submit("Usuń",delete)
+      "#email" #> SHtml.text(email, email = _, "id" -> "email", "maxlength" -> "48" ) &
+      "#password" #> SHtml.text(password, password = _, "id" -> "password", "readonly" -> "readonly", "maxlength" -> "12" ) &
+      "#submit" #> SHtml.submit("Dodaj",save, "onclick"->"return validate()") &
+      "#delete" #> SHtml.submit("Usuń",delete, "onclick" -> "return validID()")
     }
 
       def showSecretariat() = {
-        val secretariatUsers = User.findAll(By(User.role,"s"), By(User.validated, true))
+        val secretariatUsers = User.findAll(By(User.role,"s"))
         "tr" #> secretariatUsers.map( user => {
-            <tr id={user.id.is.toString}  class={if(user.validated.is) "scratched" else "normal"} onclick="edit(this)">
+            <tr class={if(user.validated.is) "normal" else "scratched" } onclick="edit(this)"
+              title={UserChangeList.findAll(By(UserChangeList.user,user),OrderBy(UserChangeList.date,Ascending)).map(changeList => {
+                 changeList.date.toString + " " + changeList.lastName.is + " " + changeList.firstName.is  + " " +
+                 changeList.email.is + " " + changeList.passStr
+              }).mkString("<br />")
+              }
+               >
+              <td>{user.id.is.toString}</td>
               <td>{user.lastName.is}</td>
               <td>{user.firstName.is}</td>
               <td>{user.email.is}</td>

@@ -22,7 +22,7 @@ package net.brosbit4u {
     import _root_.net.liftweb.util._
     import _root_.net.liftweb.http.{SHtml,S}
     import _root_.net.liftweb.common._
-    import _root_.java.util.{Date,Random}
+    import _root_.java.util.{Date,Random, GregorianCalendar, TimeZone}
     import _root_.net.liftweb.mapper.{By,OrderBy,Ascending}
     import Helpers._
     import net.brosbit4u.model._
@@ -31,95 +31,63 @@ package net.brosbit4u {
       
       def teacherList() = {
         //var out:NodeSeq = NodeSeq.Empty
-        val teachers:List[User] = User.findAll(By(User.role,"n"),OrderBy(User.lastName, Ascending))
+        val teachers:List[User] = User.findAll(By(User.role,"n"))
 
         "tr" #> teachers.map(teacher => {
-            "#firstname" #> <td>{teacher.firstName}</td> &
-            "#lastname" #> <td>{teacher.lastName}</td> &
-            "#email" #> <td>{teacher.email.is}</td> &
-            "#password" #> <td>{teacher.passStr}</td> &
-            "#phone" #> <td>{teacher.phone}</td> 
-          })
+            "tr [class]" #> {if(teacher.validated.is) "" else "scratched"} &
+            ".iduser" #>  <td>{teacher.id.is.toString}</td> &
+            ".firstname" #> <td>{teacher.firstName.is}</td> &
+            ".lastname" #> <td>{teacher.lastName.is}</td> &
+            ".email" #> <td>{teacher.email.is}</td> &
+            ".password" #> <td>{teacher.passStr.is}</td> &
+            ".phone" #> <td>{teacher.phone.is}</td> 
+          }) 
         
+      }
+      def logedInUser() = {
+        "#username" #> Text(User.currentUser.open_!.getFullName)
       }
 
       /** dodanie formatki i obsługa */
       def formItem() = {
-        var dataStrE = ""
-        var dataStrN = ""
-        var dataStrD = ""
+        var dataStr = ""
 
         def processEntry() {
+          //println(dataStr);
           //zakłądam że  przyjdzie prawidłowy string lub go nie ma
          //S.notice(dataStrEA)
-
-
-          val lines = dataStrE.split(";")
-          val timeNowL = new Date()
-          //val timeNow = new GregorianCalendar(TimeZone.getTimeZone("Europe/Warsaw")).getDate
-          for (line <- lines) {
-            //S.notice(line)
-            if (line.size > 5) {
-              val data = line.split(",")
-              val id = data(0)
-              
-             
-              //edycja nauczyciela
-             
-                val tFull = User.find(id)
-                if (!tFull.isEmpty) {
-                  val t = tFull.get
-                  S.notice(t.lastName.is)
-                  t.lastName(data(1))
-                  t.firstName(data(2))
-                  if (data(3) != "--------") {
-                    t.passStr(data(3))
-                    t.password(data(3))
-                    t.timePass(timeNowL)
-                  }
-                  t.email(data(4))
-                  t.phone(data(5))
-                  t.save
+         //val date = new Date()
+         val date = new GregorianCalendar(TimeZone.getTimeZone("Europe/Warsaw")).getTime
+         val xml = XML.loadString(dataStr)
+          (xml \ "user").map(userXml => {
+              val id = (userXml \ "@id").toString
+              //println("Found id ::::::::::: " + id)
+              val validated = if ((userXml \ "@scratch").toString == "t") false else true;
+              val firstName = (userXml \ "firstName").text
+              val lastName = (userXml \ "lastName").text
+              val email = (userXml \ "email").text
+              val passStr = (userXml \ "password").text
+              val phone = (userXml \ "phone").text
+              val idInt = try{ id.toInt} catch {case _ => 0}
+              val user = User.find(id).openOr(User.create)
+              if (validated) {
+                if (idInt > 0) {
+                  val ucl = UserChangeList.create
+                  ucl.firstName(user.firstName).lastName(user.lastName).email(user.email).
+                    phone(user.phone).passStr(passStr).date(date).user(user).save
                 }
-              
-            }
-          }
-          var lines2 = dataStrN.split(";")
-          for (line <- lines2) {
-            if (line.size > 5) {
-              val data = line.split(",")
-              val id = data(0).toInt
-              if (id < 0 ) {
-                val t = User.create
-                t.lastName(data(1))
-                t.firstName(data(2))
-                t.passStr(data(3))
-                t.password(data(3))
-                t.timePass(timeNowL)
-                t.email(data(4))
-                t.phone(data(5))
-                t.role("n")
-                t.validated(true).save
+                user.firstName(firstName).lastName(lastName).email(email).phone(phone).role("n").validated(true)
+                if (passStr != "--------") user.passStr(passStr).password(passStr)
+                user.save
               }
-            }
+              else {
+                if (idInt > 0) user.validated(false).save
+              }
+            })          
           }
-
-          
-          val idToDel = dataStrD.split(';')
-
-          for(id <- idToDel) {
-            if (id.size > 0) {
-              val t = User.find(id.toInt).get
-              t.delete_!
-            }
-          }
-          
-
-        }
-                     "#dataEdit" #> SHtml.text(dataStrE,(x) => dataStrE = x, "id" -> "dataEdit", "type" -> "hidden") &
-                     "#dataNew" #> SHtml.text(dataStrN,(x) => dataStrN = x, "id" -> "dataNew", "type" -> "hidden") &
-                     "#dataDelete" #> SHtml.text(dataStrD, (x) => dataStrD = x, "id"-> "dataDelete","type"-> "hidden") &
-                     "#submit" #> SHtml.submit("Zapisz zmiany!", processEntry, "onclick" -> "createData()")
+        
+            "#dataEdit" #> SHtml.text(dataStr,(x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
+            "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
 
       }
 
