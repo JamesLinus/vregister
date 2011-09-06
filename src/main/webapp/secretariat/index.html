@@ -40,7 +40,20 @@
             
                         });
                     }
-   
+                    
+                     //usunięcie dodanego w danej sesji
+                    function deleteUser(elem) {
+                        var $tr = $(elem).parent('td').parent('tr');
+                        var id = parseInt($tr.children('td:first').text());
+                        for (i in users){
+                            if (users[i].id == id){
+                                users.splice(i,1);
+                            }
+                        }
+                        $dTable.fnDeleteRow( $tr.get()[0]);
+                        //$tr.remove();
+                        incraseToSaveInfo();
+                    }
             
                     function showAddUser(){
                         $('#formAdd').dialog('open');
@@ -82,15 +95,15 @@
                         }
                     }
            
-                    function genPass(){
+                    function genPass() {
                         if ($('#editedInput').val() != "--------" || confirm("Chcesz zresetować hasło?")){
                             $('#editedInput').val(mkPass());
                         }           
                     }
            
-                    function closeEdit(){
+                    function closeEdit() {
                         //alert('children: '+ $editedTd.attr('class')); //testowe
-                        $editedTd.attr('id','');
+                        $editedTd.removeAttr('id');
                         $editedTd.text(oldCellValue);
                         $editedTd.dblclick(function(){editCell(this);});
                         $editedTd = $();
@@ -108,8 +121,31 @@
                             oldCellValue = newValue;
                             $editedTd.text(oldCellValue);
                             addDataToUsersArray($editedTr);
-                            closeEdit();
                         }
+                        closeEdit();
+                    }
+    
+                    function  validateNewValue(newValue){
+                        var column = columnNumber();
+                        var isValid = true;
+                        switch (column){
+                            case 1:
+                            case 2:
+                                isValid = validateName(newValue);
+                                $('#editedInfo').text(info);
+                                break;
+                            case 3:
+                                isValid = validateEmail(newValue);
+                                $('#editedInfo').text(info);
+                                break;
+                            case 5:
+                                isValid = validatePhone(newValue);
+                                $('#editedInfo').text(info);
+                                break;
+                            default:
+                                break;
+                        }
+                        return isValid;
                     }
                
                     function addDataToUsersArray($editedTr){

@@ -16,45 +16,46 @@
  */
 
 package net.brosbit4u {
-package  snippet {
+  package snippet {
 
-import _root_.scala.xml.{NodeSeq}
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
-import net.brosbit4u.lib._
-//import _root_.net.liftweb.mapper.{Descending ,OrderBy,By}
-import _root_.net.liftweb.http.{SHtml}
-import Helpers._
+    import _root_.scala.xml.{ NodeSeq }
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
+    import net.brosbit4u.lib._
+    //import _root_.net.liftweb.mapper.{Descending ,OrderBy,By}
+    import _root_.net.liftweb.http.{ SHtml }
+    import Helpers._
 
-class ContactSn {
+    class ContactSn {
 
       val cmList = ContactMail.findAll
       def cmListDB = cmList.map(x => (x.mail.is -> x.descript.is))
-      val cmListPair = ("-----"->"-----")::cmListDB
+      val cmListPair = ("-----" -> "-----") :: cmListDB
 
       def getData() = {
-         var theme = ""
-         var content = ""
-         var sign = ""
-         var mail = ""
-         var selectedMail = ""
+        var theme = ""
+        var content = ""
+        var sign = ""
+        var mail = ""
+        var selectedMail = ""
 
-         def sendMail() {
-            val emailer = new Emailer()
-            val body = content + "\n" + "----------\n" + sign
-            emailer.sendEmail(selectedMail, theme, content)
-          
-         }
+        def sendMail() {
+          val emailer = new Emailer()
+          val body = content + "\n" + "----------\n" + sign
+          emailer.sendEmail(selectedMail, theme, content)
+
+        }
 
         "#theme" #> SHtml.text(theme, x => theme = x) &
-        "#content" #>SHtml.textarea(content, x => content = x, "id"->"") &
-        "#sign"#> SHtml.text(sign, x => sign = x) &
-        "#mail" #> SHtml.text(mail,x => mail = x) &
-        "#select" #> SHtml.select(cmListPair, Empty, x => selectedMail = x) &
-        "#submit" #> SHtml.submit("Wyślij!",sendMail)
-        
-      }
-}
+          "#content" #> SHtml.textarea(content, x => content = x, "id" -> "") &
+          "#sign" #> SHtml.text(sign, x => sign = x) &
+          "#mail" #> SHtml.text(mail, x => mail = x) &
+          "#select" #> SHtml.select(cmListPair, Empty, x => selectedMail = x) &
+          "#submit" #> SHtml.submit("Wyślij!", sendMail)
 
-}} //end packages
+      }
+    }
+
+  }
+} //end packages

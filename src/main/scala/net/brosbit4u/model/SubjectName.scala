@@ -15,26 +15,25 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package net.brosbit4u {
-package model {
+  package model {
 
-import net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
+    import net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
 
+    class SubjectName extends LongKeyedMapper[SubjectName] with IdPK {
+      def getSingleton = SubjectName
 
-class SubjectName extends LongKeyedMapper[SubjectName] with IdPK {
-  def getSingleton = SubjectName
+      object name extends MappedString(this, 40)
+      object short extends MappedString(this, 5)
+      object nr extends MappedInt(this)
+      object validated extends MappedBoolean(this)
+    }
 
-  object name extends MappedString(this,40)
-  object short extends MappedString(this,5)
-  object nr extends MappedInt(this)
-}
+    object SubjectName extends SubjectName with LongKeyedMetaMapper[SubjectName] {
 
-object SubjectName extends SubjectName with LongKeyedMetaMapper[SubjectName] {
-  override def fieldOrder = List(id, name, short, nr)
-}
+    }
 
-}
+  }
 }

@@ -32,7 +32,7 @@
                     function bindEditCell(){
                         $('#fullList').children('tbody').children('tr').each(function(){
                             $(this).children('td').each(function(index){
-                                if( index > 0 && index < 6) {
+                                if( index > 0 && index < 4) {
                                     var $td = $(this);
                                     $td.dblclick(function(){editCell(this);});
                                 }        
@@ -40,7 +40,20 @@
             
                         });
                     }
-   
+                    
+                    //usunięcie dodanego w danej sesji
+                    function deleteUser(elem) {
+                        var $tr = $(elem).parent('td').parent('tr');
+                        var id = parseInt($tr.children('td:first').text());
+                        for (i in users){
+                            if (users[i].id == id){
+                                users.splice(i,1);
+                            }
+                        }
+                        $dTable.fnDeleteRow( $tr.get()[0]);
+                        //$tr.remove();
+                        incraseToSaveInfo();
+                    }
             
                     function showAddUser(){
                         $('#formAdd').dialog('open');
@@ -61,7 +74,9 @@
                         if (column == 1) {
                             //dodać select zamiast input !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                             $elem.append('<span id="editedInfo" class="errorInfo"></span>');
-                            $elem.append('<input id="editedInput" type="text" value="' + oldCellValue + '" readonly="readonly" size="10" maxlength="12" />');
+                            $elem.append('<select id="editedInput"><option>0</option><option>1</option> \
+                                    <option>2</option><option>3</option><option>4</option> \
+                                    <option>5</option><option>6</option></select>');
                             $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEdit()" />');
                         }
                         else  if (column == 2) {
@@ -72,7 +87,7 @@
                         }
                         else if (column == 3){
                             $elem.append('<span id="editedInfo" id="editInfo" class="errorInfo"></span>');
-                            $elem.append('<input id="editedInput" type="text" value="' + oldCellValue + '" size="15" maxlength="48" />');
+                            $elem.append('<textarea id="editedInput">' + oldCellValue + '</textarea>');
                             $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEdit()" />')
                         }
                     }
@@ -80,7 +95,7 @@
            
                     function closeEdit(){
                         //alert('children: '+ $editedTd.attr('class')); //testowe
-                        $editedTd.attr('id','');
+                        $editedTd.removeAttr('id');
                         $editedTd.text(oldCellValue);
                         $editedTd.dblclick(function(){editCell(this);});
                         $editedTd = $();
@@ -91,15 +106,14 @@
                         var newValue = jQuery.trim($('#editedInput').val());
                         if (oldCellValue != newValue) {
                             //nieprawidłowy wpis wychodzę!!!
-                            if (!validateNewValue(newValue)) return;
                             var $editedTr = $editedTd.parent('tr');
-                   
                             //zamykam edycję i podmieniam dane
                             oldCellValue = newValue;
                             $editedTd.text(oldCellValue);
                             addDataToUsersArray($editedTr);
-                            closeEdit();
+                            
                         }
+                        closeEdit();
                     }
                
                     function addDataToUsersArray($editedTr){
@@ -139,30 +153,14 @@
                             incraseToSaveInfo();
                         }
                     }
-           
-          
-           
          
            
                     function addUser(elem) {
                         var isError = false;
                         clearFormsAddInfo();
-                        ///tu zmienić na select !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        var level = jQuery.trim($('#levelAdd').val());
-                        if (!validateName(firstName)) {
-                            $('#levelInfo').text(info);
-                            isError = true;
-                        }
+                        var level = $('#levelAdd').val();
                         var division = jQuery.trim($('#divisionAdd').val());
-                        if (!validateName(lastName)) {
-                            $('#levelInfo').text(info);
-                            isError = true;
-                        }
                         var descript = jQuery.trim($('#descriptAdd').val());
-                        if (!validateEmail(email)) {
-                            $('#descriptAddInfo').text(info);
-                            isError = true;
-                        }
                         if (!isError) {
                             var id = negativeId--;
                             $dTable.fnAddData([id,level,division, descript,
@@ -171,7 +169,7 @@
                             user.id = id;
                             user.level = level;
                             user.division = division;
-                            user.decript = descript;
+                            user.descript = descript;
                             users.push(user);
                             incraseToSaveInfo();
                             clearFormsAdd();
@@ -197,7 +195,7 @@
                     var oldCellValue = "";
                     var $editedTd = $();
                        
-                       ///////////////////////////////////////////////niepoprawione!!!!!!!
+                    ///////////////////////////////////////////////niepoprawione!!!!!!!
                     function createData(){
                         var xml = '<root>';
                         for (i in users){
@@ -208,7 +206,7 @@
                             else xml += 'n';
                             xml += '" ><level>';
                             xml += users[i].level;
-                            xml += '</level><divison>';
+                            xml += '</level><division>';
                             xml += users[i].division;
                             xml += '</division><descript>';
                             xml += users[i].descript;
@@ -216,7 +214,7 @@
                         }
                         xml += '</root>';
                         $('#dataEdit').val(xml);
-                        //alert($('#dataEdit').val());
+                        alert($('#dataEdit').val());
                         $('#submit').click();
                         return false;
                     }                    
@@ -269,21 +267,21 @@
                 <div id="formAdd" style="display: none;" title="Dodawanie nowych klas">
                     <table>
                         <tr>
-                            <td><label for="levelAdd">Nazwisko:</label></td>
+                            <td><label for="levelAdd">Poziom:</label></td>
                             <td><select id="levelAdd"><option>0</option><option>1</option>
                                     <option>2</option><option>3</option><option>4</option>
                                     <option>5</option><option>6</option></select></td>
                             <td><span id="levelInfo" class="errorInfo"></span></td>
                         </tr>
                         <tr>
-                            <td><label for="divisonAdd">Imię:</label></td>
+                            <td><label for="divisonAdd">Oddział:</label></td>
                             <td><input id="divisionAdd" type="text" size="2" maxlength="2"/></td>
-                            <td><span id="firstNameAddInfo" class="errorInfo"></span></td>
+                            <td><span id="divisionAddInfo" class="errorInfo"></span></td>
                         </tr>
                         <tr>
-                            <td><label for="descriptAdd">Adres email:</label></td>
-                            <td><textarea id="emailAdd" > </textarea></td>
-                            <td><span id="emailAddInfo" class="errorInfo"></span></td>
+                            <td><label for="descriptAdd">Opis:</label></td>
+                            <td><textarea id="descriptAdd" > </textarea></td>
+                            <td><span id="descriptAddInfo" class="errorInfo"></span></td>
                         </tr>
                         <tr>
                             <td colspan="2"></td><td><input  title="Zapisz" type="image" src="/style/images/addico.png" name="add" onclick="addUser(this)" /> 

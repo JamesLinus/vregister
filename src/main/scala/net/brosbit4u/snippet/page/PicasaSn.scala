@@ -16,34 +16,34 @@
  */
 
 package net.brosbit4u {
-package snippet {
+  package snippet {
 
-import _root_.scala.xml.{NodeSeq}
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
-import _root_.net.liftweb.mapper.{By}
-import _root_.net.liftweb.http.{SHtml}
-import Helpers._
-import net.brosbit4u.lib.{PicasaIndex}
+    import _root_.scala.xml.{ NodeSeq }
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
+    import _root_.net.liftweb.mapper.{ By }
+    import _root_.net.liftweb.http.{ SHtml }
+    import Helpers._
+    import net.brosbit4u.lib.{ PicasaIndex }
 
-class PicasaSn {
-  def make():Boolean = {
-    val picasa = new PicasaIndex()
-    if (picasa.make) true
-    else false
-  }
+    class PicasaSn {
+      def make(): Boolean = {
+        val picasa = new PicasaIndex()
+        if (picasa.make) true
+        else false
+      }
 
-  def forms() = {
-        val edAddress = ExtraData.findAll(By(ExtraData.keyStr,"picasamail")) match {
+      def forms() = {
+        val edAddress = ExtraData.findAll(By(ExtraData.keyStr, "picasamail")) match {
           case Nil => ExtraData.create
           case list => list.head
         }
-        val edPass = ExtraData.findAll(By(ExtraData.keyStr,"picasapass")) match {
+        val edPass = ExtraData.findAll(By(ExtraData.keyStr, "picasapass")) match {
           case Nil => ExtraData.create
           case list => list.head
         }
-        var pass:String = edPass.dataStr.is
+        var pass: String = edPass.dataStr.is
         var address = edAddress.dataStr.is
         def save() {
           if (pass.trim.length > 0 && address.trim.length > 0) {
@@ -51,13 +51,13 @@ class PicasaSn {
             edPass.keyStr("picasapass").dataStr(pass).save
           }
         }
-        
-             "#adres" #> SHtml.text(address,x => address = x) &
-             "#pass" #> SHtml.text(pass, x => pass = x, "type"->"password") &
-             "#submit" #> SHtml.submit("Zapisz!",save) &
-             "#index" #> SHtml.submit("Indeksuj!",make) 
+
+        "#adres" #> SHtml.text(address, x => address = x) &
+          "#pass" #> SHtml.text(pass, x => pass = x, "type" -> "password") &
+          "#submit" #> SHtml.submit("Zapisz!", save) &
+          "#index" #> SHtml.submit("Indeksuj!", make)
       }
-}
+    }
 
-
-}} //end pakages
+  }
+} //end pakages

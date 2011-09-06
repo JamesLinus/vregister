@@ -16,22 +16,21 @@
  */
 
 package net.brosbit4u {
-package model {
+  package model {
 
-  import _root_.net.liftweb.mapper._
-  import _root_.net.liftweb.util._
-  import _root_.net.liftweb.common._
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
 
-class ContactMail extends LongKeyedMapper[ContactMail] with IdPK {
-  def getSingleton = ContactMail
-  object mail extends MappedEmail(this,40)
-  object descript extends MappedString(this,40)
-}
+    class ContactMail extends LongKeyedMapper[ContactMail] with IdPK {
+      def getSingleton = ContactMail
+      object mail extends MappedEmail(this, 40)
+      object descript extends MappedString(this, 40)
+    }
 
-object ContactMail extends ContactMail with LongKeyedMetaMapper[ContactMail] {
-  
-}
+    object ContactMail extends ContactMail with LongKeyedMetaMapper[ContactMail] {
 
+    }
 
-
-}}//end packages
+  }
+} //end packages

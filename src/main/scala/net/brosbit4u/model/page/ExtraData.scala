@@ -15,31 +15,31 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package net.brosbit4u {
   package model {
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
 
-  class ExtraData extends LongKeyedMapper[ExtraData] with IdPK  {
-    def getSingleton = ExtraData
+    class ExtraData extends LongKeyedMapper[ExtraData] with IdPK {
+      def getSingleton = ExtraData
 
-    object keyStr extends MappedString(this,25) //klucz danych
-    object dataStr extends MappedString(this,200) //dane
-    def getData(keyString:String):String = {
-        ExtraData.findAll(By(ExtraData.keyStr,keyString)) match {
+      object keyStr extends MappedString(this, 25) //klucz danych
+      object dataStr extends MappedString(this, 200) //dane
+      def getData(keyString: String): String = {
+        ExtraData.findAll(By(ExtraData.keyStr, keyString)) match {
           case Nil => ""
           case list => list.head.dataStr.is
         }
-    }
-    
-}
+      }
 
-  object ExtraData extends ExtraData with LongKeyedMetaMapper[ExtraData] {
+    }
+
+    object ExtraData extends ExtraData with LongKeyedMetaMapper[ExtraData] {
+
+    }
 
   }
-
-}}
+}

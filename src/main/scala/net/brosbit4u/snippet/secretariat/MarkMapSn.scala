@@ -16,44 +16,43 @@
  */
 
 package net.brosbit4u {
-package snippet {
+  package snippet {
 
- import _root_.scala.xml.{NodeSeq, Text}
+    import _root_.scala.xml.{ NodeSeq, Text }
     import _root_.net.liftweb.util._
-    import _root_.net.liftweb.http.{SHtml,S}
+    import _root_.net.liftweb.http.{ SHtml, S }
     import _root_.net.liftweb.common._
-    import _root_.java.util.{Date,Random}
-    import net.brosbit4u.model.{MarkMap}
-    import _root_.net.liftweb.mapper.{By,OrderBy,Ascending}
+    import _root_.java.util.{ Date, Random }
+    import net.brosbit4u.model.{ MarkMap }
+    import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
     import Helpers._
 
-class MarkMapSn {
+    class MarkMapSn {
 
- 
-   /** zwraca listę klas w tabeli*/
-  def markList(in:NodeSeq):NodeSeq = {
+      /** zwraca listę klas w tabeli*/
+      def markList(in: NodeSeq): NodeSeq = {
 
-        val markList:List[MarkMap] = MarkMap.findAll(OrderBy(MarkMap.name,Ascending))
-        val cont = <tbody id="list">{for (markObj <- markList) yield {
-              <tr id={markObj.id.is.toString} >
-                <td >{markObj.name.is}</td>
-                <td >{markObj.value.is.toString}</td>
-                <td><button  name="deleteMark" onclick="deleteMark(this)">Edytuj!</button></td>
-              </tr> //nieprawidłowe id w cudzysłowiu
-            }
-          } </tbody>
+        val markList: List[MarkMap] = MarkMap.findAll(OrderBy(MarkMap.name, Ascending))
+        val cont = <tbody id="list">{
+          for (markObj <- markList) yield {
+            <tr id={ markObj.id.is.toString }>
+              <td>{ markObj.name.is }</td>
+              <td>{ markObj.value.is.toString }</td>
+              <td><button name="deleteMark" onclick="deleteMark(this)">Edytuj!</button></td>
+            </tr> //nieprawidłowe id w cudzysłowiu
+          }
+        }</tbody>
         cont
-  }
+      }
 
-
- /** dodanie formatki i obsługa */
-      def formItem(in:NodeSeq):NodeSeq = {
+      /** dodanie formatki i obsługa */
+      def formItem(in: NodeSeq): NodeSeq = {
         var dataStrD = ""
         var dataStrN = ""
 
         def processEntry() {
           //zakłądam że  przyjdzie prawidłowy string lub go nie ma
-         //S.notice(dataStrEA)
+          //S.notice(dataStrEA)
 
           val lines1 = dataStrN.split(";")
           for (line <- lines1) {
@@ -71,22 +70,21 @@ class MarkMapSn {
 
           val idToDel = dataStrD.split(';')
 
-          for(id <- idToDel) {
+          for (id <- idToDel) {
             if (id.size > 0) {
               val m = MarkMap.find(id.toInt).get
               m.delete_!
             }
           }
 
-
         }
-        Helpers.bind("entry",in,
-                     "dataN" -> SHtml.text(dataStrN,(x) => dataStrN = x, "id" -> "dataN", "type" -> "hidden"),
-                     "dataD" -> SHtml.text(dataStrD, (x) => dataStrD = x, "id"-> "dataD","type"-> "hidden"),
-                     "submit" -> SHtml.submit("Zapisz zmiany!", processEntry, "onclick" -> "createData()"))
+        Helpers.bind("entry", in,
+          "dataN" -> SHtml.text(dataStrN, (x) => dataStrN = x, "id" -> "dataN", "type" -> "hidden"),
+          "dataD" -> SHtml.text(dataStrD, (x) => dataStrD = x, "id" -> "dataD", "type" -> "hidden"),
+          "submit" -> SHtml.submit("Zapisz zmiany!", processEntry, "onclick" -> "createData()"))
 
       }
-}
+    }
 
-
-  }} //koniec packages
+  }
+} //koniec packages

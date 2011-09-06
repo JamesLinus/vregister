@@ -16,33 +16,33 @@
  */
 
 package net.brosbit4u {
-package snippet {
+  package snippet {
 
-import _root_.scala.xml.{NodeSeq, Text,Unparsed,XML}
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
-import _root_.net.liftweb.mapper.{Descending ,OrderBy,By}
-import _root_.net.liftweb.http.{S,SHtml}
-import Helpers._
-import java.io._
+    import _root_.scala.xml.{ NodeSeq, Text, Unparsed, XML }
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
+    import _root_.net.liftweb.mapper.{ Descending, OrderBy, By }
+    import _root_.net.liftweb.http.{ S, SHtml }
+    import Helpers._
+    import java.io._
 
-class Test {
- 
+    class Test {
 
-      def test(n:NodeSeq):NodeSeq = {
-        
+      def test(n: NodeSeq): NodeSeq = {
+
         <div>Sprawdzanie lightbox.</div>
 
       }
-      def formTest(n:NodeSeq):NodeSeq = {
+      def formTest(n: NodeSeq): NodeSeq = {
         var text = ""
         def nic() {
-          
+
         }
-        bind("f",n,"text"-> SHtml.text(text,x => text = x),
-        "sub" -> SHtml.submit("OK",nic,"onclick" -> "actions();"))
+        bind("f", n, "text" -> SHtml.text(text, x => text = x),
+          "sub" -> SHtml.submit("OK", nic, "onclick" -> "actions();"))
       }
 
-}
-}} //package end
+    }
+  }
+} //package end

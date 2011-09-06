@@ -18,22 +18,22 @@
 package net.brosbit4u {
   package model {
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
-
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
 
     class ForumCom extends LongKeyedMapper[ForumCom] with IdPK with CreatedUpdated {
       def getSingleton = ForumCom
-      
+
       object content extends MappedText(this)
-      object author extends MappedLongForeignKey(this,User)
-      object thread extends MappedLongForeignKey(this,ForumThread)
+      object author extends MappedLongForeignKey(this, User)
+      object thread extends MappedLongForeignKey(this, ForumThread)
     }
 
     object ForumCom extends ForumCom with LongKeyedMetaMapper[ForumCom] {
-      
+
     }
 
-}} //ends packages
+  }
+} //ends packages

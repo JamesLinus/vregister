@@ -18,25 +18,24 @@
 package net.brosbit4u {
   package model {
 
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
+    class LinkDepartment extends LongKeyedMapper[LinkDepartment] with IdPK with OneToMany[Long, LinkDepartment] {
+      def getSingleton = LinkDepartment
 
-class LinkDepartment extends  LongKeyedMapper[LinkDepartment] with IdPK with OneToMany[Long, LinkDepartment] {
-  def getSingleton = LinkDepartment
+      object name extends MappedString(this, 40)
+      //object nr extends MappedInt(this)
+      object links extends MappedOneToMany(LinkItem, LinkItem.department)
+        with Owned[LinkItem] with Cascade[LinkItem]
+    }
 
-  object name extends MappedString(this,40)
-  //object nr extends MappedInt(this)
-  object links extends MappedOneToMany(LinkItem, LinkItem.department)
-                  with Owned [LinkItem] with  Cascade [LinkItem]
+    object LinkDepartment extends LinkDepartment
+      with LongKeyedMetaMapper[LinkDepartment] {
+      //override def fieldOrder = List(nr, name)
+    }
+
   }
-
-object LinkDepartment extends LinkDepartment
-                         with LongKeyedMetaMapper[LinkDepartment] {
-  //override def fieldOrder = List(nr, name)
 }
-
-}}
-
 

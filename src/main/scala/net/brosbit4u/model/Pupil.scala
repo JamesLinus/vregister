@@ -16,25 +16,27 @@
  */
 
 package net.brosbit4u {
-package model {
+  package model {
 
-import net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
+    import net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
 
-class Pupil extends LongKeyedMapper[Pupil] with IdPK {
-  def getSingleton = Pupil
+    class Pupil extends LongKeyedMapper[Pupil] with IdPK {
+      def getSingleton = Pupil
 
-  object schoolId extends MappedString(this,12)
-  object user extends MappedLongForeignKey(this, User)
-  object classIn  extends MappedLongForeignKey(this,ClassModel)
-  object nr extends MappedInt(this)
-  object father extends MappedLongForeignKey(this, User)
-  object mather extends MappedLongForeignKey(this, User)
-}
+      //object schoolId extends MappedString(this, 12)
+      object user extends MappedLongForeignKey(this, User)
+      object classIn extends MappedLongForeignKey(this, ClassModel)
+      object birthDay extends MappedDate(this)
+      object pesel extends MappedString(this, 11)
+      object nr extends MappedInt(this)
+      object father extends MappedLongForeignKey(this, User)
+      object mather extends MappedLongForeignKey(this, User)
+    }
 
-object Pupil extends Pupil with LongKeyedMetaMapper[Pupil] {
-}
+    object Pupil extends Pupil with LongKeyedMetaMapper[Pupil] {
+    }
 
-}
+  }
 }

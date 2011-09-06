@@ -1,42 +1,346 @@
-<lift:surround with="secretary" at="content">
-
-<head><script type="text/javascript" src="/scripts/addsubject.js" ></script></head>		
-
-			<div id="centrum">
-            <h3>Edycja przedmiotów</h3>
-            
-            <table><tr><td><b>Status zmian: &nbsp;&nbsp;</b></td><td>nowych</td><td><input id="newRows" type="text" readonly="true" value="0" size="2" /></td><td>edytowanych</td><td><input id="editedRows" type="text" readonly="true" value="0" size="2" /></td><td>do usunięcia</td><td><input id="deletedRows"  type="text" readonly="true" value="0" size="2" /></td><td>
-            <lift:SubjectSn.formItem form="POST">
-     <entry:dataE /><entry:dataN /><entry:dataD /><entry:submit />
-            </lift:SubjectSn.formItem>
-            </td></tr></table>
-                <br  />
-        <form>
-                <table  border="0" cellpadding="2" cellspacing="2">
-			<thead>
-        		<tr><th>Nr</th><th>Nazwa przedmiotu</th><th>Skrót przedmiotu</th></tr>
-			</thead>  
-			<tbody>   
-            	<tr><td><input type="text" maxlength="2" size="2" id="nrAdd" /></td>
-		<td><input type="text"  maxlength="20" size="15" id="nameAdd"/></td><td><input type="text"  maxlength="5" size="4" id="shortAdd" /></td></tr>
-                        </tbody>
-                </table>
-                <table align="center"><tr><td><button  name="add" onclick="return addSubject();">Nowa klasa!</button></td><td ><input name="clear" type="reset"/></td></tr>
-		</table>
-	</form>
-		<br />
-       
-	<hr  />
-		<h4>Lista przedmiotów: </h4>
-		<table  border="0" cellpadding="2" cellspacing="2" >
-		
-            		<thead>
-        		<tr><th>Nr</th><th>Nazwa przedmiotu</th><th>Skrót przedmiotu</th><th>Edycja</th></tr>
-			</thead>  
-		  <lift:SubjectSn.subjectList></lift:SubjectSn.subjectList>
-		</table>
+<!DOCTYPE html>
+<html>
+    <body class="lift:content_id=main">
+        <div id="main" class="lift:surround?with=secret;at=content">
+            <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
+                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                <script type="text/javascript" charset="utf-8">
+                    $dTable = $();
+                    $(document).ready(function() {
                 
-              
-	</div>
-								
-</lift:surround>
+                        $dTable = $('#fullList').dataTable();
+                        bindEditCell();
+                        $('#formAdd').dialog({
+                            autoOpen: false,
+                            height: 300,
+                            width: 400,
+                            modal: true,
+                            close: function(){
+                                bindEditCell();
+                            }
+                        });
+                        //zmiana ikonki w skreślonych użytkownikach
+                        $('#fullList').children('tbody').children('tr').each(function() {
+                            var $tr = $(this);
+                            if($tr.hasClass('scratched')) {
+                                $tr.children('td:last').children('input').attr('src','/style/images/addico.png');
+                            }           
+                        });
+                
+                    } );
+    
+                    function bindEditCell(){
+                        $('#fullList').children('tbody').children('tr').each(function(){
+                            $(this).children('td').each(function(index){
+                                if( index > 0 && index < 4) {
+                                    var $td = $(this);
+                                    $td.dblclick(function(){editCell(this);});
+                                }        
+                            });
+            
+                        });
+                    }
+                    
+                     //usunięcie dodanego w danej sesji
+                    function deleteUser(elem) {
+                        var $tr = $(elem).parent('td').parent('tr');
+                        var id = parseInt($tr.children('td:first').text());
+                        for (i in users){
+                            if (users[i].id == id){
+                                users.splice(i,1);
+                            }
+                        }
+                        $dTable.fnDeleteRow( $tr.get()[0]);
+                        //$tr.remove();
+                        incraseToSaveInfo();
+                    }
+            
+                    function showAddUser(){
+                        $('#formAdd').dialog('open');
+                    }
+               
+                    function editCell(elem) {
+                        $elem = $(elem); //td
+                        $elem.unbind();
+                        //if ($elem.hasClass('iduser') || $elem.hasClass('scratch')) return;
+                        closeEdit();
+                        oldCellValue = $elem.text();
+               
+                        $editedTd = $elem;
+               
+                        $elem.text('');
+                        $elem.attr('id','EDITED');
+                        var column = columnNumber();
+                        if (column == 1) {
+                            $elem.append('<span id="editedInfo" id="editInfo" class="errorInfo"></span>');
+                            $elem.append('<input id="editedInput" type="text" value="' + oldCellValue + '" size="3" maxlength="3" />');
+                            $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEdit()" />');
+                   
+                        }
+                        else if (column == 2){
+                            $elem.append('<span id="editedInfo" id="editInfo" class="errorInfo"></span>');
+                            $elem.append('<input id="editedInput" type="text" value="' + oldCellValue + '" size="15" maxlength="40" />');
+                            $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEdit()" />')
+                        }
+                        else {
+                            $elem.append('<span id="editedInfo" id="editInfo" class="errorInfo"></span>');
+                            $elem.append('<input id="editedInput" type="text" value="' + oldCellValue + '" size="4" maxlength="5" />');
+                            $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEdit()" />')
+                        }
+                    }
+           
+                    
+           
+                    function closeEdit(){
+                        //alert('children: '+ $editedTd.attr('class')); //testowe
+                        $editedTd.removeAttr('id');
+                        $editedTd.text(oldCellValue);
+                        $editedTd.dblclick(function(){editCell(this);});
+                        $editedTd = $();
+                    }
+
+           
+                    function saveAndCloseEdit(){
+                        var newValue = jQuery.trim($('#editedInput').val()).toLowerCase();
+                        if (oldCellValue != newValue) {
+                            //nieprawidłowy wpis wychodzę!!!
+                            if (!validateNewValue(newValue)) {
+                                $('editedIngo').text(info);
+                                return;
+                            }
+                            var $editedTr = $editedTd.parent('tr');
+                   
+                            //zamykam edycję i podmieniam dane
+                            oldCellValue = newValue;
+                            $editedTd.text(oldCellValue);
+                            addDataToUsersArray($editedTr);
+                            closeEdit();
+                        }
+                    }
+    
+                    function  validateNewValue(newValue){
+                        var column = columnNumber();
+                        var isValid = true;
+                        switch (column){
+                            case 1:
+                                isValid = uniqueNumber(newValue);
+                                $('#editedInfo').text(info);
+                                break;
+                            case 2:
+                                if(newValue.length < 3) {
+                                    isValid = false;
+                                    info = "Za krótka nazwa";
+                                    $('#editedInfo').text(info);
+                                }
+                                break;
+                            case 3:
+                                if(newValue.length < 1) {
+                                    isValid = false;
+                                    info = "Uzupełnij";
+                                    $('#editedInfo').text(info);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                        return isValid;
+                    }
+               
+                    function addDataToUsersArray($editedTr){
+                        var foundInArray = false;
+                        var user = new User();
+                        if ($editedTr.hasClass('scratched')) user.toDel = true;
+                        $editedTr.children('td').each(function(index){
+                            switch (index){
+                                case 0:
+                                    user.id = parseInt(this.innerHTML);
+                                    break;
+                                case 1:
+                                    user.nr = parseInt(this.innerHTML);
+                                    break;
+                                case 2:
+                                    user.name = this.innerHTML;
+                                    break;
+                                case 3:
+                                    user.shortName = this.innerHTML;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+                        for(i in users){
+                            if (users[i].id == user.id) {
+                                foundInArray = true;
+                                users[i].name = user.name;
+                                users[i].shortName = user.shortName;
+                                users[i].nr = user.nr;
+                                users[i].toDel = user.toDel;
+                                break;
+                            }
+                        }
+                        if (!foundInArray){
+                            users.push(user);  
+                            incraseToSaveInfo();
+                        }
+                    }
+                    //do napisania
+                    function uniqueNumber(nrStr){
+                        return true;
+                    }
+          
+           
+         
+           
+                    function addUser(elem) {
+                        var isError = false;
+                        clearFormsAddInfo();
+                        var name = jQuery.trim($('#nameAdd').val()).toLowerCase();
+                        if(name.length < 3) {
+                                    isError = true;
+                                    info = "Za krótka nazwa";
+                                    $('#nameAddInfo').text(info);
+                                }
+                        var shortName = jQuery.trim($('#shortNameAdd').val());
+                        if(shortName.length < 1) {
+                                    isError = true;
+                                    info = "Uzupełnij";
+                                    $('#shortNameAddInfo').text(info);
+                                }
+                        var nr = jQuery.trim($('#numberAdd').val());
+                        if (!uniqueNumber(nr)) {
+                            $('#numberAddInfo').text(info);
+                            isError = true;
+                        }
+                        if (!isError) {
+                            var id = negativeId--;
+                            $dTable.fnAddData([id, nr, name, shortName, 
+                                '<input type="image" src="/style/images/delico.png" onclick="deleteUser(this)" />']);
+                            var user = new User();
+                            user.id = id;
+                            user.nr = nr;
+                            user.name = name;
+                            user.shortName = shortName;
+                            users.push(user);
+                            incraseToSaveInfo();
+                            clearFormsAdd();
+                            $('#addInfo').text('Dodano: ' + name );
+                        } else  $('#addInfo').text('Nie zapisano');
+                        return !isError;
+               
+                    }
+                 
+                    function User() {
+                        this.id = 0;
+                        this.nr = 0;
+                        this.name = "";
+                        this.shortName = "";
+                        this.toDel = false;
+                    }
+                       
+   
+   
+                    //globals
+                    var users = new Array();
+                    var negativeId = -1;
+                    var oldCellValue = "";
+                    var $editedTd = $();
+                       
+                       
+                    function createData(){
+                        var xml = '<root>';
+                        for (i in users){
+                            xml += '<user id="';
+                            xml += users[i].id.toString();
+                            xml += '" scratch="';
+                            if (users[i].toDel) xml += 't';
+                            else xml += 'n';
+                            xml += '" nr="';
+                            xml += users[i].nr.toString();
+                            xml += '" ><name>';
+                            xml += users[i].name;
+                            xml += '</name><shortName>';
+                            xml += users[i].shortName;
+                            xml += '</shortName></user>';
+                        }
+                        xml += '</root>';
+                        $('#dataEdit').val(xml);
+                        alert($('#dataEdit').val());
+                        $('#submit').click();
+                        return false;
+                    }                    
+                       
+                </script>
+                <style >
+                    #errorInfo { font-style: italic; font-weight: bold; color: red;}
+                    .scratched td {text-decoration: line-through;}
+                </style>
+            </head_merge>
+
+            <div id="centrum">
+                <div id="infoHead">
+                    <div class="lift:AddTeacherSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
+                    <form class="lift:SubjectSn.formItem" method="POST">
+                        <fieldset  style="width:200px;display: inline;">
+                            <legend>Status zmian</legend>
+                            <label for="editRows">Do zmiany:</label><input id="editRows" type="text" readonly="true" value="0" size="2" />
+                            <input id="dataEdit" />
+                            <input style="display:none;" id="saveButton" onclick="return createData()" src="/style/images/saveico.png" type="image" />
+                            <input id="submit"/>
+
+                        </fieldset></form>
+                </div> <!--inofhead-->
+                <br  />
+
+
+
+                <h3>Przegląd i edycja przedmiotów </h3><hr />
+                <input type="image" src="/style/images/addico.png" onclick="showAddUser()" />
+                <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
+                    <thead>
+                        <tr><th>ID</th><th>Nr</th><th>Nazwa</th><th>Skót</th>
+                            <th>+/-</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="lift:SubjectSn.subjectList">
+                        <tr >
+                            <td class="iduser"></td>
+                            <td class="nr"></td>
+                            <td  class="name"></td>
+                            <td  class="short"></td>
+                            <td class="scratch">
+                                <input  type="image" src="/style/images/delico.png"  onclick="toggleScratch(this)" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div id="formAdd" style="display: none;" title="Dodawanie nowych przedmiotów">
+                    <table>
+                        <tr>
+                            <td><label for="descriptAdd">Numer:</label></td>
+                            <td><input id="numberAdd" type="text" maxlength="3" size="3" /></textarea></td>
+                            <td><span id="numberAddInfo" class="errorInfo"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="nameAdd">Nazwa:</label></td>
+                            <td><input id="nameAdd" type="text" size="18" maxlength="40"/></td>
+                            <td><span id="nameAddInfo" class="errorInfo"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="shortNameAdd">Skrót:</label></td>
+                            <td><input id="shortNameAdd" type="text" size="5" maxlength="5"/></td>
+                            <td><span id="shorttNameAddInfo" class="errorInfo"></span></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td><td><input  title="Zapisz" type="image" src="/style/images/addico.png" name="add" onclick="addUser(this)" /> 
+                                <input type="image" title="Czyść formatkę" name="clear" onclick="clearFormsAdd()" src="/style/images/resetico.png" value="" /></td>
+                        </tr>
+                    </table>
+                    <p id="addInfo"></p>
+                </div>
+                <br  />
+
+            </div>
+    </body>
+</html>

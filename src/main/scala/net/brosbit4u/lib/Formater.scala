@@ -17,18 +17,19 @@
 
 package net.brosbit4u {
   package lib {
-    
-import java.util.{Date,Locale}
-import java.text.{SimpleDateFormat}
 
-/** Formatowanie daty */
+    import java.util.{ Date, Locale }
+    import java.text.{ SimpleDateFormat }
 
-object Formater {
-   def formatTime(t:Date):String = {
-       val l = new Locale("pl")
-       val sfd = new SimpleDateFormat("EEE, dd MMM yyyy, HH:mm",l)
-       sfd.format(t)
+    /** Formatowanie daty */
+
+    object Formater {
+      def formatTime(t: Date): String = {
+        val l = new Locale("pl")
+        val sfd = new SimpleDateFormat("EEE, dd MMM yyyy, HH:mm", l)
+        sfd.format(t)
       }
-}
+    }
 
-  }} //end packages
+  }
+} //end packages

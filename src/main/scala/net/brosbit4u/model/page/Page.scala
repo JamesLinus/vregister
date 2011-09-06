@@ -18,25 +18,26 @@
 package net.brosbit4u {
   package model {
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
 
-  class Page extends LongKeyedMapper[Page] with IdPK with CreatedUpdated {
-    def getSingleton = Page
+    class Page extends LongKeyedMapper[Page] with IdPK with CreatedUpdated {
+      def getSingleton = Page
 
-      object shortTitle extends MappedString(this,25)
-      object title extends MappedString(this,120)
+      object shortTitle extends MappedString(this, 25)
+      object title extends MappedString(this, 120)
       //object department extends MappedLongForeignKey(this,Department)
       object body extends MappedText(this)
       //object nice extends MappedInt(this)
-      object department extends MappedLongForeignKey(this,Department)
-      
-}
+      object department extends MappedLongForeignKey(this, Department)
 
-  object Page extends Page with LongKeyedMetaMapper[Page] {
-    override def fieldOrder = List(shortTitle,title,body)
+    }
+
+    object Page extends Page with LongKeyedMetaMapper[Page] {
+      override def fieldOrder = List(shortTitle, title, body)
+    }
+
   }
-
-}}
+}

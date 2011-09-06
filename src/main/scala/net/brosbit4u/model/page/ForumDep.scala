@@ -18,21 +18,20 @@
 package net.brosbit4u {
   package model {
 
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
+    class ForumDep extends LongKeyedMapper[ForumDep] with IdPK {
+      def getSingleton = ForumDep
 
-class ForumDep extends  LongKeyedMapper[ForumDep] with IdPK {
-  def getSingleton = ForumDep
+      object name extends MappedString(this, 40)
+    }
 
-  object name extends MappedString(this,40)
+    object ForumDep extends ForumDep with LongKeyedMetaMapper[ForumDep] {
+      override def fieldOrder = List(name)
+    }
+
   }
-
-object ForumDep extends ForumDep with LongKeyedMetaMapper[ForumDep] {
-  override def fieldOrder = List(name)
 }
-
-}}
-
 

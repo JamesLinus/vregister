@@ -18,37 +18,35 @@
 package net.brosbit4u {
   package snippet {
 
-import _root_.scala.xml.{NodeSeq}
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
-//import _root_.net.liftweb.mapper.{Descending ,OrderBy,By}
-//import _root_.net.liftweb.http.{S}
-//import Helpers._
+    import _root_.scala.xml.{ NodeSeq }
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
+    //import _root_.net.liftweb.mapper.{Descending ,OrderBy,By}
+    //import _root_.net.liftweb.http.{S}
+    //import Helpers._
 
     trait UsersOperations {
 
-     var isLoged = false
+      var isLoged = false
       var isTeacher = false
       var isAdmin = false
       val currentUserName = User.currentUser match {
         case Full(user) => {
-            isLoged = true
-            isTeacher = if (user.role.is == "n" || user.role.is == "a") true else false
-            isAdmin = if(user.role.is == "a") true else false
-            user.firstName + " " + user.lastName
-          }
+          isLoged = true
+          isTeacher = if (user.role.is == "n" || user.role.is == "a") true else false
+          isAdmin = if (user.role.is == "a") true else false
+          user.firstName + " " + user.lastName
+        }
         case _ => "Niezalogowany"
       }
-      
 
-      def logInfo(node:NodeSeq):NodeSeq = {
-        if (isLoged) <a href="/user_mgt/logout"><table border="0"><tr><td><img src="style/images/loged.png" /> </td><td>{currentUserName}</td></tr></table> </a>
-        else <a href="/user_mgt/login"><table border="0"><tr><td><img src="style/images/nologed.png" /> </td><td>Niezalogowany</td></tr></table></a>
+      def logInfo(node: NodeSeq): NodeSeq = {
+        if (isLoged) <a href="/user_mgt/logout"><table border="0"><tr><td><img src="style/images/loged.png"/></td><td>{ currentUserName }</td></tr></table></a>
+        else <a href="/user_mgt/login"><table border="0"><tr><td><img src="style/images/nologed.png"/></td><td>Niezalogowany</td></tr></table></a>
       }
-
-
 
     }
 
-  }} //ends packages
+  }
+} //ends packages

@@ -18,27 +18,24 @@
 package net.brosbit4u {
   package model {
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
 
+    class Post extends LongKeyedMapper[Post] with IdPK with CreatedUpdated {
+      def getSingleton = Post
 
-  class Post extends LongKeyedMapper[Post] with IdPK with CreatedUpdated {
-    def getSingleton = Post
-    
-      object title extends MappedString(this,120)
+      object title extends MappedString(this, 120)
       //object titleImg extends MappedString(this,200)
-      object body extends MappedTextarea(this,2000)
-      object author extends MappedLongForeignKey(this,User)
-     //dodać  obsługę tagów
-}
-  object Post extends Post with LongKeyedMetaMapper[Post] {
-    override def fieldOrder = List(title,body,author)
+      object body extends MappedTextarea(this, 2000)
+      object author extends MappedLongForeignKey(this, User)
+      //dodać  obsługę tagów
+    }
+    object Post extends Post with LongKeyedMetaMapper[Post] {
+      override def fieldOrder = List(title, body, author)
+    }
+
   }
-
-
-
-}}
-
+}
 

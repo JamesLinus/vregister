@@ -16,98 +16,71 @@
  */
 
 package net.brosbit4u {
-  package   snippet {
+  package snippet {
 
-
-    import _root_.scala.xml.{NodeSeq, Text}
+    import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
+    import _root_.scala.xml.{ NodeSeq, Text, XML }
     import _root_.net.liftweb.util._
-    import _root_.net.liftweb.http.{SHtml,S}
+    import _root_.net.liftweb.http.{ SHtml, S }
     import _root_.net.liftweb.common._
-    import _root_.net.liftweb.mapper.{By,OrderBy,Ascending}
+    import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
     import Helpers._
-    import net.brosbit4u.model.{User,SubjectName}
-
+    import net.brosbit4u.model.{ User, SubjectName, SubjectChangeList }
 
     class SubjectSn {
       //tabela z przedmiotami
-      def subjectList(in: NodeSeq):NodeSeq = {
+      def subjectList() = {
         //var out:NodeSeq = NodeSeq.Empty
-        val subjects:List[SubjectName] = SubjectName.findAll(OrderBy(SubjectName.nr, Ascending))
-        val cont = <tbody id="list">{for (s <- subjects) yield {
-              <tr id={s.id.toString} >
-                <td >{s.nr}</td>
-                <td >{s.name}</td>
-                <td>{s.short}</td>
-                <td><button onclick="addEditInputs(this)">Edytuj!</button></td>
-              </tr>
-            }
-          } </tbody>
-        cont
+        val subjects: List[SubjectName] = SubjectName.findAll(OrderBy(SubjectName.nr, Ascending))
+        "tr" #> subjects.map(subject => {
+          "tr [class]" #> { if (subject.validated.is) "" else "scratched" } &
+            ".iduser" #> <td>{ subject.id.is.toString }</td> &
+            ".name" #> <td>{ subject.name.is }</td> &
+            ".short" #> <td>{ subject.short.is }</td> &
+            ".nr" #> <td>{ subject.nr.is.toString }</td>
+        })
       }
 
-
       /** dodanie formatki i obsługa */
-      def formItem(in:NodeSeq):NodeSeq = {
-        var dataStrE = ""
-        var dataStrD = ""
-        var dataStrN = ""
+      def formItem() = {
+        var dataStr = ""
 
         def processEntry() {
+          //println(dataStr);
           //zakłądam że  przyjdzie prawidłowy string lub go nie ma
           //S.notice(dataStrEA)
-
-          val lines = dataStrN.split(";")
-          for (line <- lines) {
-            //S.notice(line)
-            if (line.size > 4 ) { //jeżeli nie jest pusta linia
-              val data = line.split(",")
-              val id = data(0).toInt
-              //jeżeli nowy przedmiot
-              if (id < 1) {
-                val s = SubjectName.create
-                s.nr(data(1).toInt)
-                s.name(data(2))
-                s.short(data(3))
-                s.save
+          //val date = new Date()
+          val date = new GregorianCalendar(TimeZone.getTimeZone("Europe/Warsaw")).getTime
+          val xml = XML.loadString(dataStr)
+          (xml \ "user").map(userXml => {
+            val id = (userXml \ "@id").toString
+            //println("Found id ::::::::::: " + id)
+            val validated = if ((userXml \ "@scratch").toString == "t") false else true;
+            val nr = (userXml \ "@nr").text.toInt
+            val name = (userXml \ "name").text
+            val short = (userXml \ "shortName").text
+            val idInt = try { id.toInt } catch { case _ => 0 }
+            val subjectName = SubjectName.find(id).openOr(SubjectName.create)
+            if (validated) {
+              if (idInt > 0 && (name != subjectName.name.is || short != subjectName.short.is)) {
+                val scl = SubjectChangeList.create
+                scl.name(subjectName.name.is).short(subjectName.short.is).nr(subjectName.nr.is).
+                  date(date).save
               }
+              subjectName.name(name).short(short).nr(nr).
+                validated(true).save
+            } else {
+              if (idInt > 0) subjectName.validated(false).save
             }
-            //edycja nauczyciela
-            val lines2 = dataStrE.split(";")
-            for (line <- lines2) {
-              if (line.size > 4 ) {
-                val data = line.split(",")
-                val id = data(0).toInt
-                val s = SubjectName.find(id).get
-                //S.notice(s.name.is)
-                s.nr(data(1).toInt)
-                s.name(data(2))
-                s.short(data(3))
-                s.save
-              }
-            }
-          }
-
-          val idToDel = dataStrD.split(';')
-
-          for(id <- idToDel) {
-            if (id.size > 0) {
-              val s = SubjectName.find(id.toInt).get
-              s.delete_!
-            }
-          }
-
-
+          })
         }
-        Helpers.bind("entry",in,
-                     "dataE" -> SHtml.text(dataStrE,(x) => dataStrE = x, "id" -> "dataE", "type" -> "hidden" ),
-                     "dataN" -> SHtml.text(dataStrN,(x) => dataStrN = x, "id" -> "dataN", "type" -> "hidden" ),
-                     "dataD" -> SHtml.text(dataStrD, (x) => dataStrD = x, "id"-> "dataD","type"-> "hidden"),
-                     "submit" -> SHtml.submit("Zapisz zmiany!", processEntry, "onclick" -> "createData()"))
+
+        "#dataEdit" #> SHtml.text(dataStr, (x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
+          "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
 
       }
     }
 
-
-
-  }} // koniec packages
+  }
+} // koniec packages
 

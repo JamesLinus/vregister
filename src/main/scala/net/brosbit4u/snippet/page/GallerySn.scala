@@ -18,7 +18,7 @@
 package net.brosbit4u {
   package snippet {
 
-    import _root_.scala.xml.{NodeSeq,Text}
+    import _root_.scala.xml.{ NodeSeq, Text }
     import _root_.net.liftweb.util._
     import _root_.net.liftweb.common._
     import net.brosbit4u.model._
@@ -26,38 +26,40 @@ package net.brosbit4u {
     //import _root_.net.liftweb.http.{S}
     import Helpers._
 
-    class GallerySn  {
+    class GallerySn {
       val gal = Gallery.findAll()
 
-
       //dodaje listę galeriigalleryLe
-      def drawSlider(node:NodeSeq):NodeSeq = {
-              var nr = -1
-              val n2 = <ul id={"mycarousel"} class={"jcarousel-skin-tango"}>
-                {for (i <- gal) yield {
-                 nr += 1
-                <li><img src={i.thumb.is} width="120" height="120" alt={i.title.is} onclick={"draw_Gallery(" + nr.toString + ")"} /></li>
-                } }
-              </ul>
-              n2
-            }
+      def drawSlider(node: NodeSeq): NodeSeq = {
+        var nr = -1
+        val n2 = <ul id={ "mycarousel" } class={ "jcarousel-skin-tango" }>
+                   {
+                     for (i <- gal) yield {
+                       nr += 1
+                       <li><img src={ i.thumb.is } width="120" height="120" alt={ i.title.is } onclick={ "draw_Gallery(" + nr.toString + ")" }/></li>
+                     }
+                   }
+                 </ul>
+        n2
+      }
 
-          //dodaje dwie zmienne
-          def galleryList() = {
-              var str = "var numGallery = " + gal.length.toString //ilość galerii
-              str += "\n var gallerieArr =   ["
-              for (g <- gal) {
-                str += "[" + g.nrOfPhotos.is + "," + "'" + g.title.is + "'],"
-              }
-              str += "] \n var urlsArr =  ["
-              for (g <- gal) {
-              str += g.urls.is + ","
-              }
-              str = str.substring(0, str.length - 1)
-              str += "]\n"
-              "#data" #> <script>{Text(str)}</script>
-           //bind("g", n, "data" -> Text(str))
-           }
+      //dodaje dwie zmienne
+      def galleryList() = {
+        var str = "var numGallery = " + gal.length.toString //ilość galerii
+        str += "\n var gallerieArr =   ["
+        for (g <- gal) {
+          str += "[" + g.nrOfPhotos.is + "," + "'" + g.title.is + "'],"
+        }
+        str += "] \n var urlsArr =  ["
+        for (g <- gal) {
+          str += g.urls.is + ","
+        }
+        str = str.substring(0, str.length - 1)
+        str += "]\n"
+        "#data" #> <script>{ Text(str) }</script>
+        //bind("g", n, "data" -> Text(str))
+      }
     }
 
-  }} //end packages
+  }
+} //end packages

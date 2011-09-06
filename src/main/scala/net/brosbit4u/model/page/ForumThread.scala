@@ -18,26 +18,26 @@
 package net.brosbit4u {
   package model {
 
- import _root_.net.liftweb.mapper._
- import _root_.net.liftweb.util._
- import _root_.net.liftweb.common._
- import net.brosbit4u.model._
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
 
-  class ForumThread extends LongKeyedMapper[ForumThread] with IdPK with OneToMany[Long, ForumThread]  {
+    class ForumThread extends LongKeyedMapper[ForumThread] with IdPK with OneToMany[Long, ForumThread] {
       def getSingleton = ForumThread
 
-      object title extends MappedString(this,120)
+      object title extends MappedString(this, 120)
       object department extends MappedLongForeignKey(this, ForumDep)
       object author extends MappedLongForeignKey(this, User)
       object lastPoster extends MappedLongForeignKey(this, User)
       object lastTime extends MappedDateTime(this)
-      object comments extends MappedOneToMany(ForumCom,ForumCom.thread, OrderBy(ForumCom.createdAt,Ascending) )
+      object comments extends MappedOneToMany(ForumCom, ForumCom.thread, OrderBy(ForumCom.createdAt, Ascending))
+    }
+
+    object ForumThread extends ForumThread with LongKeyedMetaMapper[ForumThread] {
+
+    }
+
   }
-
-  object ForumThread extends ForumThread with LongKeyedMetaMapper[ForumThread] {
-
-  }
-
-  }} //ends packages
-
+} //ends packages
 

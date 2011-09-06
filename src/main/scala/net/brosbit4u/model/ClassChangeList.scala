@@ -15,8 +15,6 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 package net.brosbit4u {
   package model {
 
@@ -24,21 +22,20 @@ package net.brosbit4u {
     import _root_.net.liftweb.util._
     import _root_.net.liftweb.common._
 
-  
     class ClassChangeList extends LongKeyedMapper[ClassChangeList] with IdPK {
       def getSingleton = ClassChangeList
 
       object level extends MappedInt(this)
-      object division extends MappedString(this,2)
-      object descript extends MappedString(this,80)
+      object division extends MappedString(this, 2)
+      object descript extends MappedString(this, 80)
       object date extends MappedDate(this)
-      
-      def info():String = level.is.toString + division.is + " " + date.is.toString
-     
+
+      def info(): String = level.is.toString + division.is + " " + date.is.toString
+
     }
 
     object ClassChangeList extends ClassChangeList with LongKeyedMetaMapper[ClassChangeList] {
-      
+
     }
 
   }

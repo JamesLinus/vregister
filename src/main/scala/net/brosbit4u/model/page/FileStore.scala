@@ -18,22 +18,18 @@
 package net.brosbit4u {
   package model {
 
-
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
 
     class FileStore extends LongKeyedMapper[FileStore] with IdPK {
       def getSingleton = FileStore
-      object path extends MappedString(this,200)
+      object path extends MappedString(this, 200)
     }
 
-    object FileStore extends FileStore with LongKeyedMetaMapper[FileStore]{
+    object FileStore extends FileStore with LongKeyedMetaMapper[FileStore] {
     }
 
-
-
-
-  }} //end package
-
+  }
+} //end package
 

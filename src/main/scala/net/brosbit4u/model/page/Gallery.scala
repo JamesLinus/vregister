@@ -18,25 +18,26 @@
 package net.brosbit4u {
   package model {
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
-import net.brosbit4u.model._
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
+    import net.brosbit4u.model._
 
-  class Gallery extends LongKeyedMapper[Gallery] with IdPK  {
-    def getSingleton = Gallery
+    class Gallery extends LongKeyedMapper[Gallery] with IdPK {
+      def getSingleton = Gallery
 
-    //object nrPhoto extends MappedString(this,3) //nr własny galerii
-    //object id_gallery extends MappedString(this,120) //id galerii
-    object description extends MappedText(this) //opis
-    object nrOfPhotos extends MappedString(this, 3) //ilość zdjęć
-    object thumb extends MappedText(this)
-    object title extends MappedString(this, 150)
-    object urls extends MappedText(this)
-}
+      //object nrPhoto extends MappedString(this,3) //nr własny galerii
+      //object id_gallery extends MappedString(this,120) //id galerii
+      object description extends MappedText(this) //opis
+      object nrOfPhotos extends MappedString(this, 3) //ilość zdjęć
+      object thumb extends MappedText(this)
+      object title extends MappedString(this, 150)
+      object urls extends MappedText(this)
+    }
 
-  object Gallery extends Gallery with LongKeyedMetaMapper[Gallery] {
+    object Gallery extends Gallery with LongKeyedMetaMapper[Gallery] {
+
+    }
 
   }
-
-}}
+}

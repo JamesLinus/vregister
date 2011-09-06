@@ -18,23 +18,22 @@
 package net.brosbit4u {
   package model {
 
+    import _root_.net.liftweb.mapper._
+    import _root_.net.liftweb.util._
+    import _root_.net.liftweb.common._
 
-import _root_.net.liftweb.mapper._
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.common._
+    class LinkItem extends LongKeyedMapper[LinkItem] with IdPK {
+      def getSingleton = LinkItem
 
-class LinkItem extends  LongKeyedMapper[LinkItem] with IdPK {
-  def getSingleton = LinkItem
+      object name extends MappedString(this, 40)
+      object url extends MappedString(this, 120)
+      object department extends MappedLongForeignKey(this, LinkDepartment)
+    }
 
-  object name extends MappedString(this,40)
-  object url extends MappedString(this, 120)
-  object department extends MappedLongForeignKey(this, LinkDepartment)
+    object LinkItem extends LinkItem with LongKeyedMetaMapper[LinkItem] {
+
+    }
+
+  }
 }
-
-object LinkItem extends LinkItem with LongKeyedMetaMapper[LinkItem] {
-  
-}
-
-}}
-
 

@@ -13,7 +13,7 @@ class IssueProperty extends LongKeyedMapper[IssueProperty] with IdPK {
     def getAll() = {
       TextInfo.findAll(By(TextInfo.propertyStr, getSingleton.property), By(TextInfo.idProperty, getSingleton.id))
     }
-    def getLang(lang:String) = {
+    def getLang(lang: String) = {
       TextInfo.findAll(By(TextInfo.propertyStr, getSingleton.property), By(TextInfo.idProperty, getSingleton.id), By(TextInfo.lang, lang))
     }
   }

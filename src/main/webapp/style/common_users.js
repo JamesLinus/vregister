@@ -13,6 +13,10 @@ function validateName(name){
         info = "Zacznij wielką literą"
         return false;
     }
+    if (name[1].toUpperCase() == name[1]){
+        info = "Druga litera powinna być mała";
+        return false;
+    }
     return true;
 }
            
@@ -24,7 +28,7 @@ function validatePhone(phone){
     } 
     else {
         if (phone.match(/\D/)) {
-            info = "Dozwolone tylko liczby bez spacji"
+            info = "Dozwolone tylko cyfry bez spacji"
             isError = true;
         }
     }
@@ -56,29 +60,29 @@ function validateEmail(email) {
     info ="Błędny email";
     return !isError;
 }
-          
-function  validateNewValue(newValue){
-    var column = columnNumber();
-    var isValid = true;
-    switch (column){
-        case 1:
-        case 2:
-            isValid = validateName(newValue);
-            $('#editedInfo').text(info);
-            break;
-        case 3:
-            isValid = validateEmail(newValue);
-            $('#editedInfo').text(info);
-            break;
-        case 5:
-            isValid = validatePhone(newValue);
-            $('#editedInfo').text(info);
-            break;
-        default:
-            break;
+     
+function validatePesel(pesel) {
+    
+    var peselStr = jQuery.trim(pesel);
+    if (peselStr.match(/\D/)) {
+        info = "Dozwolone tylko cyfry bez spacji";
+        return false;
     }
-    return isValid;
-}
+    if (peselStr.length != 13) {
+        info = "Tylko " + peselStr.length + " cyfr. Powinno być 13";
+        return false;
+    }
+    var sum = 0;
+    for (i = 0; i <13 ; i++){
+        sum += parseInt(peselStr[i]);
+    }
+    if (sum % 2 == 1 || (peselStr[6] != '0' && peselStr[6] != '1')) {
+        info = "Nieprawidłowy. Błędna cyfra?";
+        return false;
+    }
+    return true;
+}     
+
 
 function mkPass(){
     return Math.floor(Math.random() * 89999999) + 10000000;
@@ -114,18 +118,7 @@ function toggleScratch(elem){
     }   
 }
 
-//usunięcie dodanego w danej sesji
-function deleteUser(elem) {
-    var $tr = $(elem).parent('td').parent('tr');
-    var id = parseInt($tr.children('td:first').text());
-    for (i in users){
-        if (users[i].id == id){
-            users.splice(i,1);
-        }
-    }
-    $tr.remove();
-    incraseToSaveInfo();
-}
+
    
 function incraseToSaveInfo(){
     var length = users.length;
@@ -135,11 +128,13 @@ function incraseToSaveInfo(){
 }
            
 function clearFormsAdd(){
-    $('#addForm').children('table').children('tr').childern('td').
-    children('input').val('');
+    var $td = $('#formAdd table tr td');
+    $td.children().each (function(){
+            $(this).val('');
+    });
     clearFormsAddInfo();
 }
+
 function clearFormsAddInfo() {
-    $('#addForm').children('table').children('tr').childern('td').
-    children('span').text('');
+    $('#formAdd table tr td').children('span').text('');
 }
