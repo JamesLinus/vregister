@@ -44,9 +44,8 @@ package net.brosbit4u {
         })
 
       }
-      def logedInUser() = {
-        "#username" #> Text(User.currentUser.open_!.getFullName)
-      }
+      def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName)
+      
 
       /** dodanie formatki i obsługa */
       def formItem() = {

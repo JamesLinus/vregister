@@ -28,7 +28,7 @@ package net.brosbit4u {
       //object schoolId extends MappedString(this, 12)
       object user extends MappedLongForeignKey(this, User)
       object classIn extends MappedLongForeignKey(this, ClassModel)
-      object birthDay extends MappedDate(this)
+      object birthDate extends MappedDate(this)
       object pesel extends MappedString(this, 11)
       object nr extends MappedInt(this)
       object father extends MappedLongForeignKey(this, User)

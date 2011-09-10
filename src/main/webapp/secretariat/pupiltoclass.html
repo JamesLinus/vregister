@@ -8,7 +8,9 @@
                     $dTable = $();
                     $(document).ready(function() {
                 
-                        $dTable = $('#fullList').dataTable();
+                        $dTableClass = $('#fullListClass').dataTable();
+                        $dTableFree = $('#fullListFree').dataTable();
+                        
                         bindEditCell();
                         $('#formAdd').dialog({
                             autoOpen: false,
@@ -307,16 +309,13 @@
                     }                    
                        
                 </script>
-                <style >
-                    #errorInfo { font-style: italic; font-weight: bold; color: red;}
-                    .scratched td {text-decoration: line-through;}
-                </style>
+                <script class="lift:AssignationSn.pupilJSONdata"></script>
             </head_merge>
 
             <div id="centrum">
                 <div id="infoHead">
-                    <div class="lift:PupilSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
-                    <form class="lift:PupilSn.formItem" method="POST">
+                    <div class="lift:AssignationSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
+                    <form class="lift:AssignationSn.formItemPupil" method="POST">
                         <fieldset  style="width:200px;display: inline;">
                             <legend>Status zmian</legend>
                             <label for="editRows">Do zmiany:</label><input id="editRows" type="text" readonly="true" value="0" size="2" />
@@ -330,60 +329,31 @@
 
 
 
-                <h3>Przegląd i edycja nauczycieli </h3><hr />
-                <input type="image" src="/style/images/addico.png" onclick="showAddUser()" />
-                <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
-                    <thead>
-                        <tr><th>ID</th><th>Nazwisko</th><th>Imię</th>
-                            <th>Data urodzenia</th><th>PESEL</th><th>+/-</th>
-                        </tr>
-                    </thead>
-
-                    <tbody class="lift:PupilSn.pupilList">
-                        <tr >
-                            <td class="iduser"></td>
-                            <td  class="lastname"></td>
-                            <td  class="firstname"></td>
-                            <td class="birthdate"></td>
-                            <td class="pesel"></td>
-                            <td class="scratch">
-                                <input  type="image" src="/style/images/delico.png"  onclick="toggleScratch(this)" />
-                            </td>
-                        </tr>
-                    </tbody>
+                <h3>Przydział uczniów do klas </h3><hr />
+           
+                <div class="lift:AssignationSn.classSelect"><select id="classChoice"><option>wybór</option></select></div>
+                <table><tr><td width="450">
+                    <table id="fullListClass" class="display" border="0" cellpadding="2" cellspacing="2" >
+                        <thead> <tr><th id="inClass">Uczeń klasy:</th></tr></thead>
+                        <tbody class="AssignationSn.pupilInClass"><tr><td></td></tr></tbody>
+                    </table>   
+                            
+                     </td><td></td><td width="450">
+                         
+                        <table id="fullListFree" class="display" border="0" cellpadding="2" cellspacing="2" >
+                            <thead> <tr><th id="offClass">Uczeń nieprzydzielony:</th></tr></thead>
+                            <tbody class="AssignationSn.pupilList"><tr><td></td></tr></tbody>
+                        </table>   
+                         
+                         
+                     </td></tr>
                 </table>
+                
 
-                <div id="formAdd" style="display: none;" title="Dodawanie nowych uczniów">
-                    <table>
-                        <tr>
-                            <td><label for="lastNameAdd">Nazwisko:</label></td>
-                            <td><input id="lastNameAdd" type="text" size="18" maxlength="32"/></td>
-                            <td><span id="lastNameAddInfo" class="errorInfo"></span></td>
-                        </tr>
-                        <tr>
-                            <td><label for="firstNameAdd">Imię:</label></td>
-                            <td><input id="firstNameAdd" type="text" size="18" maxlength="32"/></td>
-                            <td><span id="firstNameAddInfo" class="errorInfo"></span></td>
-                        </tr>
-                        <tr>
-                            <td><label for="bithDateAdd">Data urodzenia:</label></td>
-                            <td><input id="birthDateAdd" type="text"  /></td>
-                            <td><span id="birthDateAddInfo" class="errorInfo"></span></td>
-                        </tr>
-                        <tr>
-                            <td><label for="peselAdd">PESEL:</label></td>
-                            <td><input id="peselAdd" type="text" size="10" maxlength="11" /></td>
-                            <td><span id="peselAddInfo" class="errorInfo"></span></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td><td><input  title="Zapisz" type="image" src="/style/images/addico.png" name="add" onclick="addUser(this)" /> 
-                                <input type="image" title="Czyść formatkę" name="clear" onclick="clearFormsAdd()" src="/style/images/resetico.png" value="" /></td>
-                        </tr>
-                    </table>
+               
                     <p id="addInfo"></p>
                 </div>
                 <br  />
-                <div id="hiddenBox" ><input type="text" id="calendarEdit" style="display: none;" value="" /></div>
             </div>
     </body>
 </html>

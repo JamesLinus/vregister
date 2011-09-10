@@ -28,10 +28,11 @@ package net.brosbit4u {
       object level extends MappedInt(this)
       object division extends MappedString(this, 2)
       object descript extends MappedString(this, 50)
+      object teacher extends MappedLongForeignKey(this, User)
       object validated extends MappedBoolean(this)
 
       def classString(): String = level.is.toString + division.is
-
+      def shortInfo(): String = classString() + " [" + id.is.toString + "]"
     }
 
     object ClassModel extends ClassModel with LongKeyedMetaMapper[ClassModel] {

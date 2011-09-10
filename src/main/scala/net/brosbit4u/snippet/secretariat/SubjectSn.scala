@@ -40,6 +40,8 @@ package net.brosbit4u {
             ".nr" #> <td>{ subject.nr.is.toString }</td>
         })
       }
+      
+      def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName)
 
       /** dodanie formatki i obsługa */
       def formItem() = {

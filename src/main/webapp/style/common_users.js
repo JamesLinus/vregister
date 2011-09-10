@@ -68,12 +68,12 @@ function validatePesel(pesel) {
         info = "Dozwolone tylko cyfry bez spacji";
         return false;
     }
-    if (peselStr.length != 13) {
+    if (peselStr.length != 11) {
         info = "Tylko " + peselStr.length + " cyfr. Powinno być 13";
         return false;
     }
     var sum = 0;
-    for (i = 0; i <13 ; i++){
+    for (i = 0; i <11 ; i++){
         sum += parseInt(peselStr[i]);
     }
     if (sum % 2 == 1 || (peselStr[6] != '0' && peselStr[6] != '1')) {
@@ -122,7 +122,7 @@ function toggleScratch(elem){
    
 function incraseToSaveInfo(){
     var length = users.length;
-    if (length > 0) $('#saveButton').show(300);
+    if (length == 1) $('#saveButton').show(300);
     $('#editRows').val(length.toString());
               
 }

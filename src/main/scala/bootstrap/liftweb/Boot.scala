@@ -62,7 +62,7 @@ class Boot {
       Department, ForumDep, FileStore, ContactMail, ForumCom,
       ForumThread, Gallery, ExtraData, LinkItem, LinkDepartment,
       ClassModel, UserChangeList, MarkMap, Pupil, SubjectName,
-      ClassChangeList)
+      ClassChangeList, PupilChangeList)
 
     //    val adminList = User.findAll(By(User.role, "a"))
     //    if (adminList.length == 0) {
