@@ -84,29 +84,51 @@ package net.brosbit4u {
 
       }
       
-      def pupilJSONdata(in:NodeSeq):NodeSeq = {
-        
-        <script></script>
+      def classSelect() = {
+        val classes = ClassModel.findAll().map(_.shortInfo)
+        "select" #> <select id="selectedClass" onchange="changeClass()">
+          {classes.map(clas => <option>{clas}</option>)}
+                           </select>
       }
       
       def formItemPupil() = {
         var dataStr = ""
         def processEntry(){
-          
+          val xml = XML.loadString(dataStr)
+          (xml \ "user").map(userXml => {
+            val id = (userXml \ "@id").toString
+            val fromClass = (userXml \ "fromClass").text
+            val toClass = (userXml \ "toClass").text
+            val pupil = Pupil.find(id).open_!
+            if (toClass == "") {
+              pupil.classIn.set(0)
+              pupil.save
+            } 
+            else {
+              if(toClass != fromClass){
+                val idClass = toClass
+                ClassModel.find(idClass) match {
+                  case Full(c) => pupil.classIn(c).save
+                  case _ => 
+                }
+              }
+            }
+            
+          })
         }
         
          "#dataEdit" #> SHtml.text(dataStr, (x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
          "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
       }
       
-      def classSelect() = {
-        val classes = ClassModel.findAll().map(_.classString)
-        "#selectChoise" #> <select id="selectChoise" onchange="changeClass()">
-          <option>wybierz</option>
-          {classes.map(clas => <option>{clas}</option>)}
-                           </select>
-      }
-      
+     def pupilList()= {
+       val (pupilInClass, pupilOffClass) = Pupil.findAll().partition(_.classIn.obj.isDefined)
+       
+        "#pupilInClass" #> pupilInClass.map(p => {<tr><td>{p.fullInfoString}</td><td>{p.classIn.obj.open_!.shortInfo}</td></tr> }) &
+        "#pupilOffClass"  #> pupilOffClass.map(p => {<tr><td>{p.fullInfoString}</td></tr>})
+     }
+     
+     
       
     
      }

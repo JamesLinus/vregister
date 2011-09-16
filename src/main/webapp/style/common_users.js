@@ -123,6 +123,7 @@ function toggleScratch(elem){
 function incraseToSaveInfo(){
     var length = users.length;
     if (length == 1) $('#saveButton').show(300);
+    if (length == 0) $('#saveButton').hide(300);
     $('#editRows').val(length.toString());
               
 }

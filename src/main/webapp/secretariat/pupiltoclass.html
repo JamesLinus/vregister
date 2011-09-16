@@ -5,282 +5,124 @@
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
                 <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
                 <script type="text/javascript" charset="utf-8">
-                    $dTable = $();
+                    //globals
+                    var theClass = "";
+                    var $dTableFull = $();
+                    var $dTableFree = $();
+                    var users = new Array();
+                    
                     $(document).ready(function() {
-                
-                        $dTableClass = $('#fullListClass').dataTable();
-                        $dTableFree = $('#fullListFree').dataTable();
-                        
-                        bindEditCell();
-                        $('#formAdd').dialog({
-                            autoOpen: false,
-                            height: 300,
-                            width: 400,
-                            modal: true,
-                            close: function(){
-                                bindEditCell();
-                            }
-                        });
-                        //zmiana ikonki w skreślonych użytkownikach
-                        $('#fullList').children('tbody').children('tr').each(function() {
-                            var $tr = $(this);
-                            if($tr.hasClass('scratched')) {
-                                $tr.children('td:last').children('input').attr('src','/style/images/addico.png');
-                            }           
+                        $dTableFull = $('#fullListClass').dataTable({
+                            
+                            "bPaginate": false
+                            
                         });
                         
-                        $( "#birthDateAdd" ).datepicker({
-                            changeMonth: true,
-                            changeYear: true,
-                            yearRange: '1980:2010' ,
-                            defaultDate: '-14y',
-                            dateFormat: 'yy-mm-dd',
-                            prevText : "poprzedni",
-                            nextText : "następny",
-                            dayNamesMin: ['Ni','Po','Wt','Śr','Cz','Pi','So'],
-                            monthNamesShort: ['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie', 'Wrz','Paź','Lis','Gru'] 
+                        
+                        $dTableFree = $('#fullListFree').dataTable({
+                            
                         });
                         
-                         $( "#calendarEdit" ).datepicker({
-                            changeMonth: true,
-                            changeYear: true,
-                            yearRange: '1980:2010' ,
-                            defaultDate: '-14y',
-                            dateFormat: 'yy-mm-dd',
-                            prevText : "poprzedni",
-                            nextText : "następny",
-                            dayNamesMin: ['Po','Wt','Śr','Cz','Pi','So','Ni'],
-                            monthNamesShort: ['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie', 'Wrz','Paź','Lis','Gru'] 
-                        });
-                
-                    } );
-    
-                    function bindEditCell(){
-                        $('#fullList').children('tbody').children('tr').each(function(){
-                            $(this).children('td').each(function(index){
-                                if( index > 0 && index < 5) {
-                                    var $td = $(this);
-                                    $td.dblclick(function(){editCell(this);});
-                                }        
-                            });
-            
-                        });
+                        $('#fullListClass_filter').hide();
+                        bindAssign();
+                        bindUnassign();
+                        changeClass();
+                    });
+                    
+                       
+                    function bindAssign(){
+                        $('#fullListFree tbody tr').each(function(){
+                            $(this).dblclick(function(){assignToClass(this);});
+                        }); 
                     }
                     
-                     //usunięcie dodanego w danej sesji
-                    function deleteUser(elem) {
-                        var $tr = $(elem).parent('td').parent('tr');
-                        var id = parseInt($tr.children('td:first').text());
-                        for (i in users){
-                            if (users[i].id == id){
-                                users.splice(i,1);
-                            }
-                        }
-                        $dTable.fnDeleteRow( $tr.get()[0]);
-                        //$tr.remove();
-                        incraseToSaveInfo();
-                    }
-            
-                    function showAddUser(){
-                        $('#formAdd').dialog('open');
-                    }
-               
-                    function editCell(elem) {
-                        $elem = $(elem); //td
-                        $elem.unbind();
-                        //if ($elem.hasClass('iduser') || $elem.hasClass('scratch')) return;
-                        closeEdit();
-                        oldCellValue = $elem.text();
-               
-                        $editedTd = $elem;
-               
-                        $elem.text('');
-                        $elem.attr('id','EDITED');
-                        var column = columnNumber();
-                        if (column == 3) {
-                            $elem.append('<span id="editedInfo" id="editInfo" class="errorInfo"></span>');
-                            var $inputEd = $('#calendarEdit').show();
-                            $inputEd.val(oldCellValue);
-                            $elem.append($inputEd);
-                            $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEditDate()" />');
-                   
-                        }
-                        else if (column == 4){
-                            $elem.append('<span id="editedInfo" id="editInfo" class="errorInfo"></span>');
-                            $elem.append('<input id="editedInput" type="text" value="' + oldCellValue + '" size="11" maxlength="11" />');
-                            $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEdit()" />')
-                        }
-                        else {
-                            $elem.append('<span id="editedInfo" id="editInfo" class="errorInfo"></span>');
-                            $elem.append('<input id="editedInput" type="text" value="' + oldCellValue + '" size="12" maxlength="32" />');
-                            $elem.append('<input  title="OK" type="image" src="/style/images/okico.png" onclick="saveAndCloseEdit()" />')
-                        }
-                    }
-           
-                    
-           
-                    function closeEdit(){
-                        //alert('children: '+ $editedTd.attr('class')); //testowe
-                        var col = columnNumber();
-                        if (col == 3) {
-                            var $calendarEdit = $('#calendarEdit');
-                             $calendarEdit.hide();
-                            $('#hiddenBox').append($calendarEdit);
-                        }
-                        $editedTd.removeAttr('id');
-                        $editedTd.text(oldCellValue);
-                        $editedTd.dblclick(function(){editCell(this);});
-                        $editedTd = $();
-                    }
-
-           
-                    function saveAndCloseEdit(){
-                        var newValue = jQuery.trim($('#editedInput').val());
-                        if (oldCellValue != newValue) {
-                            //nieprawidłowy wpis wychodzę!!!
-                            if (!validateNewValue(newValue)) return;
-                            var $editedTr = $editedTd.parent('tr');
-                   
-                            //zamykam edycję i podmieniam dane
-                            oldCellValue = newValue;
-                            $editedTd.text(oldCellValue);
-                            addDataToUsersArray($editedTr);
-                        }
-                        closeEdit();
+                    function bindUnassign(){
+                        $('#fullListClass tbody tr').each(function(){
+                            $(this).dblclick(function(){unassignFromClass(this);});
+                        }); 
                     }
                     
-                    function saveAndCloseEditDate() {
-                        $calendarEdit = $('#calendarEdit');
-                        var newValue = jQuery.trim($calendarEdit.val());
-                        if (oldCellValue != newValue) {
-                            var $editedTr = $editedTd.parent('tr');
-                            //zamykam edycję i podmieniam dane
-                            oldCellValue = newValue;
-                            closeEdit();
-                            addDataToUsersArray($editedTr);
-                        }
-                        else closeEdit();
-                    }
-    
-                    function  validateNewValue(newValue){
-                        var column = columnNumber();
-                        var isValid = true;
-                        switch (column){
-                            case 1:
-                            case 2:
-                                isValid = validateName(newValue);
-                                $('#editedInfo').text(info);
-                                break;
-                            case 4:
-                                isValid = validatePesel(newValue);
-                                $('#editedInfo').text(info);
-                                break;
-                            default:
-                                break;
-                        }
-                        return isValid;
-                    }
-               
-                    function addDataToUsersArray($editedTr){
-                        var foundInArray = false;
-                        var user = new User();
-                        if ($editedTr.hasClass('scratched')) user.toDel = true;
-                        $editedTr.children('td').each(function(index){
-                            switch (index){
-                                case 0:
-                                    user.id = parseInt(this.innerHTML);
-                                    break;
-                                case 1:
-                                    user.lastName = this.innerHTML;
-                                    break;
-                                case 2:
-                                    user.firstName = this.innerHTML;
-                                    break;
-                                case 3:
-                                    user.birthDate = this.innerHTML;
-                                    break;
-                                case 4:
-                                    user.pesel = this.innerHTML;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
+                    
+                    function assignToClass(elem){
+                        //dodać dziłania sprawdzające czy uczeń jest na liście do wycofania z klasy
+                        var $tr = $(elem);
+                        var text  = $tr.children('td').text();
+                        var id = parseInt(text.match(/\d+/));
+                        var tClass = $('#selectedClass').val();
+                        var found = false;
                         for(i in users){
-                            if (users[i].id == user.id) {
-                                foundInArray = true;
-                                users[i].fistName = user.firstName;
-                                users[i].lastName = user.lastName;
-                                users[i].pesel = user.pesel;
-                                users[i].birthDate = user.birthDate;
-                                users[i].toDel = user.toDel;
-                                break;
+                            if( id == users[i].id) {
+                                found = true;
+                                if(users[i].classFrom == tClass){ //początkowo był w tej klasie więc nie ma zmiany
+                                    users.splice(i,1);
+                                    incraseToSaveInfo();
+                                }
+                                else users[i].classTo = tClass;
                             }
                         }
-                        if (!foundInArray){
-                            users.push(user);  
-                            incraseToSaveInfo();
-                        }
-                    }
-           
-          
-           
-         
-           
-                    function addUser(elem) {
-                        var isError = false;
-                        clearFormsAddInfo();
-                        var firstName = jQuery.trim($('#firstNameAdd').val());
-                        if (!validateName(firstName)) {
-                            $('#firstNameAddInfo').text(info);
-                            isError = true;
-                        }
-                        var lastName = jQuery.trim($('#lastNameAdd').val());
-                        if (!validateName(lastName)) {
-                            $('#lastNameAddInfo').text(info);
-                            isError = true;
-                        }
-                        var birthDate = jQuery.trim($('#birthDateAdd').val());
-                        var pesel = jQuery.trim($('#peselAdd').val());
-                        if (!validatePesel(pesel)) {
-                            $('#peselAddInfo').text(info);
-                            isError = true;
-                        }
-                        if (!isError) {
-                            var id = negativeId--;
-                            $dTable.fnAddData([id, lastName,firstName, birthDate, pesel,
-                                '<input type="image" src="/style/images/delico.png" onclick="deleteUser(this)" />']);
+                        if(!found){
                             var user = new User();
                             user.id = id;
-                            user.lastName = lastName;
-                            user.firstName = firstName;
-                            user.pesel = pesel;
-                            user.birthDate = birthDate;
+                            user.str = text;
+                            user.classTo = tClass;
                             users.push(user);
                             incraseToSaveInfo();
-                            clearFormsAdd();
-                            $('#addInfo').text('Dodano: ' + firstName + ' ' + lastName);
-                        } else  $('#addInfo').text('Nie zapisano');
-                        return !isError;
-               
+                        }
+                        
+                        $dTableFull.fnAddData([text,tClass ]);
+                        $('#fullListClass tbody tr').each(function(){
+                            $(this).unbind().dblclick(function(){unassignFromClass(this);});
+                        });
+                        $dTableFree.fnDeleteRow( $tr.get()[0]);
+                        
                     }
-                 
+                    
+                    function unassignFromClass(elem){
+                        var $tr = $(elem);
+                        var text  = $tr.children('td:first').text();
+                        var toDelete  = confirm("Usunąć" + text + " z klasy?");
+                        if (toDelete){
+                            var tClass = $tr.children('td:last').text();
+                            var id = parseInt(text.match(/\d+/));
+                            var found = false;
+                            for(i in users){
+                                if(users[i].id == id){
+                                    found = true;
+                                    if(users[i].classFrom == ""){
+                                        users.splice(i,1);
+                                        incraseToSaveInfo();
+                                    }
+                                }
+                            }
+                            if(!found){
+                                var user = new User();
+                                user.id = id;
+                                user.str = text;
+                                user.classFrom = tClass;
+                                users.push(user);
+                                incraseToSaveInfo();
+                            }
+                            $dTableFree.fnAddData([text ]);
+                            $('#fullListFree tbody tr').each(function(){
+                            $(this).unbind().dblclick(function(){assignToClass(this);});
+                             });
+                            $dTableFull.fnDeleteRow( $tr.get()[0]);
+                        
+                        }
+                    }
+                    
                     function User() {
-                        this.id = 0;
-                        this.firstName = "";
-                        this.lastName = "";
-                        this.birthDate = "";
-                        this.pesel = "";
-                        this.toDel = false;
+                        this.id;
+                        this.str = "";
+                        this.classFrom= "";
+                        this.classTo = "";
                     }
-                       
-   
-   
-                    //globals
-                    var users = new Array();
-                    var negativeId = -1;
-                    var oldCellValue = "";
-                    var $editedTd = $();
+                    
+                    //wyświetlanie uczniów z klasy wybranej w select
+                    function changeClass(){
+                        var tClass = $('#selectedClass').val();
+                        $dTableFull.fnFilter(tClass,1);
+                    }   
                        
                        
                     function createData(){
@@ -288,18 +130,17 @@
                         for (i in users){
                             xml += '<user id="';
                             xml += users[i].id.toString();
-                            xml += '" scratch="';
-                            if (users[i].toDel) xml += 't';
-                            else xml += 'n';
-                            xml += '" ><firstName>';
-                            xml += users[i].firstName;
-                            xml += '</firstName><lastName>';
-                            xml += users[i].lastName;
-                            xml += '</lastName><birthDate>';
-                            xml += users[i].birthDate;
-                            xml += '</birthDate><pesel>';
-                            xml += users[i].pesel;
-                            xml += '</pesel></user>';
+                            xml += '" ><toClass>';
+                            if (users[i].classTo != "") {
+                                var temp = users[i].classTo.match(/\[\d+\]/).toString();
+                                xml += temp.substring(1,temp.length - 1);
+                            }
+                            xml += '</toClass><fromClass>';
+                            if (users[i].classFrom != ""){
+                                var temp = users[i].classFrom.match(/\[\d+\]/).toString();
+                                xml += temp.substring(1,temp.length - 1);
+                            }
+                            xml += '</fromClass></user>';
                         }
                         xml += '</root>';
                         $('#dataEdit').val(xml);
@@ -309,7 +150,6 @@
                     }                    
                        
                 </script>
-                <script class="lift:AssignationSn.pupilJSONdata"></script>
             </head_merge>
 
             <div id="centrum">
@@ -331,18 +171,21 @@
 
                 <h3>Przydział uczniów do klas </h3><hr />
            
-                <div class="lift:AssignationSn.classSelect"><select id="classChoice"><option>wybór</option></select></div>
-                <table><tr><td width="450">
-                    <table id="fullListClass" class="display" border="0" cellpadding="2" cellspacing="2" >
-                        <thead> <tr><th id="inClass">Uczeń klasy:</th></tr></thead>
-                        <tbody class="AssignationSn.pupilInClass"><tr><td></td></tr></tbody>
+                
+                
+                <table class="lift:AssignationSn.pupilList" ><tr><td width="450"><br/>
+                            <div class="lift:AssignationSn.classSelect"><select><option>wybór</option></select></div>
+                    <table  id="fullListClass" class="display" border="0" cellpadding="2" cellspacing="2" >
+                       
+                        <thead> <tr><th id="inClass">Uczeń</th><th>Klasa</th></tr></thead>
+                        <tbody id="pupilInClass"><tr><td></td></tr></tbody>
                     </table>   
                             
                      </td><td></td><td width="450">
                          
                         <table id="fullListFree" class="display" border="0" cellpadding="2" cellspacing="2" >
                             <thead> <tr><th id="offClass">Uczeń nieprzydzielony:</th></tr></thead>
-                            <tbody class="AssignationSn.pupilList"><tr><td></td></tr></tbody>
+                            <tbody ><tr  id="pupilOffClass"><td></td></tr></tbody>
                         </table>   
                          
                          

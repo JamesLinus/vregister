@@ -21,6 +21,7 @@ package net.brosbit4u {
     import net.liftweb.mapper._
     import _root_.net.liftweb.util._
     import _root_.net.liftweb.common._
+    import net.brosbit4u.lib.Formater
 
     class Pupil extends LongKeyedMapper[Pupil] with IdPK {
       def getSingleton = Pupil
@@ -33,6 +34,9 @@ package net.brosbit4u {
       object nr extends MappedInt(this)
       object father extends MappedLongForeignKey(this, User)
       object mather extends MappedLongForeignKey(this, User)
+      def fullInfoString() = {
+        val theClass = this.user.obj.open_!
+        this.id.is.toString + " " + theClass.getFullName + " [" +  Formater.formatDate(this.birthDate.is) + "] "}                       
     }
 
     object Pupil extends Pupil with LongKeyedMetaMapper[Pupil] {
