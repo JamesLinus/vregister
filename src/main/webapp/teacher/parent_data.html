@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <body class="lift:content_id=main">
+        <div id="main" class="lift:surround?with=teacher;at=content">
+            <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
+                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                
+            </head_merge>
+
+            <div id="centrum">
+                <div id="infoHead">
+                    <div class="lift:MainTeacher.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
+                   
+                </div> <!--inofhead-->
+                <br  />
+
+
+ 
+            <h2>Podstawowe dane rodziców</h2>
+            <table><tr><td><b>Oczekuje do zapisu: &nbsp;&nbsp;</b></td><td><input id="changedRows" type="text" readonly="true" value="0" size="2" /></td>
+           <td> <span  class="lift:LogDataSn.getParentData?form=POST" >
+                <entry:dataEdit /> <entry:submit />
+            </span > </td></tr></table>
+                <br  />
+                
+       
+	<hr  />
+		<table id="fullList" border="0" cellpadding="2" cellspacing="2" >
+		<thead>
+			<tr><th>Nr</th><th class="nameList">Nazwisko</th><th class="nameList" >Imię</th><th title="Ojciec/Matka">O/M?</th><th>Nazwisko rodzica</th><th>Imię rodzica</th><th>Hasło</th><th>E-Mail</th><th>Telefon</th><th>Akcje</th></tr>
+			
+			
+                </thead>
+		   
+        <tbody class="lift:LogDataSn.showListParent"><tr><td>nr</td><td>nazwisko</td><td rowspan="2" >imie</td>
+        <td>M</td><td>Nazwisko</td><td>Imię</td><td>hasło</td><td>email</td><td>telefon</td><td><button>Edytuj</button></td></tr>
+        <tr><td>O</td><td>Nazwisko</td><td>Imię</td><td>hasło</td><td>email</td><td>telefon</td><td><button>Edytuj</button></td></tr></tbody>
+           </table>
+                
+                
+                    <p id="addInfo"></p>
+                </div>
+                <br  />
+
+        </div>
+    </body>
+</html>
+
+
+
+
+
+
+<div class="lift:surround?with=register;at=content">
+    <head><script type="text/javascript" src="/scripts/log_data_parent.js" ></script></head>
+   
+<span class="lift:LogDataSn.makeMenuRegister"><ul><li>menu1</li><li>menu2 itd...</li></ul></span>
+		
+        <div id="centrum">
+           
+	 </div> <!-- koniec dodawania -->
+ 
+      
+</div>
+

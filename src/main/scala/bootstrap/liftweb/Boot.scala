@@ -81,6 +81,8 @@ class Boot {
       () => RedirectResponse("/"))
     val isSecretariat = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "s"),
       () => RedirectResponse("/"))
+    val isTeacher = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "n"),
+      () => RedirectResponse("/"))
 
     // Build SiteMap::
     def sitemap() = SiteMap(
@@ -107,11 +109,52 @@ class Boot {
         Menu("Uczniowie") / "secretariat" / "pupils" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Przydział klas") / "secretariat" / "pupiltoclass" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Przedmioty") / "secretariat" / "subjects" >> LocGroup("secretariat") >> isSecretariat,
+        Menu("Dzwonki") / "secretariat" / "bells" >> LocGroup("secretariat") >> isSecretariat,
+        Menu("Wybór dziennika") / "teacher" / "index" >> LocGroup("teacher") >> isTeacher,
+        Menu("Dane ucznia") / "teacher" / "pupil_data" / **  >> LocGroup("teacher") >> isTeacher,
+        Menu("Rodzice ucznia") / "teacher" / "parent_data" / ** >> LocGroup("teacher") >> isTeacher,
+        Menu("Tematy") / "teacher" / "themes"/ ** >> LocGroup("teacher") >> isTeacher,
+        Menu("Obecności") / "teacher" / "absents"/ ** >> LocGroup("teacher") >> isTeacher,
+        Menu("Oceny") / "teacher" / "marks"/ ** >> LocGroup("teacher") >> isTeacher,
+        Menu("Uwagi") / "teacher" / "opinions"/ ** >> LocGroup("teacher") >> isTeacher,
+        Menu("Twój plan") / "teacher" / "teacher_plan" >> LocGroup("teacher") >> isTeacher,
+        Menu("Plan klasy") / "teacher" / "class_plan" / ** >> LocGroup("teacher") >> isTeacher,
         Menu("Test") / "test" >> LocGroup("extra")) :::
         // Menu entries for the User management stuff
         User.sitemap: _*)
 
     LiftRules.setSiteMapFunc(sitemap)
+    
+    LiftRules.statelessRewrite.prepend(NamedPF("ClassRewrite") {
+        case RewriteRequest(
+            ParsePath("teacher" :: "pupil_data" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "pupil_data" :: Nil, Map("class" -> classSchool)  )
+         case RewriteRequest(
+            ParsePath("teacher" :: "parent_data" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "parent_data" :: Nil, Map("class" -> classSchool)  )
+         case RewriteRequest(
+            ParsePath("teacher" :: "themes" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "themes" :: Nil, Map("class" -> classSchool)  )
+          case RewriteRequest(
+            ParsePath("teacher" :: "absents" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "absents" :: Nil, Map("class" -> classSchool)  )
+          case RewriteRequest(
+            ParsePath("teacher" :: "marks" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "marks" :: Nil, Map("class" -> classSchool)  )
+          case RewriteRequest(
+            ParsePath("teacher" :: "opinions" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "opinions" :: Nil, Map("class" -> classSchool)  )
+         case RewriteRequest(
+            ParsePath("teacher" :: "class_plan" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "class_plan" :: Nil, Map("class" -> classSchool)  )
+      })
 
     LiftRules.htmlProperties.default.set((r: Req) =>
       new Html5Properties(r.userAgent))

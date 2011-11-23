@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+    <body class="lift:content_id=main">
+        <div id="main" class="lift:surround?with=teacher;at=content">
+            <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
+                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                
+            </head_merge>
+
+            <div id="centrum">
+                <div id="infoHead">
+                    <div class="lift:MainTeacher.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
+                   
+                </div> <!--inofhead-->
+                <br  />
+
+
+<h2>Oceny klasy <span class="lift:MarksSn.whatClass">3C</span></h2>
+		<table><tr><td><b>Wprowadzono nie zapisanych: &nbsp;&nbsp;</b></td><td><input id="changedRows" type="text" readonly="true" value="0" size="2" /></td>
+				<td> <form  class="lift:MarksSn.getData?form=POST" >
+						<entry:dataEdit /> <entry:submit />
+					</form > </td></tr></table>
+		<br  />
+		<select><option>Semestr 1</option><option>Semestr 2</option></select>
+		<hr  />
+                
+		<table id="fullList" border="0" cellpadding="2" cellspacing="2" >
+			<thead>
+				
+				<tr><th title="nr:&lt;br&gt;23">Nr</th><th>Nazwisko</th><th>Imię</th><th>Nr</th><th>1</th><th>2</th><th>3</th>
+					<th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th><th>13</th>
+					<th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>21</th><th>22</th>
+					<th>prop</th>
+					<th>sem</th>
+				</tr>
+				
+				
+			</thead>
+			
+			<tbody class="lift:MarksSn.marksTable" >
+			<tr><td>1.</td><td>Kowalski</td><td>Józef</td><td>1.</td><td>4+</td><td></td><td>1</td><td>4+</td><td></td><td>1</td><td>4+</td><td></td>
+			<td>1</td><td>4+</td><td></td><td>1</td><td>4+</td><td></td><td>1</td><td>4+</td><td></td><td>1</td><td>4+</td><td></td>		<td></td><td></td><td></td><td></td></tr></tbody>
+		</table>
+                
+                
+                
+                    <p id="addInfo"></p>
+                </div>
+                <br  />
+
+        </div>
+    </body>
+</html>
+
+
+

@@ -13,6 +13,9 @@
  *
  *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
+ *   
+ *   
+ *   assign pupil to class - secretariat
  */
 
 package net.brosbit4u {

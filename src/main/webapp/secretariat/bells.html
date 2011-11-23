@@ -1,15 +1,26 @@
-<lift:surround with="secretary" at="content">
+<!DOCTYPE html>
+<html>
+    <body class="lift:content_id=main">
+        <div id="main" class="lift:surround?with=secret;at=content">
+            <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
+                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                <script type="text/javascript" charset="utf-8">
+                   
+                       
+                </script>
+            </head_merge>
 
+            <div id="centrum">			
 			
 			
-			<div id="centrum">
 				<h3>Dzwonki</h3>
 				<table  border="0" cellpadding="2" cellspacing="2">
+                                    <thead><tr><th>Nr lekcji</th><th>Od</th><th>Do</th></tr></thead>
 					<tbody>  
-						<tr><td>0</td><td><select></select></td><td><select></select></td></tr>
-						<tr><td>1</td><td><select></select></td><td><select></select></td></tr>
-						<tr><td>2</td><td><select></select></td><td><select></select></td></tr>
-						<tr><td>3</td><td><select></select></td><td><select></select></td></tr>
+						<tr><td>0</td><td><select></select><select></select></td><td><select></select><select></select></td></tr>
+						<tr><td>1</td><td><select></select><select></select></td><td><select></select><select></select></td></tr>
+						<tr><td>2</td><td><select></select><select></select></td><td><select></select><select></select></td></tr>
+						<tr><td>3</td><td><select></select><select></select></td><td><select></select><select></select></td></tr>
 						<tr><td>4</td><td><select></select></td><td><select></select></td></tr>
 						<tr><td>5</td><td><select></select></td><td><select></select></td></tr>
 						<tr><td>6</td><td><select></select></td><td><select></select></td></tr>
@@ -17,9 +28,11 @@
 						<tr><td>8</td><td><select></select></td><td><select></select></td></tr>
 						<tr><td>9</td><td><select></select></td><td><select></select></td></tr>
 						<tr><td>10</td><td><select></select></td><td><select></select></td></tr>
-										</tbody>
+                                        </tbody>
 										
 									</table><br />
 			<input type="submit" value="Zatwierdź Dzwonki!" />
-			</div>
-</lift:surround>
+			
+        </div>
+    </body>
+</html>

@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html>
+    <body class="lift:content_id=main">
+        <div id="main" class="lift:surround?with=teacher;at=content">
+            <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
+                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                
+            </head_merge>
+
+            <div id="centrum">
+                <div id="infoHead">
+                    <div class="lift:MainTeacher.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
+                   
+                </div> <!--inofhead-->
+                <br  />
+
+
+
+                <h3>Dane ucznia - w budowie </h3><hr />
+                <br/><br/><br/>
+                
+                
+            
+            <h2>Podstawowe dane uczniów</h2>
+            <table><tr><td><b>Oczekuje do zapisu: &nbsp;&nbsp;</b></td><td><input id="changedRows" type="text" readonly="true" value="0" size="2" /></td>
+           <td> <form  class="lift:LogDataSn.getPupilData?form=POST" >
+                <entry:dataEdit /> <entry:submit />
+            </form > </td></tr></table>
+                <br  />
+                
+       
+	<hr  />
+		<table id="fullList" border="0" cellpadding="2" cellspacing="2" >
+		<thead>
+			<tr><th>Nr</th><th>Nazwisko</th><th>Imię</th><th>Hasło</th><th>E-Mail</th><th>Telefon</th><th>Akcje</th></tr>
+			
+			
+                </thead>
+		   
+        <span class="lift:LogDataSn.showListPupil" ><tbody><tr><td>nr</td><td>nazwisko</td><td>imie</td>
+        <td>hasło</td><td>email</td><td>telefon</td><td><button>Edytuj</button></td></tr></tbody>
+        
+	</span>
+           </table>
+        
+        
+         <div class="l:PupilData.table" >
+            <table>
+                <thead><tr><th>Nr</th><th>Nazwisko</th><th>Imię</th><th>Drugie imię</th><th>Numer ucznia</th><th>Pesel</th><th>Data urodzenia</th><th>Miejsce urodzenia</th><th>Województwo</th></tr></thead>
+                <tbody><tr><td></td></tr></tbody>
+            </table>
+        </div>
+        
+        <div style="display: none;">
+            <tr><td>nr</td><td>nazwisko</td>imie<td><input id="secondName" type="text"/></td><td></td><td></td><input id="datapicker" type="text" /></tr>
+        </div>
+                
+                    <p id="addInfo"></p>
+                </div>
+                <br  />
+
+        </div>
+    </body>
+</html>
+
+
+

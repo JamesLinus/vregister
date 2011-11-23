@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
@@ -13,28 +14,31 @@
  *
  *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
+ *   
+ *   
+ *   assign pupil to class - secretariat
  */
 
 package net.brosbit4u.snippet
 
+import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
+import _root_.scala.xml.{ NodeSeq, Text, XML }
+import _root_.net.liftweb.util._
+import _root_.net.liftweb.http.{ SHtml, S }
+import _root_.net.liftweb.common._
+import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
+import Helpers._
 import net.brosbit4u.model._
-import net.liftweb.http._
-import scala.xml.Text
-import net.liftweb.common._
-import net.liftweb.util.Helpers._
 
-class RegisterSwitcherSn {
-  def redir() = {
-    User.currentUser match {
-      case Full(user) => user.role.is match {
-        case char: String if (char == "a" || char == "n") => S.redirectTo("/teacher/index")
-        case "s" => S.redirectTo("/secretariat/index")
-        case char: String if (char == "u" || char == "r") => S.redirectTo("/view/")
-        case _ => S.redirectTo("/user_mgt/login")
-      }
-      case _ => S.redirectTo("/user_mgt/login")
-    }
-    "#info" #> Text("Błąd")
+class MainTeacher {
+  
+  def classList() = {
+    val classes = ClassModel.findAll(OrderBy(ClassModel.level, Ascending)).filter(_.validated.is)
+    "a" #> classes.map(classItem => {
+        "a" #> <a href={"teacher/marks/"+ classItem.id.toString}>{classItem.classString}</a>
+      })
   }
-}
 
+  def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName)
+
+}
