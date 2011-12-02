@@ -110,7 +110,7 @@ class Boot {
         Menu("Przydział klas") / "secretariat" / "pupiltoclass" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Przedmioty") / "secretariat" / "subjects" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Dzwonki") / "secretariat" / "bells" >> LocGroup("secretariat") >> isSecretariat,
-        Menu("Wybór dziennika") / "teacher" / "index" >> LocGroup("teacher") >> isTeacher,
+        Menu("Wybór dziennika") / "teacher" / "index" / ** >> LocGroup("teacher") >> isTeacher,
         Menu("Dane ucznia") / "teacher" / "pupil_data" / **  >> LocGroup("teacher") >> isTeacher,
         Menu("Rodzice ucznia") / "teacher" / "parent_data" / ** >> LocGroup("teacher") >> isTeacher,
         Menu("Tematy") / "teacher" / "themes"/ ** >> LocGroup("teacher") >> isTeacher,

@@ -52,6 +52,7 @@ package net.brosbit4u {
       object timePass extends MappedDateTime(this)
 
       def getFullName = firstName.is + " " + lastName.is
+      def getFullNameReverse = lastName.is + " " + firstName.is
       def shortInfo = getFullName + " [" + id.is.toString + "]"
 
     }

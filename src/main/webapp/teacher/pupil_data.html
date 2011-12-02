@@ -5,49 +5,57 @@
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
                 <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
-                
+                <script>
+                    function User() {
+                        var id = 0;
+                        var secondName = "";
+                        var email = "";
+                        var password = "";
+                        var phone = "";
+                        var address = "";
+                    }
+                    
+                    var user = new Array(); 
+                    function createXML() {
+                        var xmlStr = "<root>";
+                        //content
+                        xmlStr += "</root>";
+                    }
+                </script>
             </head_merge>
 
             <div id="centrum">
                 <div id="infoHead">
-                    <div class="lift:MainTeacher.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
-                   
+			<div class="lift:PupilDataSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username">Imię i Nazwisko</p> <p id="choosenclass">Klasa</p></div>
+                   <form class="lift:PupilDataSn.formItem" method="POST">
+                        <fieldset  style="width:200px;display: inline;">
+                            <legend>Status zmian</legend>
+                            <label for="editRows">Do zmiany:</label><input id="editRows" type="text" readonly="true" value="0" size="2" />
+                            <input id="dataEdit" />
+                            <input style="display:none;" id="saveButton" onclick="return createData()" src="/style/images/saveico.png" type="image" />
+                            <input id="submit"/>
+
+                        </fieldset></form>
                 </div> <!--inofhead-->
                 <br  />
-
-
-
-                <h3>Dane ucznia - w budowie </h3><hr />
-                <br/><br/><br/>
                 
                 
             
-            <h2>Podstawowe dane uczniów</h2>
-            <table><tr><td><b>Oczekuje do zapisu: &nbsp;&nbsp;</b></td><td><input id="changedRows" type="text" readonly="true" value="0" size="2" /></td>
-           <td> <form  class="lift:LogDataSn.getPupilData?form=POST" >
-                <entry:dataEdit /> <entry:submit />
-            </form > </td></tr></table>
-                <br  />
-                
+            <h1>Dane uczniów</h1>
        
 	<hr  />
-		<table id="fullList" border="0" cellpadding="2" cellspacing="2" >
-		<thead>
-			<tr><th>Nr</th><th>Nazwisko</th><th>Imię</th><th>Hasło</th><th>E-Mail</th><th>Telefon</th><th>Akcje</th></tr>
-			
-			
-                </thead>
-		   
-        <span class="lift:LogDataSn.showListPupil" ><tbody><tr><td>nr</td><td>nazwisko</td><td>imie</td>
-        <td>hasło</td><td>email</td><td>telefon</td><td><button>Edytuj</button></td></tr></tbody>
-        
-	</span>
-           </table>
+	
         
         
-         <div class="l:PupilData.table" >
+         <div class="l:PupilDataSn.dataTable" >
             <table>
-                <thead><tr><th>Nr</th><th>Nazwisko</th><th>Imię</th><th>Drugie imię</th><th>Numer ucznia</th><th>Pesel</th><th>Data urodzenia</th><th>Miejsce urodzenia</th><th>Województwo</th></tr></thead>
+                
+                <thead><tr><th colspan="2"></th><th colspan="4">Dane</th><th colspan="5">Dane z księgi</th></tr>
+                    <tr><th>Nr</th><th>Nazwisko i Imię</th>
+                        <th>Drugie imię</th><th>E-mail</th><th>Hasło</th><th>Telefon</th><th>Adres</th>
+                        <th>Pesel</th><th>Data urodzenia</th>
+                        <th>Miejsce urodzenia</th><th>Województwo</th>
+                    </tr></thead>
                 <tbody><tr><td></td></tr></tbody>
             </table>
         </div>
