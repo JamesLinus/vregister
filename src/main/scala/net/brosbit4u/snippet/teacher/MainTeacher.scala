@@ -30,17 +30,37 @@ import net.brosbit4u.model._
 
 object ClassChoose extends SessionVar[Int](0)
 
-class MainTeacher extends BaseTeacher {
+class MainTeacher  {
+		def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName) &
+		"#choosenclass" #> { 
+				if(ClassChoose.is == 0) Text("Wybierz klasę!")
+				else {
+						val cl = ClassModel.find(ClassChoose.is)
+						if (cl.isEmpty) Text("Wybierz klasę!!")
+						else Text(cl.open_!.classString)
+				}
+	  
+		}
   
 	def classList() = {
-		val paramClass = S.param("class").openOr("0").toInt
+		val classParamStr = S.param("class").openOr("0")
+		val paramClass = try{ classParamStr.toInt } catch {case e => 0}
 		if(paramClass != 0) {
 			ClassChoose.set(paramClass)
 		}
 		val classes = ClassModel.findAll(OrderBy(ClassModel.level, Ascending)).filter(_.validated.is)
 		"a" #> classes.map(classItem => {
 				"a" #> <a href={"/teacher/index/"+ classItem.id.toString}>{classItem.classString}</a>
-			})
+			}) &
+		"#username" #> Text(User.currentUser.open_!.getFullName) &
+		"#choosenclass" #> { 
+				if(ClassChoose.is == 0) Text("Wybierz klasę!")
+				else {
+						val cl = ClassModel.find(ClassChoose.is)
+						if (cl.isEmpty) Text("Wybierz klasę!!")
+						else Text(cl.open_!.classString)
+				}
+		}
 	}
 
 

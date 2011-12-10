@@ -126,6 +126,10 @@ class Boot {
     LiftRules.setSiteMapFunc(sitemap)
     
     LiftRules.statelessRewrite.prepend(NamedPF("ClassRewrite") {
+		case RewriteRequest(
+            ParsePath("teacher" :: "index" :: classSchool :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "index" :: Nil, Map("class" -> classSchool)  )			
         case RewriteRequest(
             ParsePath("teacher" :: "pupil_data" :: classSchool :: Nil, _, _,_), _, _) =>
           RewriteResponse(
