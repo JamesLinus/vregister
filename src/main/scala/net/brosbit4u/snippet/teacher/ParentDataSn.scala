@@ -26,21 +26,23 @@ import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
 import Helpers._
 import net.brosbit4u.model._
 
-class PupilDataSn extends BaseTeacher {
-  
-  def dataTable() = {
+class ParentDataSn extends BaseTeacher {
+	def dataTable() = {
 	val idClass = ClassChoose.is
 	if (idClass == 0) S.redirectTo("teacher/index")
     val classT = ClassModel.find(idClass)
     val pupils = Pupil.findAll(By(Pupil.classIn, classT))
    
     "tbody" #> pupils.map(pupil => {
-        val user = pupil.user.obj.open_!
-        "tr" #> <tr><td>{pupil.id.is.toString}</td><td>{user.getFullNameReverse}</td>
-          <td>{pupil.secondName.is}</td><td>{user.email.is}</td><td>{user.passStr.is}</td>
-         <td>{user.phone.is}</td><td>{pupil.address.is}</td>
-         <td>{pupil.pesel.is}</td><td>{pupil.birthDate.is.toString}</td><td>{pupil.birthPlace.is}</td>
-          <td>{pupil.birthDistrict.is}</td></tr>
+		val user = pupil.user.obj.open_!
+        val userMather = pupil.mather.obj.openOr(User.create)
+		val userFather = pupil.father.obj.openOr(User.create)
+        "tr" #> <tr id={"0" + pupil.id.is.toString}><td rowspan="2">{pupil.nr.is.toString}</td><td rowspan="2">{user.getFullNameReverse}</td>
+				<td>O</td><td>{userFather.lastName.is}</td><td>{userFather.email.is}</td><td>{userFather.passStr.is}</td>
+         <td>{userFather.phone.is}</td></tr>
+		<tr id={"M"+userMather.id.is.toString}><td>M</td><td>{userMather.lastName.is}</td><td>{userMather.email.is}</td><td>{userMather.passStr.is}</td>
+         <td>{userMather.phone.is}</td>
+		 </tr>
     })
   }
   
@@ -57,14 +59,16 @@ class PupilDataSn extends BaseTeacher {
       
           val xml = XML.loadString(dataStr)
           (xml \ "user").map(userXml => {
-            val id = (userXml \ "@id").toString
-            val secondName =(userXml \ "secondName").text
+			//pupilId
+            val idPupil = (userXml \ "@id").toString
+            val fistName =(userXml \ "firstName").text
+			val lastName = (userXml \ "lastName").text
             val password = (userXml \ "password").text
             val phone = (userXml \ "phone").text
             val email = (userXml \ "email").text
             val address = (userXml \ "address").text
-            val pupil = Pupil.find(id).open_!
-         
+            val pupil = Pupil.find(idPupil).open_!
+         /////dodawanie rodziców -------------- zaimplementować
             
           })
         }
@@ -72,5 +76,4 @@ class PupilDataSn extends BaseTeacher {
          "#dataEdit" #> SHtml.text(dataStr, (x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
          "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
       }
-  
 }

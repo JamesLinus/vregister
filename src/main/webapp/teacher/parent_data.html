@@ -9,32 +9,35 @@
 
             <div id="centrum">
                 <div id="infoHead">
-                    <div class="lift:MainTeacher.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
-                   
+                    <div class="lift:ParentDataSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
+                   <form class="lift:ParentDataSn.formItem" method="POST">
+                        <fieldset  style="width:200px;display: inline;">
+                            <legend>Status zmian</legend>
+                            <label for="editRows">Do zmiany:</label><input id="editRows" type="text" readonly="true" value="0" size="2" />
+                            <input id="dataEdit" />
+                            <input style="display:none;" id="saveButton" onclick="return createData()" src="/style/images/saveico.png" type="image" />
+                            <input id="submit"/>
+
+                        </fieldset></form>
                 </div> <!--inofhead-->
                 <br  />
 
 
  
             <h2>Podstawowe dane rodziców</h2>
-            <table><tr><td><b>Oczekuje do zapisu: &nbsp;&nbsp;</b></td><td><input id="changedRows" type="text" readonly="true" value="0" size="2" /></td>
-           <td> <span  class="lift:LogDataSn.getParentData?form=POST" >
-                <entry:dataEdit /> <entry:submit />
-            </span > </td></tr></table>
-                <br  />
                 
        
 	<hr  />
 		<table id="fullList" border="0" cellpadding="2" cellspacing="2" >
 		<thead>
-			<tr><th>Nr</th><th class="nameList">Nazwisko</th><th class="nameList" >Imię</th><th title="Ojciec/Matka">O/M?</th><th>Nazwisko rodzica</th><th>Imię rodzica</th><th>Hasło</th><th>E-Mail</th><th>Telefon</th><th>Akcje</th></tr>
+			<tr><th>Nr</th><th class="nameList">Nazwisko i imię</th><th class="nameList" >Imię</th><th title="Ojciec/Matka">O/M</th><th>Nazwisko rodzica</th><th>Imię rodzica</th><th>E-Mail</th><th>Hasło</th><th>Telefon</th><th>Akcje</th></tr>
 			
 			
                 </thead>
 		   
-        <tbody class="lift:LogDataSn.showListParent"><tr><td>nr</td><td>nazwisko</td><td rowspan="2" >imie</td>
+        <tbody class="lift:ParentDataSn.dataTable"><tr><td>nr</td><td>nazwisko</td><td rowspan="2" >imie</td>
         <td>M</td><td>Nazwisko</td><td>Imię</td><td>hasło</td><td>email</td><td>telefon</td><td><button>Edytuj</button></td></tr>
-        <tr><td>O</td><td>Nazwisko</td><td>Imię</td><td>hasło</td><td>email</td><td>telefon</td><td><button>Edytuj</button></td></tr></tbody>
+        </tbody>
            </table>
                 
                 
