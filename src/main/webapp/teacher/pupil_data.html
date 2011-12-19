@@ -6,8 +6,26 @@
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
                 <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
                 <script>
+                    $(document).ready(function() {
+                        $('#fullList').children('tbody').children('tr').each(function(){
+                            $(this).dblclick(function(){beginEdit(this);});
+                        });
+                    
+                        $('#formAdd').dialog({
+                            autoOpen: false,
+                            height: 280,
+                            width: 500,
+                            modal: true,
+                            close: function(){
+                                whenCloseForm();
+                            }
+                        });
+                    });
+                       
+                        
                     function User() {
-                        var id = 0;
+                        var id = "";
+                        var nr = "";
                         var secondName = "";
                         var email = "";
                         var password = "";
@@ -15,19 +33,158 @@
                         var address = "";
                     }
                     
-                    var user = new Array(); 
+                    function clearEditedUser(){
+                        id = "";
+                        nr = "";
+                        secondName = "";
+                        email = "";
+                        password = "";
+                        phone = "";
+                        address = "";
+                    }
+                    //globals 
+                    var $editedRow = $();
+                    var users = new Array();
+                    var editedUser = new User();
+                    
                     function createXML() {
                         var xmlStr = "<root>";
                         //content
                         xmlStr += "</root>";
+                    }
+                    
+                    function loadFromRow(){
+                        clearEditedUser();
+                        editedUser.id = $editedRow.attr('id');
+                        $('#idPupil').text(editedUser.id);
+                        $editedRow.children().each(function(index){
+                            switch(index){
+                                case 0:
+                                    editedUser.nr = this.innerHTML;
+                                    $('#classNumberAdd').text(this.innerHTML);
+                                    break;
+                                case 1:
+                                    $('#pupilNameAdd').text(this.innerHTML);
+                                    break;
+                                case 2:
+                                    editedUser.secondName = this.innerHTML;
+                                    $('#secondNameAdd').val(this.innerHTML);
+                                    break;
+                                case 3:
+                                    editedUser.email = this.innerHTML;
+                                    $('#emailAdd').val(this.innerHTML);
+                                    break;
+                                case 4:
+                                    editedUser.password = this.innerHTML;
+                                    $('#passwordAdd').val(this.innerHTML);
+                                    break;
+                                case 5:
+                                    editedUser.phone = this.innerHTML;
+                                    $('#phoneAdd').val(this.innerHTML);
+                                    break;
+                                case 6: 
+                                    editedUser.address = this.innerHTML;
+                                    $('#addressAdd').val(this.innerHTML);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+                    }
+                   
+                    function saveRow(){
+                        var tmpUser = new User();
+                        tmpUser.secondName = jQuery.trim($('#secondNameAdd').val());
+                        tmpUser.email = jQuery.trim($('#emailAdd').val());
+                        tmpUser.password = jQuery.trim($('#passwordAdd').val());
+                        tmpUser.phone = jQuery.trim($('#phoneAdd').val());
+                        tmpUser.address = jQuery.trim($('#addressAdd').val());
+                        $editedRow.children('td').each(function(index){
+                            switch(index){
+                                case 2:
+                                    $(this).text(tmpUser.secondName);
+                                    break;
+                                case 3:
+                                    $(this).text(tmpUser.email);
+                                    break;
+                                case 4:
+                                    $(this).text(tmpUser.password);
+                                    break;
+                                case 5:
+                                    $(this).text(tmpUser.phone);
+                                    break;
+                                case 6:
+                                    $(this).text(tmpUser.address);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+                        if (editedUser.secondName != tmpUser.secondName || tmpUser.email != editedUser.email || tmpUser.password != editedUser.password || tmpUser.phone !=  editedUser.phone || tmpUser.address != editedUser.address){
+                            tmpUser.id = editedUser.id;
+                            tmpUser.nr = editedUser.nr;
+                            var foundUser = false;
+                            for(i in users){
+                                if (users[i].id == tmpUser.id){
+                                    users[i] = tmpUser;
+                                    foundUser = true;
+                                    break;
+                                }
+                            }
+                            if (!foundUser) users.push(tmpUser);
+                        }
+                        $('#editRows').val(users.length.toString());
+                        if(users.length > 0){
+                            $('#saveButton').show();
+                        }
+                    }
+                    
+                    function beginEdit(elem){
+                        $editedRow= $(elem);
+                        $("#formAdd").dialog("open");
+                        loadFromRow();
+                    }
+                    
+                    function nextUser(){
+                        saveRow();
+                        $newRow = $editedRow.next('tr');
+                        if($newRow.is('tr')){
+                            $editedRow = $newRow;
+                            loadFromRow();
+                        }
+                    }
+                    
+                    function previousUser(){
+                        $newRow = $editedRow.prev('tr');
+                        saveRow();
+                        if($newRow.is('tr')){
+                            $editedRow = $newRow;
+                            loadFromRow();
+                        }
+                    }
+                    
+                    function whenCloseForm(){
+                        saveRow();
+                        $editedRow = null;
+                    }
+                    
+                    function genPass(){
+                        var pass = $('#passwordAdd').val();
+                        if (pass == "" || pass == "--------"){
+                            $('#passwordAdd').val(mkPass());
+                        } else {
+                            if (confirm('Czy na pewno chcesz zresetować hasło?')){
+                                $('#passwordAdd').val(mkPass());
+                            }
+                        } 
                     }
                 </script>
             </head_merge>
 
             <div id="centrum">
                 <div id="infoHead">
-			<div class="lift:PupilDataSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username">Imię i Nazwisko </p> Wybrany dziennik:  <p id="choosenclass">Klasa</p></div>
-                   <form class="lift:PupilDataSn.formItem" method="POST">
+                    <div class="lift:PupilDataSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username">Imię i Nazwisko </p> Wybrany dziennik:  <p id="choosenclass">Klasa</p></div>
+                    <form class="lift:PupilDataSn.formItem" method="POST">
                         <fieldset  style="width:200px;display: inline;">
                             <legend>Status zmian</legend>
                             <label for="editRows">Do zmiany:</label><input id="editRows" type="text" readonly="true" value="0" size="2" />
@@ -38,35 +195,67 @@
                         </fieldset></form>
                 </div> <!--inofhead-->
                 <br  />
-                
-                
-            
-            <h1>Dane uczniów</h1>
-       
-	<hr  />
-	
-        
-        
-         <div class="l:PupilDataSn.dataTable" >
-            <table>
-                
-                <thead><tr><th colspan="2"></th><th colspan="4">Dane</th><th colspan="5">Dane z księgi</th></tr>
-                    <tr><th>Nr</th><th>Nazwisko i Imię</th>
-                        <th>Drugie imię</th><th>E-mail</th><th>Hasło</th><th>Telefon</th><th>Adres</th>
-                        <th>Pesel</th><th>Data urodzenia</th>
-                        <th>Miejsce urodzenia</th><th>Województwo</th>
-                    </tr></thead>
-                <tbody><tr><td></td></tr></tbody>
-            </table>
-        </div>
-        
-        <div style="display: none;">
-            <tr><td>nr</td><td>nazwisko</td>imie<td><input id="secondName" type="text"/></td><td></td><td></td><input id="datapicker" type="text" /></tr>
-        </div>
-                
-                    <p id="addInfo"></p>
+
+
+
+                <h1>Dane uczniów</h1>
+
+                <hr  />
+
+
+
+                <div >
+                    <table id="fullList">
+
+                        <thead><tr><th colspan="2"></th><th colspan="4">Dane</th><th colspan="5">Dane z księgi</th></tr>
+                            <tr><th>Nr</th><th>Nazwisko i Imię</th>
+                                <th>Drugie imię</th><th>E-mail</th><th>Hasło</th><th>Telefon</th><th>Adres</th>
+                                <th>Pesel</th><th>Data urodzenia</th>
+                                <th>Miejsce urodzenia</th><th>Województwo</th>
+                            </tr></thead>
+                        <tbody class="l:PupilDataSn.dataTable"><tr><td></td></tr></tbody>
+                    </table>
                 </div>
-                <br  />
+
+                <div id="formAdd" style="display: none;" title="Edycja danych uczniów">
+                    <table>
+                        <tr><td id="classNumberAdd">2</td><td id="pupilNameAdd">Kowalski Józef</td><td id="idPupil">234234</td></tr>
+                        <tr>
+                            <td><label for="secondNameAdd">Drugie imię:</label></td>
+                            <td><input id="secondNameAdd" type="text" size="20" maxlength="32"/></td>
+                            <td><span id="secondNameAddInfo" class="errorInfo"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="emailAdd">Email:</label></td>
+                            <td><input id="emailAdd" type="text" size="20" maxlength="32"/></td>
+                            <td><span id="emailAddInfo" class="errorInfo"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="passwordAdd">Hasło:</label></td>
+                            <td><input id="passwordAdd" type="text" size="20" readonly="readonly"/></td>
+                            <td><input type="image" name="genPass" src="/style/images/randomico.png" onclick="genPass()" title="Generuj hasło" /></td>
+                        </tr>
+                        <tr>
+                            <td><label for="phoneAdd">Telefon:</label></td>
+                            <td><input id="phoneAdd" type="text" size="10" maxlength="9" /></td>
+                            <td><span id="phoneAddInfo" class="errorInfo"></span></td>
+                        </tr>
+                        <tr>
+                            <td><label for="addressAdd">Adres:</label></td>
+                            <td colspan="2"><input id="addressAdd" type="text" size="40" maxlength="80" /></td>
+                        </tr>
+                        <tr>
+                            <td><input title="Poprzedni uczeń" type="image" src="/style/images/previco.png" name="previous" onclick="previousUser()" /></td>
+                            <td></td>
+                            <td><input type="image" title="Następny uczeń" name="next" onclick="nextUser()" src="/style/images/nextico.png" value="" />
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+                <p id="addInfo"></p>
+            </div>
 
         </div>
     </body>

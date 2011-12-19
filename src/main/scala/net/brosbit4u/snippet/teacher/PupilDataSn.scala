@@ -34,9 +34,9 @@ class PupilDataSn extends BaseTeacher {
     val classT = ClassModel.find(idClass)
     val pupils = Pupil.findAll(By(Pupil.classIn, classT))
    
-    "tbody" #> pupils.map(pupil => {
+    "tr" #> pupils.map(pupil => {
         val user = pupil.user.obj.open_!
-        "tr" #> <tr><td>{pupil.id.is.toString}</td><td>{user.getFullNameReverse}</td>
+		<tr id={pupil.id.is.toString}><td></td><td>{user.getFullNameReverse}</td>
           <td>{pupil.secondName.is}</td><td>{user.email.is}</td><td>{user.passStr.is}</td>
          <td>{user.phone.is}</td><td>{pupil.address.is}</td>
          <td>{pupil.pesel.is}</td><td>{pupil.birthDate.is.toString}</td><td>{pupil.birthPlace.is}</td>
