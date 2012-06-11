@@ -21,7 +21,10 @@
                             }
                         });
                     });
-                       
+                       //hide pupil list, ?????????
+                    function hideColumnFamily(number){
+                    
+                    }
                         
                     function User() {
                         var id = "";
@@ -34,23 +37,41 @@
                     }
                     
                     function clearEditedUser(){
-                        id = "";
-                        nr = "";
-                        secondName = "";
-                        email = "";
-                        password = "";
-                        phone = "";
-                        address = "";
+                        editedUser.id = "";
+                        editedUser.nr = "";
+                        editedUser.secondName = "";
+                        editedUser.email = "";
+                        editedUser.password = "";
+                        editedUser.phone = "";
+                        editedUser.address = "";
                     }
                     //globals 
                     var $editedRow = $();
                     var users = new Array();
                     var editedUser = new User();
-                    
+                    //create data to send on server
                     function createXML() {
                         var xmlStr = "<root>";
-                        //content
+                        for(i in users){
+                            xmlStr += '<user id="';
+                            xmlStr += users[i].id;
+                            xmlStr += '"/><nr>';
+                            xmlStr += users[i].nr;
+                            xmlStr += '</nr><secondName>';
+                            xmlStr += users[i].secondName;
+                            xmlStr += '</secondName><email>';
+                            xmlStr += users[i].email;
+                            xmlStr += '</email><password>';
+                            xmlStr += users[i].password;
+                            xmlStr += '</password><phone>';
+                            xmlStr += users[i].phone;
+                            xmlStr += '</phone><address>';
+                            xmlStr += users[i].address;
+                            xmlStr += '</address></user>';
+                        }
                         xmlStr += "</root>";
+                        $('#editData').val(xmlStr);
+                        return true;
                     }
                     
                     function loadFromRow(){

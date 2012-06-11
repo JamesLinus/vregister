@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
- *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
+ * Copyright (C) 2012   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of ePodreczniki.edu.pl 
  *
  *   VRegister is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
@@ -15,8 +15,7 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet {
+package net.brosbit4u.snippet 
 
     import _root_.scala.xml.{ NodeSeq, Text }
     import _root_.net.liftweb.util._
@@ -66,7 +65,7 @@ package net.brosbit4u {
           if (isCorrect) {
 
             val dirRoot: File = new File(pathRootImages)
-            val img = model.FileStore.create
+            val img = FileStore.create
             img.path("empty").save //potrzebuje id do wyliczenia hashu
             val subDirPath = ((img.id.is / 200) + 1).toString
             val imgDir = new File(dirRoot, subDirPath)
@@ -126,7 +125,7 @@ package net.brosbit4u {
             S.notice("Zapis nieudany")
           } else {
             val dirRoot: File = new File(pathRootFiles)
-            val fileSt = model.FileStore.create
+            val fileSt = FileStore.create
             fileSt.path("empty").save //potrzebuje id do wyliczenia hashu
             val subDirPath = ((fileSt.id.is / 200) + 1).toString
             val imgDir = new File(dirRoot, subDirPath)
@@ -166,5 +165,5 @@ package net.brosbit4u {
       }
 
     }
-  }
-} //end packages
+ 
+
