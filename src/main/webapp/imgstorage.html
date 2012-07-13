@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
       <head>
+      <script type="text/javascript" src="/jquery/jquery.js"></script>    
         <script type="text/javascript">
             function copyLink() {
                 var link = document.getElementById("linking").innerHTML;
@@ -12,7 +13,7 @@
     </head>
 <body onload="copyLink()">
 <h4>Wczytywanie grafiki:</h4>
-	<form class="lift:FilesSn.addImg" method="POST" enctype="multipart/form-data" >
+	<form class="lift:FilesSn.addSlide" method="POST" enctype="multipart/form-data" >
 	<input id="file" /><br />
 	<input id="submit" /><br /><hr />
         <p><em>link do skopiowania: </em> <br /> <span id="linkimg"></span> </p>

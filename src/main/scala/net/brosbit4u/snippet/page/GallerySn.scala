@@ -1,65 +1,58 @@
-/*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
+/* Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *
- *   VRegister is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
- *   as published by the Free Software Foundation
- *
- *   VRegister is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
- *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
+ *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
+ *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet {
+package net.brosbit4u.snippet
 
-    import _root_.scala.xml.{ NodeSeq, Text }
-    import _root_.net.liftweb.util._
-    import _root_.net.liftweb.common._
-    import net.brosbit4u.model._
-    //import _root_.net.liftweb.mapper.{Descending ,OrderBy,By}
-    //import _root_.net.liftweb.http.{S}
-    import Helpers._
+import _root_.scala.xml.{ NodeSeq, Text }
+import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
+import net.brosbit4u.model._
+import _root_.net.liftweb.http.{ S }
+import Helpers._
 
-    class GallerySn {
-      val gal = Gallery.findAll()
+class GallerySn {
 
-      //dodaje listę galeriigalleryLe
-      def drawSlider(node: NodeSeq): NodeSeq = {
-        var nr = -1
-        val n2 = <ul id={ "mycarousel" } class={ "jcarousel-skin-tango" }>
-                   {
-                     for (i <- gal) yield {
-                       nr += 1
-                       <li><img src={ i.thumb.is } width="120" height="120" alt={ i.title.is } onclick={ "draw_Gallery(" + nr.toString + ")" }/></li>
-                     }
-                   }
-                 </ul>
-        n2
+  //dodaje listę galeriigalleryLe
+  def drawSlider() = {
+    val galleries = Gallery.findAll
+    "li" #> galleries.map(gallery => {
+      <li><img src={ gallery.photos.head.thumbnail } width="144" height="108" 
+      alt={ gallery.title } onclick={ "window.location='/gallery/" + gallery._id.toString  + "'"}/></li>
+    })
+  }
+
+  //dodaje dwie zmienne
+  def gallery() = {
+
+    val id = S.param("id").openOr("0")
+    Gallery.find(id)
+    val gallery = if (id == 0) {
+      Gallery.findAll match {
+        case Nil => Gallery.create
+        case galleries => galleries.head
       }
-
-      //dodaje dwie zmienne
-      def galleryList() = {
-        var str = "var numGallery = " + gal.length.toString //ilość galerii
-        str += "\n var gallerieArr =   ["
-        for (g <- gal) {
-          str += "[" + g.nrOfPhotos.is + "," + "'" + g.title.is + "'],"
+    } else {
+      Gallery.find(id) match {
+        case Some(gallery) => gallery
+        case _ => {
+          Gallery.findAll match {
+            case Nil => Gallery.create
+            case galleries => galleries.head
+          }
         }
-        str += "] \n var urlsArr =  ["
-        for (g <- gal) {
-          str += g.urls.is + ","
-        }
-        str = str.substring(0, str.length - 1)
-        str += "]\n"
-        "#data" #> <script>{ Text(str) }</script>
-        //bind("g", n, "data" -> Text(str))
       }
     }
-
+    var counter = 0
+    "#gallerytitle" #> <span>{ gallery.title }</span> &
+      ".grid_3" #> gallery.photos.map(photo => {
+        val extraClass = if (counter % 5 == 0) "alpha" else if (counter % 4 == 0) "omega" else ""
+        counter += 1
+          <a href={ photo.full } rel="group1">
+            <img src={ photo.thumbnail } alt="" class="frame"/>
+          </a>
+      })
   }
-} //end packages
+}

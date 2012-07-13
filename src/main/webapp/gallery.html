@@ -1,124 +1,17 @@
 <!DOCTYPE html>
 <html>
 <body class="lift:content_id=main">
-<div id="main" class="lift:surround?with=default;at=content">
+<div id="main" class="lift:surround?with=gallerytemplate;at=content">
 <head_merge>
-   <link rel="stylesheet" type="text/css" href="style/gallery.css" />
-  <script type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
- <script type="text/javascript" src="jquery/jquery.jcarousel.min.js"></script>
-
- <link rel="stylesheet" type="text/css" href="style/tango/skin.css" /> 
-
-  <link rel="stylesheet" type="text/css" href="style/shadowbox.css" />
-	<script type="text/javascript" src="style/shadowbox.js"></script>
-	
-	<script type="text/javascript">
-	Shadowbox.init({
-    		modal: true,
-		slideshowDelay: 5
-	});
-	</script>
- 
- 
- <script type="text/javascript">
-function mycarousel_initCallback(carousel)
-{
-    // Disable autoscrolling if the user clicks the prev or next button.
-    carousel.buttonNext.bind('click', function() {
-        carousel.startAuto(0);
-    });
-
-    carousel.buttonPrev.bind('click', function() {
-        carousel.startAuto(0);
-    });
-
-    // Pause autoscrolling if the user moves with the cursor over the clip.
-    carousel.clip.hover(function() {
-        carousel.stopAuto();
-    }, function() {
-        carousel.startAuto();
-    });
-};
-
-jQuery(document).ready(function() {
-    jQuery('#mycarousel').jcarousel({
-        
-        auto: 2,
-        wrap: 'last',
-        visible : 6,
-        initCallback: mycarousel_initCallback
-    });
-});
-
-
-</script>
-
-<script type="text/javascript" >
-     var galMarked = 0;  //obecnie wybrana galeria
-     var serie = 0; //zapisuje która porcja galerii
-
-//rysowanie wybranej galerii
-    function draw_Gallery(nr) { 
-    var nrInt = parseInt(nr);
-    //alert("galeria: " + nr)
-	Shadowbox.clearCache();
-
-    var titleGal = document.getElementById("galTitle");
-    titleGal.innerHTML = "Zdjęcia z galerii:  " + gallerieArr[nrInt][1];
-
-    delete_Element() //usuwam wszystkie obrazki w galeri aktualnie wyświetlanej
-    var thumbCont = document.getElementById("thumbcontainer")
-    var nrOfPhotos = parseInt(gallerieArr[nrInt][0])
-    for (i = 0; i < nrOfPhotos ; i++) {
-var a_tag = document.createElement("a")
-a_tag.href = urlsArr[nrInt][i][1]
-a_tag.rel = "shadowbox[" + nr + "]";
-thumbCont.appendChild(a_tag)
-var div_tag = document.createElement("div")
-div_tag.className = "imgcontainer"
-a_tag.appendChild(div_tag)
-
-Shadowbox.addCache(a_tag);
-
-div_tag.style.backgroundImage = "url("+ urlsArr[nrInt][i][0] +")";
-div_tag.style.backgroundRepeat = "no-repeat";
-div_tag.style.backgroundPosition = "center";
-}
-
-setCointenrWidth(nrOfPhotos);
-}
-//ważne dopasować wielkość kolumny
-function setCointenrWidth(nrOfPhotos) {
-var columns = 6; //ile zdjęć w kolumnie
-var lines = parseInt(nrOfPhotos / columns);
-var margin = parseInt((lines + 1) * 120);
-document.getElementById("thumbcontainer").style.marginBottom = margin.toString() + "px";
-}
-
-function delete_Element(){
-var thumbCont = document.getElementById("thumbcontainer");
-var tabTags = thumbCont.getElementsByTagName("a");
-while (tabTags.length != 0) {
-thumbCont.removeChild(tabTags[0]);
-}
-}
-  </script>
 
 </head_merge>
+<div class="lift:GallerySn.gallery" id="gallery">
 
-    <div class="lift:GallerySn.galleryList"><span id="data"></span></div>
- 
-  <div id="wrap" class="lift:GallerySn.drawSlider" ></div>
-  <br />
-  <div id="galCont" > 
- <div><h3 id="galTitle" style="color: #555555;" >Zdjęcia w galerii: </h3></div>
-  <br />
-  <div id="thumbcontainer">
-      
-  <script type="text/javascript">draw_Gallery(0)</script>
-  </div>
- 
-  </div>
+ <h1>Zdjęcia w galerii: <span id="gallerytitle"></span></h1> <br/>
+
+<div class="grid_3"></div>
+
 </div>
-
+  
+</div>
 </body></html>

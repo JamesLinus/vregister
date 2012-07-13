@@ -15,155 +15,272 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet 
+package net.brosbit4u.snippet
 
-    import _root_.scala.xml.{ NodeSeq, Text }
-    import _root_.net.liftweb.util._
-    import _root_.net.liftweb.common._
-    import net.brosbit4u.model._
-    import _root_.net.liftweb.http.{ S, SHtml, FileParamHolder, RequestVar }
-    import _root_.net.liftweb.mapper.{ Ascending, OrderBy }
-    import net.liftweb.http.js._
-    import JsCmds._
-    import JE._
-    import Helpers._
-    import java.awt.image.BufferedImage
-    import java.awt.Image
-    import javax.imageio.ImageIO
-    import java.io.{ File, ByteArrayInputStream, FileOutputStream }
-    /**
-     * snipet ma dostarczać grafikę na stronę oraz obsługiwać zapis zdjęć i dostarczenie
-     * ich do edytora - w przysłości obsługa plików statycznych
-     */
-    class FilesSn {
+import _root_.scala.xml.{ NodeSeq, Text }
+import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
+import _root_.net.brosbit4u.model._
+import _root_.net.liftweb.http.{ S, SHtml, FileParamHolder, RequestVar }
+import _root_.net.liftweb.mapper.{ Ascending, OrderBy }
+import _root_.net.liftweb.http.js._
+import JsCmds._
+import JE._
+import Helpers._
+import java.awt.image.BufferedImage
+import java.awt.Image
+import javax.imageio.ImageIO
+import java.io.{ File, ByteArrayInputStream, ByteArrayOutputStream, FileOutputStream }
+import com.mongodb.gridfs._
+import com.mongodb._
+import net.liftweb.mongodb.MongoDB
+import _root_.net.liftweb.mongodb.DefaultMongoIdentifier
+/**
+ * snipet ma zapisywać grafikę i pliki dla strony
+ */
+class FilesSn {
 
-      object linkpath extends RequestVar[String]("")
-      val pathRootImages = "/home/ms/imagesApp"
-      val pathRootFiles = "/home/ms/filesApp"
+  object linkpath extends RequestVar[String]("")
 
-      def addImg() = {
-        var fileHold: Box[FileParamHolder] = Empty
-        var mimeType = ""
-        def isCorrect = fileHold match {
-          case Full(FileParamHolder(_, mime, _, data)) if mime.startsWith("image/") => {
-            mimeType = "." + mime.split("/")(1)
-            S.notice(mime.toString) //tutaj do dać odczyt mime i rozszerzenie
-            true
-          }
-          case Full(_) => {
-            S.error("Nieprawidłowy format pliku!")
-            false
-          }
-          case _ => {
-            S.error("Brak pliku?")
-            false
-          }
-        }
-
-        def save() {
-
-          if (isCorrect) {
-
-            val dirRoot: File = new File(pathRootImages)
-            val img = FileStore.create
-            img.path("empty").save //potrzebuje id do wyliczenia hashu
-            val subDirPath = ((img.id.is / 200) + 1).toString
-            val imgDir = new File(dirRoot, subDirPath)
-            //sprawdzam czy katalog do którego pasuje hash istnieje
-            if (!imgDir.exists) {
-              imgDir.mkdir
-            }
-            val link = imgDir.getAbsolutePath + "/" + img.id.toString + mimeType
-            var imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
-            //tutaj przeskalowanie
-            var imBox: Box[BufferedImage] = Empty
-            val w = imageBuf.getWidth
-            val h = imageBuf.getHeight
-            if (w > 500 || h > 500) {
-              if (w > h) {
-                val im: java.awt.Image = imageBuf.getScaledInstance(500, (h.toDouble * 500.0 / w.toDouble).toInt, Image.SCALE_SMOOTH)
-                //val graf2D = imageBuf.createGraphics
-                //graf2D.scale(1.0, 500.0/w.toDouble)
-                //imageBuf.getGraphics.translate(500, (h.toDouble * 500.0/w.toDouble).toInt)
-                imBox = Full(new BufferedImage(500, (h.toDouble * 500.0 / w.toDouble).toInt, BufferedImage.TYPE_INT_ARGB))
-                imBox.get.getGraphics.drawImage(im, 0, 0, null)
-                //imageBuf = im.asInstanceOf[BufferedImage]
-              } else {
-                val im: java.awt.Image = imageBuf.getScaledInstance((w.toDouble * 500.0 / h.toDouble).toInt, 500, Image.SCALE_SMOOTH)
-                imBox = Full(new BufferedImage((w.toDouble * 500.0 / h.toDouble).toInt, 500, BufferedImage.TYPE_INT_ARGB))
-                imBox.get.getGraphics.drawImage(im, 0, 0, null)
-              }
-            } else {
-              imBox = Full(new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB))
-              imBox.get.getGraphics.drawImage(imageBuf, 0, 0, null)
-            }
-            //dodać do imbox obrazek gdy jest mały!
-            //zapisx$1
-            if (ImageIO.write(imBox.get, "png", new File(imgDir, img.id.toString + mimeType))) {
-              img.path(link).save
-              linkpath(serverPath + "/imgdata/" + img.id.toString + mimeType)
-              //S.notice("Plik został zapisany")
-            } else {
-              img.delete_!
-              S.notice("Zapis nieudany")
-            }
-          }
-        }
-
-        "#file" #> SHtml.fileUpload(x => fileHold = Full(x)) &
-          "#submit" #> SHtml.submit("Dodaj!", save) &
-          "#linkimg" #> <span id="linking">{ linkpath.is }</span>
-
-      }
-      /* ładownie pliku na serwer -- dokończyć*/
-      def uploadFile() = {
-        var fileHold: Box[FileParamHolder] = Empty
-
-        def save() {
-
-          if (fileHold.isEmpty) {
-            S.notice("Zapis nieudany")
-          } else {
-            val dirRoot: File = new File(pathRootFiles)
-            val fileSt = FileStore.create
-            fileSt.path("empty").save //potrzebuje id do wyliczenia hashu
-            val subDirPath = ((fileSt.id.is / 200) + 1).toString
-            val imgDir = new File(dirRoot, subDirPath)
-            //sprawdzam czy katalog do którego pasuje hash istnieje
-            if (!imgDir.exists) {
-              imgDir.mkdir
-            }
-            S.notice(fileHold.get.fileName)
-            val extension = fileHold.get.fileName.split('.').last //jakiś błąd
-            val link = imgDir.getAbsolutePath + "/" + fileSt.id.toString + "." + extension
-            val filename = fileSt.id.toString + "." + extension
-            val fileOut = new FileOutputStream(new File(imgDir, filename))
-            fileOut.write(fileHold.get.file)
-            fileSt.path(link).save
-            linkpath(serverPath + "/filedata/" + filename)
-            //S.notice("Plik został zapisany")
-          }
-
-        }
-        "#file" #> SHtml.fileUpload(x => fileHold = Full(x)) &
-          "#submit" #> SHtml.submit("Dodaj!", save) &
-          "#linking" #> <span id="linking">{ linkpath.is }</span>
-      }
-
-      lazy val serverPath = {
-        S.request match {
-          case Full(r) => r.hostAndPath
-          case _ => "add host name"
+  def addImage() = {
+    var fileHold: Box[FileParamHolder] = Empty
+    var mimeType = ""
+    var mimeTypeFull = ""
+    var fileName = ""
+    def isCorrect = fileHold match {
+      case Full(FileParamHolder(_, mime, _, data)) => {
+        if (mime.startsWith("image/")) {
+          mimeType = "." + mime.split("/").last
+          mimeTypeFull = mime.toString
+          S.notice(mime.toString)
+          println("mimetype is good")
+          true
+        } else {
+          println("mimetype is wrong")
+          false
         }
       }
+      case Full(_) => {
+        println("NOT FileParamHolder?????")
+        S.error("Nieprawidłowy format pliku!")
+        false
+      }
+      case _ => {
+         println("Noting????????????????????????????")
+        S.error("Nie wczytano pliku")
+        false
+      }
+    }
+    val bufferedImageTYPE = if (mimeType == ".jpeg") BufferedImage.TYPE_INT_RGB else BufferedImage.TYPE_INT_ARGB
+    
+    def save() {
+      if (isCorrect) {
+        val fileName = fileHold.get.fileName
+        val imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
+        val resizedImageBuf = resizeImageWithProportion(imageBuf, 600, bufferedImageTYPE)
+        var outputStream = new ByteArrayOutputStream()
+        ImageIO.write(resizedImageBuf, mimeType.substring(1), outputStream)
+        val inputStream = new ByteArrayInputStream(outputStream.toByteArray())
+        MongoDB.use(DefaultMongoIdentifier) { db =>
+          val fs = new GridFS(db)
+          val inputFile = fs.createFile(inputStream)
+          inputFile.setContentType(mimeTypeFull)
+          inputFile.setFilename(fileName)
+          inputFile.save
+          linkpath("/img/" + inputFile.getId().toString() + mimeType)
+        }
 
-      //niezaimlpementowane - zrobić osobny moduł dla crona
-      def cleanImages(node: NodeSeq): NodeSeq = {
-        //przeszukiwanie wszystkich Post, Page i Comments i wyszukanie wszystkich 
-        val n = <h1>Nieużywane obrazki  zostały usunięte</h1>
-        n
+      }
+    }
+
+    "#file" #> SHtml.fileUpload(fileUploaded => fileHold = Full(fileUploaded)) &
+      "#submit" #> SHtml.submit("Dodaj!", save) &
+      "#linkimg" #> <span id="linking">{ linkpath.is }</span>
+  }
+
+  def addThumbnail() = {
+    var fileHold: Box[FileParamHolder] = Empty
+    var mimeType = ""
+    var mimeTypeFull = ""
+    var fileName = ""
+    def isCorrect = fileHold match {
+      case Full(FileParamHolder(_, mime, _, data)) => {
+        println("first: " + mime.toString)
+        if (!mime.startsWith("image/")) {
+          S.notice("Musisz dodać obrazek")
+          false
+        } else {
+          mimeType = "." + mime.split("/")(1)
+
+          S.notice(mime.toString)
+          true
+        }
+      }
+      case Full(_) => {
+        println("second: ")
+        S.error("Nieprawidłowy format pliku!")
+        false
+      }
+      case _ => {
+        println("third: ")
+        S.error("Brak pliku?")
+        false
+      }
+    }
+    val bufferedImageTYPE = if (mimeType == ".jpeg") BufferedImage.TYPE_INT_RGB else BufferedImage.TYPE_INT_ARGB
+
+    def save() {
+      if (isCorrect) {
+        val imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
+        val resizedImageBuf = resizeImageWithProportion(imageBuf, 100, bufferedImageTYPE)
+        var outputStream = new ByteArrayOutputStream()
+        ImageIO.write(resizedImageBuf, mimeType.substring(1), outputStream)
+        val inputStream = new ByteArrayInputStream(outputStream.toByteArray())
+        MongoDB.use(DefaultMongoIdentifier) { db =>
+          val fs = new GridFS(db)
+          val inputFile = fs.createFile(inputStream)
+          inputFile.setContentType(mimeTypeFull)
+          inputFile.setFilename(fileName + mimeType)
+          inputFile.save
+          linkpath("/img/" + inputFile.getId().toString() + mimeType)
+        }
+
       }
 
     }
+
+    "#file" #> SHtml.fileUpload(fileUploaded => fileHold = Full(fileUploaded)) &
+      "#submit" #> SHtml.submit("Dodaj!", save) &
+      "#linkimg" #> <span id="linking" style="display:none;">{ linkpath.is }</span>
+  }
+
+  private def resizeImageWithProportion(imageBuf: BufferedImage, maxDimension: Int, bufferedImageType: Int): BufferedImage = {
+    var imageBufferOut: BufferedImage = imageBuf
+    val width = imageBuf.getWidth
+    val height = imageBuf.getHeight
+    if (width > maxDimension || height > maxDimension) {
+      if (width > height) {
+        val image: java.awt.Image = imageBuf.getScaledInstance(maxDimension, (height.toDouble * maxDimension.toDouble / width.toDouble).toInt, Image.SCALE_SMOOTH)
+        imageBufferOut = new BufferedImage(maxDimension, (height.toDouble *maxDimension.toDouble / width.toDouble).toInt, bufferedImageType)
+        imageBufferOut.getGraphics.drawImage(image, 0, 0, null)
+        //imageBuf = im.asInstanceOf[BufferedImage]
+      } else {
+        val image: java.awt.Image = imageBuf.getScaledInstance((width.toDouble * 500.0 / height.toDouble).toInt, 500, Image.SCALE_SMOOTH)
+        imageBufferOut = new BufferedImage((width.toDouble * maxDimension.toDouble / height.toDouble).toInt, maxDimension, bufferedImageType)
+        imageBufferOut.getGraphics.drawImage(image, 0, 0, null)
+      }
+    } else {
+      imageBufferOut = new BufferedImage(width, height, bufferedImageType)
+      imageBufferOut.getGraphics.drawImage(imageBuf, 0, 0, null)
+    }
+    imageBufferOut
+  }
+
+  /* ładownie pliku na serwer -- dokończyć*/
+  def uploadFile() = {
+    var fileHold: Box[FileParamHolder] = Empty
+    var fileName = ""
+    var mimeType = ""
+    var mimeTypeFull = ""
+    def isCorrect = fileHold match {
+      case Full(FileParamHolder(_, mime, fileNameIn, data)) => {
+        fileName = fileNameIn
+        mimeType = mime.toString
+        if (data.length < 10000000) true else {
+          println("Za duży plik!")
+          S.error("Za duży plik!")
+          false
+        }
+      }
+      case Full(_) => {
+        println("Nieprawidłowy format pliku!")
+        S.error("Nieprawidłowy format pliku!")
+        false
+      }
+      case _ => {
+        println("Brak pliku")
+        S.error("Brak pliku?")
+        false
+      }
+    }
+
+    def save() {
+      if (isCorrect) {
+        MongoDB.use(DefaultMongoIdentifier) { db =>
+          val fs = new GridFS(db)
+          val inputFile = fs.createFile(fileHold.get.fileStream)
+          inputFile.setContentType(mimeType)
+          inputFile.setFilename(fileName)
+          inputFile.save
+          linkpath("/file/" + inputFile.getId().toString() + fileName.split(".").last)
+        }
+      }
+    }
+    "#file" #> SHtml.fileUpload(x => fileHold = Full(x)) &
+      "#submit" #> SHtml.submit("Dodaj!", save) &
+      "#linking" #> <span id="linking">{ linkpath.is }</span>
+  }
+
+  def addSlide() = {
+     var fileHold: Box[FileParamHolder] = Empty
+    var mimeType = ""
+    var mimeTypeFull = ""
+    var fileName = ""
+    def isCorrect = fileHold match {
+      case Full(FileParamHolder(_, mime, _, data)) => {
+        if (mime.startsWith("image/")) {
+          mimeType = "." + mime.split("/").last
+          mimeTypeFull = mime.toString
+          S.notice(mime.toString)
+          println("mimetype is good")
+          true
+        } else {
+          println("mimetype is wrong")
+          false
+        }
+      }
+      case Full(_) => {
+        println("NOT FileParamHolder?????")
+        S.error("Nieprawidłowy format pliku!")
+        false
+      }
+      case _ => {
+         println("Noting????????????????????????????")
+        S.error("Nie wczytano pliku")
+        false
+      }
+    }
+    val bufferedImageTYPE = if (mimeType == ".jpeg") BufferedImage.TYPE_INT_RGB else BufferedImage.TYPE_INT_ARGB
+    
+    def save() {
+      if (isCorrect) {
+        val fileName = fileHold.get.fileName
+        MongoDB.use(DefaultMongoIdentifier) { db =>
+          val fs = new GridFS(db)
+          val inputFile = fs.createFile(fileHold.get.fileStream)
+          inputFile.setContentType(mimeTypeFull)
+          inputFile.setFilename(fileName)
+          inputFile.save
+          linkpath("/img/" + inputFile.getId().toString() + mimeType)
+        }
+
+      }
+    }
+
+      "#file" #> SHtml.fileUpload(fileUploaded => fileHold = Full(fileUploaded)) &
+      "#submit" #> SHtml.submit("Dodaj!", save) &
+      "#linkimg" #> <span id="linking">{ linkpath.is }</span>
+    
+  }
+  
+  
+  lazy val serverPath = {
+    S.request match {
+      case Full(r) => r.hostAndPath
+      case _ => "add host name"
+    }
+  }
+
+}
  
 

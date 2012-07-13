@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">	
+    <head_merge>
+       <link rel="stylesheet" href="/style/adminsite.css" />
+       <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+       <script>
+       $(document).ready(function(){
+    	   CKEDITOR.replace( 'body',{
+    		   toolbar :
+    			    [
+    			      { name: 'basicstyles', items : [ 'Bold','Italic' ] },
+    			      { name: 'paragraph', items : 
+    			    	  [ 'NumberedList','BulletedList','Blockquote','Underline','Strike','Subscript','Superscript' ] }
+    			    ],
+        uiColor : '#F4F6F3', width: '300px', height: '200px'} );
+       });
+       function clearForm() {
+			document.getElementById('frm2').reset();
+			return false;
+		}
+       function setData(elemTr) {
+			var $elem = $(elemTr);
+			var id = $elem.attr("id");
+			document.getElementById('id').value = id;
+			$elem.children('td').each(function(index){
+				switch (index){
+				case 0:
+					document.getElementById('title').value = this.innerHTML;
+					break;
+				case 1:
+					CKEDITOR.instances.body.setData(this.innerHTML);
+					break;
+			    default:
+			    	break;
+				}
+			});
+       }
+	   function validate(){
+		   var title = jQuery.trimmed(document.getElementById('title').value);
+		   var content = JQuery.trimmed(document.getElementById('body').value);
+		   if (title.length < 1 && content.length < 5) {
+			   document.getElementById('notice').innerHTML = "Za mało znaków";
+			   return false;
+		   }
+		   else return true;
+	   }
+	   function areYouSure() {
+		   var id = document.getElementById('id').value
+		   return confirm("Na pewno usunąć? id= " + id);
+	   }
+		
+       </script>
+    </head_merge>
+    <div class="container_12">
+	<div class="grid_3 new-bullets">
+		<h2>Administracja stronami:</h2>
+		
+                <div class="lift:Menu.builder?group=admin;i_item:id="> </div>
+		<a href="/">Powrót</a>
+	</div>
+	
+	<div class="grid_9">
+		
+		<form class="lift:AdminPagesSn.addAnounce?form=POST" method="POST" id="frm2"><br />
+			<fieldset><legend>Dodawanie ogłoszenia</legend>
+			  <p><input id="id"></p>
+				<p><label for="title">Tytuł:</label><input id="title" /></p>
+				<p><label for="body">Treść:</label><br/><textarea id="body"></textarea></p>
+				 <p><input id="submit" /><input id="delete">
+				 <input type="submit" onclick="return clearForm()" value="Czyść!" /></p>
+				<p id="notice"> </p>
+			</fieldset>
+		</form>
+		
+		<hr />
+		<div class="tables">
+		<h1>Ogłoszenia:</h1>
+		<table cellspacing="2">
+			<thead><tr><th>Tytuł</th><th>Treść</th></tr></thead>
+            <tbody class="lift:AdminPagesSn.anounceList"><tr><td></td><td></td></tr></tbody>
+		</table>
+		</div>
+	</div>
+	<div class="clear"></div>
+	</div>
+</div>
+</body></html>

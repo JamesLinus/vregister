@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <link rel="icon" type="image/png" href="/style/images/favicon.ico"/>
+        <title>XX LO im Zbigniewa Herberta w Gdańsku</title>
+        <script type="text/javascript" src="/jquery/jquery.js"></script>        
+      
+ 
+        <link rel="stylesheet" href="/style/global.css" />
+        <link rel="stylesheet" href="/style/reset.css" />
+        <link rel="stylesheet" href="/style/960.css" />
+        <link rel="stylesheet" href="/style/style.css" />
+        <link rel="stylesheet" href="/style/colorbox.css" />
+        <script type="text/javascript" src="/jquery/jquery.jcarousel.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/style/jcarousel/skin.css" /> 
+        <script src="/jquery/jquery.colorbox-min.js" type="text/javascript"></script>
+ <script type="text/javascript">
+function mycarousel_initCallback(carousel)
+{
+    // Disable autoscrolling if the user clicks the prev or next button.
+    carousel.buttonNext.bind('click', function() {
+        carousel.startAuto(0);
+    });
+
+    carousel.buttonPrev.bind('click', function() {
+        carousel.startAuto(0);
+    });
+
+    // Pause autoscrolling if the user moves with the cursor over the clip.
+    carousel.clip.hover(function() {
+        carousel.stopAuto();
+    }, function() {
+        carousel.startAuto();
+    });
+};
+
+jQuery(document).ready(function() {
+    jQuery('#mycarousel').jcarousel({
+        
+        auto: 2,
+        wrap: 'last',
+        visible : 5,
+        initCallback: mycarousel_initCallback
+    });
+    jQuery("a[rel='group1']").colorbox();
+});
+
+
+</script>
+    </head>
+    <body id="body-gal">
+    
+        <!-- Header -->
+        <div class="container_12">
+            <div id="header-pages" class="grid_12">
+                <div id="logo" class="grid_4 alpha"><a href="/index"><img src="/style/images/logo.png" alt="" /></a></div>
+                <div id="menu" class="grid_8 omega">
+                    <ul id="nav">
+                        <li><a href="/index"><img src="/style/images/home.png"  title="Strona główna"/></a></li>
+            <li><a href="/pages"><img src="/style/images/pages.png"  title="Artykuły"/></a></li>
+                        <li><a href="/forum"><img src="/style/images/forum.png"  title="Forum"/></a></li>
+                        <li><a href="/gallery"><img src="/style/images/gallery.png"  title="Galeria zdjęć"/></a></li>
+            <li><a href="/vregister"><img src="/style/images/register.png"  title="Dziennik internetowy"/></a></li>
+            <li><a href="/gallery"><img src="/style/images/vacat.png"  title="Zastępstwa"/></a></li>
+            <li><a href="/contact"><img src="/style/images/mail.png"  title="Kontakt"/></a></li>
+                        <li id="login"><div style="text-align:right; margin-top: 5px;" class="lift:MainSn.logInfo">
+                        <img src="/style/images/user.png" /><a><span>Nie---zalogowany</span></a></div></li> 
+                    </ul>
+                </div>                
+            </div>
+           
+            <div  class="grid_12">
+               <div id="wrap" class="lift:GallerySn.drawSlider" >
+               <ul id="mycarousel" class="jcarousel-skin-tango"><li></li></ul>
+               </div>  
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!-- End of Header -->
+
+
+        
+
+         <!-- Main Section : index.html-->
+        <div id="content" class="main-section">
+        
+        </div>
+         <!-- End of Main Section -->
+         
+         
+        <div class="clear"></div>
+        <div id="tail">
+            <div class="container_12">
+        Programmed by <a href="http://brosbit4u.net">BrosBit4U.net</a> &bull; Core template by <a href="http://www.codeplay.co.za">Code Play Studios</a> 
+            </div>
+        </div>
+        
+    </body>
+</html>
+

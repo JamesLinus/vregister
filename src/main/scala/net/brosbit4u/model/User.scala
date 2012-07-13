@@ -32,7 +32,9 @@ package net.brosbit4u {
       override def fieldOrder = List(id, firstName, lastName, email,
         locale, timezone, password, role)
       override def screenWrap = Full(<lift:surround with="default" at="content">
-                                       <div class="center"><lift:bind/></div>
+                                       <div id="main" class="main-section">
+    		  							<div class="container_12"><lift:bind/>
+    		  							</div></div>
                                      </lift:surround>)
       // comment this line out to require email validations
       override def skipEmailValidation = true

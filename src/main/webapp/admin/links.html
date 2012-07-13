@@ -4,7 +4,7 @@
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
     <head_merge>
-     
+      <link rel="stylesheet" href="/style/adminsite.css" />
         <script>
             
             var isEdited = false;
@@ -36,7 +36,7 @@
                 $edited.children('.urlLink').text('');
                 $edited.children('.nameLink').append('<input type="text" value="' + name +'" />');
                 $edited.children('.urlLink').append('<input type="text" value="' + url +'" />');
-                $edited.children('.buttonLink').append('<input type="submit" value="USUŃ" onclick="deleteRow(this)"/>');
+                $edited.children('.buttonLink').append('<input type="image" src="/style/images/delico.png" onclick="deleteRow(this)"/>');
 
 
             }
@@ -88,7 +88,7 @@
                     xmlStr += '<links name="';
                     xmlStr += name;
                     xmlStr += '">';
-                    $(this).children('table').children('tbody').children('tr').each(function() {
+                    $(this).children('.tables').children('table').children('tbody').children('tr').each(function() {
                         xmlStr += '<link ';
                         var error = false;
                         $(this).children('td').each(function(index) {                                
@@ -142,27 +142,29 @@
 
             function newDepartment() {
                 var divDep  = '<fieldset class="divDepartment"> \
-                    <strong class="nameDepartment">Nazwa działu: </strong><input class="nameDep" value="" /> \
+                    <strong class="nameDepartment">Nazwa działu: </strong><input type="text" class="nameDep" value="" /> \
                 <span class="nameError"></span> \
+                <img type="image" src="/style/images/delico.png" onclick="deleteDepartment(this)"  /> \
+                <div class="tables"> \
                 <table> \
                     <thead><tr><th>Nazwa</th><th>Link</th><th></th></tr></thead> \
                     <tfoot><tr><td><input type="text" class="addLinkNameInput" /></td> \
                 <td><input type="text" class="addLinkUrlInput" /></td> \
-                <td><input type="submit" value="DODAJ" onclick="addRow(this)"/></td> \
+                <td><input type="image" src="/style/images/addico.png" value="DODAJ" onclick="addRow(this)"/></td> \
             </tr> \
                        </tfoot> \
                     <tbody ></tbody> \
                 </table>  \
-                        <button onclick="deleteDepartment(this)" style="float:right;" >USUŃ DZIAŁ</button> \
+                </div> \
                 </fieldset>';
             $("#linksCont").prepend(divDep);
             }
 	</script>
-        <style> .divDepartment  thead th {background-color: blue; }
-        .divDepartment tfoot  td {background-color: blue;}</style>
+      
     </head_merge>
 
-	<div class="menuside">
+	<div class="container_12">
+  <div class="grid_3 new-bullets">
 		<h3>Administracja stronami:</h3>
 
                 <div class="lift:Menu.builder?group=admin;i_item:id="> </div>
@@ -170,27 +172,29 @@
 		<a href="/">Powrót</a>
 	</div>
 
-	<div class="right">
+	<div class="grid_9">
             <h2>Edycja linków</h2><br/>
             <div class="lift:AdminPagesSn.showLinks" id="linksCont">
                 <fieldset class="divDepartment">
                 <strong class="nameDepartment">Nazwa działu: </strong><input class="nameDep" />
                 <span class="nameError"></span>
+                <input  type="image" src="/style/images/delico.png" onclick="deleteDepartment(this)"  />
+                <div class="tables">
                 <table>
                     <thead><tr><th>Nazwa</th><th>Link</th><th></th></tr></thead>
                     <tfoot>
                         <tr><td><input type="text" class="addLinkNameInput" /></td>
                 <td><input type="text" class="addLinkUrlInput" /></td>
-                <td><input type="submit" value="OK" onclick="addRow(this)"/></td>
+                <td><input type="image" src="/style/images/okico.png" onclick="addRow(this)"/></td>
             </tr></tfoot>
                     <tbody ><tr class="linkTr" onclick="editLink(this)"><td class="nameLink"></td>
                             <td class="urlLink"></td><td class="buttonLink"></td></tr></tbody>
                     
                 </table>
-                 <button onclick="deleteDepartment(this)" style="float:right;" >USUŃ DZIAŁ</button>
-                 
+                </div>
                 </fieldset>
-                <button onclick="newDepartment()">NOWY DZIAŁ</button>
+                <br/>
+                <label>Nowy dział </label><input type="image" src="/style/images/addico.png" onclick="newDepartment()" />
             </div>
         <hr/>
         <iframe src='/filestorage' width='95%' height='250px'><p>Brak obsługi ifame!</p></iframe>
@@ -199,6 +203,10 @@
 			<input id="xmlData" />
 			<input id="submit" /> 
                 </form>
+                
+                </div>
+                <div class="clear"></div>
+                </div>
            
 </div>
 </body></html>

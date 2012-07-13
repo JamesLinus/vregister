@@ -1,138 +1,78 @@
-/* CSS Document */
-/* Web Industry */
+body { font:13px/1.4em "Helvetica", Arial, sans-serif;} 
+#body {background: #272729 url(/style/images/bg.png) repeat-x top;}
+#body-gal {background: #FFF url(/style/images/bg_gal.png) repeat-x top;}
+/* Content */
+#wrapper{}
+#header {height:101px;margin:1px 10px 5px 10px;}
+#header-pages {height:86px;margin:10px 10px 5px 10px;}
+#content{width:100%;margin-top:-100px;padding-bottom:10px;min-height:200px;background-color:#FFF;padding-top: 100px;}
+.shadow {background:#FFF url(/style/images/content-bg.png) no-repeat top center;}
+#logo {margin-top:5px;}
+#slider {height:330px;margin-bottom:0px;position:relative;}
+#footer {width:100%;color:#FFF; padding:20px 0;}
+#footer h1 {text-shadow: 0px 1px 1px #000000;}
+#footer ul {margin-top:10px;list-style:none;}
+#footer ul  li{ border-top:solid 1px #414141; padding: 3px 0;}
+#footer ul.social-icons  li{display:inline;margin-right:5px;border:none;}
+#footer ul.social-icons {margin-bottom:20px;}
+#tail {width:100%; min-height:20px; color:#000;background-color:#FFF;padding:15px 0;text-align:center;}
+a {color:#2DA8F8;}
+a:hover {color:#FF0000;}
+spacer {height:20px;}
+.main-section {padding-top:20px;background-color:#FFF;margin:0px auto;}
 
-body{
-	background:url(images/bg.png) repeat-x 0 0 #ffffff; color:#363636;
-	font: normal 12px/18px Arial sans-serif;
-	margin:0; padding:0;}
-div, h1, h2, h3, h4, h5, h6, form, label, input, span, ul, li, p, a{
-	margin:0; padding:0;}
-ul{
-	list-style:none;}
-.spacer{
-	font-size:0; line-height:0; clear:both;}
+/* Headings */
+h1 {font-size:1.5em;}
+p {margin:10px 0;}
 
+/* Testimonials section */
+div.testimonials {font:20px/26px Georgia, Times, serif;color:#3e4548;text-align:center; margin-top:20px;margin-bottom:20px;}
+span.testimonial-message {font:30px/36px Georgia, "Times New Roman", Times, serif;color:#a4a4a4;}
+#submit-form input[type="text"]{width: 120px;}
+#submit-form input[type="submit"] {background: url("/style/images/subscribe-single.png") no-repeat scroll 0 0 transparent;border: medium none;cursor: pointer;height: 27px;position: relative;top:2px;text-indent: -9999px;width: 90px;}
 
-/* -- header start -- */
-#header{
-	position:relative; margin:0 auto; width:950px; height:80px;
-	background:url(images/logo_zkpig26.png) no-repeat 0 0 #337BA6; color:#000000;}
-	
-#header img{
-	position:absolute; left:150px; top:30px; border:none;}
-	
-/* -- header end -- */
+/* Menu */
+#menu {}
+#menu ul {list-style:none;float:right;margin:5px 0px 0px 0px;}
+#menu ul li ul {list-style:none;float:right;margin:0px;background-color:#FFF;}
+#menu ul li ul li{font:11px/18px "Helvetica", Arial, sans-serif;color:#000000;text-decoration:none;padding:0px 3px 1px 3px;}
+#menu ul li {margin-right:15px;display:inline;}
+#menu ul li a.active {border-bottom:3px solid #2DA8F8;}
+#menu ul li  {font:20px/25px "Helvetica", Arial, sans-serif;color:#D2D2D2;text-shadow: 0px 1px 1px #000000;text-decoration:none; padding-bottom:3px;}
+#menu ul li a {color:#D2D2D2;text-shadow: 0px 1px 1px #000000;text-decoration:none; padding-bottom:3px;}
+ul li.dir:hover{background-color: #FFF; -moz-border-radius-topleft: 5px;-moz-border-radius-topright: 5px;}
+#menu ul li.last {margin-right:0px;}
+#menu span {color:rgb(45, 168, 248);font-size:12px; padding: 0 5px 0 5px;}
 
-/* -- top navigation start -- */
-#topNav{
-	width:950px; height:30px; margin:0 auto;
-	background:url(images/top_nav_bg.gif) no-repeat 0 0 #FFFFFF; color:#000000;}
-#topNav ul{
-	width:850px; margin:0 auto; }
-#topNav ul li{
-	float:left; margin:0 1px 0 0 ;}
-#topNav ul li a{
-	font:bold 12px/29px Arial, Helvetica, sans-serif; color:#595959;
-	background:url(images/top_nav_btn_bg.gif) repeat-x 0 0 #FFFFFF;
-	padding:0 12px; display:block; text-decoration:none;}
-#topNav ul li a:hover{
-	font:bold 12px/27px Arial, Helvetica, sans-serif; color:#337BA6;
-	background-color:#FFFFFF; background-image:none;
-	border-top:#DADADA 1px solid; border-right:#DADADA 1px solid; border-left:#DADADA 1px solid;
-	padding:0 11px; margin:2px 0 0 0; display:block; text-decoration:none;}
-#topNav ul li span {
-	font:bold 12px/27px Arial, Helvetica, sans-serif; color:#F50B04;
-	background-color:#FFFFFF; background-image:none;
-	border-top:#DADADA 1px solid; border-right:#DADADA 1px solid; border-left:#DADADA 1px solid;
-	padding:0 11px; margin:2px 0 0 0; display:block; text-decoration:none;}
-/* -- top navigation end -- */
+/* Side menu */
+#sidebar ul { list-style: none outside none;margin-top: 10px;margin-bottom:20px;}
+#sidebar ul li {padding: 3px 0px 0px 10px;background: url(/style/images/797.png) no-repeat center left;}
 
-/* body start */
-#body{
-	width:950px; margin:0 auto; padding:10px 0 0 0;
-	background-color: #ffffff;}
-/* body end */
-/* -- left pannel start poza kontaktem i galerią to samo-- */
-.menuside {
-	width:230px; float:left; padding: 2px 2px 2px 2px;}
-.menuside hr {
-	 margin-right: 20px; }
+/* frame for images */
+.frame{float:left; padding:3px;border:1px solid #AAAAAA;margin:0px 10px 10px 0px;-moz-border-radius: 3px;}
 
-.menuside ul{	
-	padding:7px 0 0 16px;}
-.menuside ul li a{
-	font:bold  13px/19px Arial, Helvetica, sans-serif; color:#535353;
-	padding:0 0 0 12px; display:block; text-decoration:none;
-	background:url(images/red_arrow.gif) no-repeat 0 4px #FFFFFF;}
-.menuside ul li a:hover{
-	font:bold 13px/19px Arial, Helvetica, sans-serif; color:#434343;
-	padding:0 0 0 12px; display:block; text-decoration:none;
-	background:url(images/red_arrow_bullet.gif) no-repeat 0 4px #BFDEF7;}
-.menuside h2 span{
-	margin:10px 10px 10px 10px; 
-	font:bold 20px/25px  Arial, Helvetica, sans-serif; color:#F50B04;
-	background-color:#FFFFFF; height:125px; }
-.menuside ul li a span {
-	font-style: italic; color:#337BA6; }
-.menuside ul li  span {
-	font-style: bold ; color: navy; padding-left: 10px; font-size: 120%;}
+/* gallery styles */
+#gallery .frame:hover{-moz-transform: rotate(-4deg);-webkit-transform: rotate(-4deg);} 
+#gallery { margin: 10px auto; background-color: white; text-align: center; width: 820px;}
 
+/*contact form */
+input[type="text"] {height:22px;border:1px solid #CCCCCC;width:325px;}
+#contact_form {margin:10px 0px;width:430px;}
+#contact_form textarea {border:1px solid #CCCCCC;width:325px;}
+#contact_form label {float:left;width:100px;}
+#contact_form input[type="submit"] {float:right;}
+.map {margin:10px 0px;}
 
+/* bullets */
+.new-bullets ul { list-style: none outside none;margin-bottom: 20px;margin-top: 10px;}
+.new-bullets ul li {background: url("/style/images/797.png") no-repeat scroll left center transparent;padding: 3px 0 0 10px;}
 
-/* -- left pannel end -- */
+/* Icons on text homepge */
+h1.image-info {background:url(/style/images/info_button_32.png) no-repeat left center; padding:10px 0px 0px 40px; height:32px;}
+h1.image-search {background:url(/style/images/search_32.png) no-repeat left center; padding:10px 0px 0px 40px; height:32px;}
+h1.image-home {background:url(/style/images/home_32.png) no-repeat left center; padding:10px 0px 0px 40px; height:32px;}
+/* new added */
+.grid_4 h1 { color: #f00; padding-left: 20px; }
+.pine-box { border: 1px solid #ddd; padding: 0 5px 0 5px; 
+	    margin: 5px; background-color: #ccccaa; }
 
-/* -- right pannel start -- */
-
-
-
-/* footer start -- */
-#footer{  
-	background:url(images/footer_bg.gif) repeat-x center top #0E4472; color:#000000;}
-.footer { 
-	width:490px; height:80px; margin:0 auto; padding:12px 0 0 0;}
-.footer ul{
-	width:445px; margin:0 auto;}
-.footer ul li{
-	font:bold 11px/20px "Trebuchet MS&quot", Arial, Helvetica, sans-serif;
-	color:#FFFFFF; background-color:#0E4472; float:left;}
-.footer ul li a{
-	font:bold 11px/20px "Trebuchet MS", Arial, Helvetica, sans-serif; text-decoration:none;
-	color:#FFFFFF; background-color:#0E4472; padding:0 8px;}
-.footer ul li a:hover{
-	font:bold 11px/20px "Trebuchet MS", Arial, Helvetica, sans-serif; text-decoration:none;
-	color:#FFFFFF; background-color:#11558C; padding:0 8px;}
-.footer p{ text-align:center;
-	margin:0 auto; width:450px; color:#DBEDFB; background-color:#0E4472;
-	font:normal 10px/18px Arial, Helvetica, sans-serif;}
-
-.footer p.signature a{
-	font:bold 12px/16px Arial, Helvetica, sans-serif; color:#FFFFFF;
-	text-align:center; text-decoration:none;}
-.footer p.signature a:hover{
-	font:bold 12px/16px Arial, Helvetica, sans-serif; color:#FFFFFF; background-color:#11558C; text-align:center; text-decoration:none;}
-/* footer end -- */
-#loginfo { 
-
-text-align: center;
-	background:url(images/loginfo.png) no-repeat;
-	width:215px; height:50px; padding:0px; border: none;}
-
-
-#loginfo a, img {
-	color: navy;
-	border-style: none;
-	border: none;
-	padding: 0px;
-	font: normal 16px/16px Arial, Helvetica, sans-serif;
-	text-decoration: none;
-}
-
-#loginfo a:link { border-style: none;  border: none; } 
-
-/* administracja stronami*/
-.right {
-	width:670px; float: right; padding: 0 21px 0 0;}
-.right table {
-	 border-spacing: 1px 1px; background-color: blue;}
-.right td,th {
-	padding: 2px 5px 2px 5px; background-color: #fff;}

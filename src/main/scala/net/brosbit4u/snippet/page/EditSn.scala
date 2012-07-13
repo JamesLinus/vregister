@@ -15,189 +15,162 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet {
+package net.brosbit4u.snippet
 
-    import _root_.scala.xml.{ NodeSeq }
-    import _root_.net.liftweb.util._
-    import _root_.net.liftweb.common._
-    import net.brosbit4u.model._
-    import _root_.net.liftweb.http.{ S, SHtml, RequestVar }
-    import Helpers._
+import _root_.scala.xml.{ NodeSeq, Unparsed }
+import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
+import _root_.net.brosbit4u.model._
+import _root_.net.liftweb.http.{ S, SHtml}
+import Helpers._
 
-    class EditSn {
+class EditSn {
 
-      //  val pageEditLink = <a href="/extra/editpage">Powrót do Edycji</a>
-      //  val postEditLink = <a href="/extra/edit.html">Powrót do Edycji</a>
-      //  val hydeparkEditLink = <a href="/extra/edithydepark.html">Powrót do edycji</a>
-
-      //  tworzenie nowego postu gdy rozpoczynamy nowy a nie edytujemy
-      //def createNewPost():String = {
-      //  val p = Post.create
-      //  p.confirmed(false).save
-      //  p.id.toString
-      //}
-
-      object idPost extends RequestVar[Long](
-        try { (S.param("id").openOr("0")).toLong }
-        catch { case _ => 0L })
-      object body extends RequestVar[String]("")
-      object title extends RequestVar[String]("")
-      object shortTitle extends RequestVar[String]("")
-      object depId extends RequestVar[Long](0L)
-
-      def addPage() = {
-
-        var defltOption = ""
-        val depart: List[(String, String)] = ("0", "wybierz") :: Department.findAll().map(d => (d.id.is.toString, d.shortName.is))
-        var id = "0" //id do zapisu do inputa
-        if (idPost.get != 0L) {
-          id = idPost.get.toString
-          val pageB = Page.find(id)
-          if (!pageB.isEmpty) {
-            val page = pageB.get
-            body(page.body.is)
-            title(page.title.is)
-            shortTitle(page.shortTitle.is)
-            depId(page.department.obj.get.id.is)
-            defltOption = page.department.obj.get.id.is.toString
-          }
-        }
-
-        //zapis postu
-        def savePage() {
-          var page = id match {
-            case "0" => Page.create
-            case id => Page.find(id) match {
-              case Full(p) => p
-              case _ => throw new IllegalAccessException("Nieprawidłowe id")
-            }
-          }
-          if (isAdmin_?) page.shortTitle(shortTitle.get).title(title.get).body(body.get).department(Department.find(depId)).save
-          S.redirectTo("/index?w=p&id=" + id)
-        }
-        //usunięcie
-        def delPage() {
-          Page.find(id) match {
-            case Full(p) if (isAdmin_?) => p.delete_!
-            case _ => Unit
-          }
-          S.redirectTo("/index")
-        }
-
-        def disPage() {
-          S.redirectTo("/index?w=p&id=" + id)
-        }
-
-        //akcja zapisu pliku --  do poprawy
-
-        if (isTeacher_?) {
-          "#id" #> SHtml.text(id, x => id = x, "type" -> "hidden") &
-            "#title" #> SHtml.text(title.is, x => title(x), "maxlength" -> "120", "id" -> "title") &
-            "#shorttitle" #> SHtml.text(shortTitle.is, x => shortTitle(x), "maxlength" -> "25", "id" -> "short") &
-            "#departs" #> SHtml.select(depart, if (defltOption.isEmpty) Empty else Full(defltOption), s => depId(s.toLong)) &
-            "#editor" #> SHtml.textarea(body.is, x => body(x), "class" -> "wymeditor", "style" -> "width:800px; height:600px", "id" -> "wymeditor") &
-            "#save" #> SHtml.submit("Zapisz!", savePage, "class" -> "wymupdate", "onclick" -> "return isValid();") &
-            "#delete" #> SHtml.submit("Usuń!", delPage, "onclick" -> "return confirm('Na pewno chcesz usunąć?');") &
-            "#discard" #> SHtml.submit("Anuluj!", disPage, "onclick" -> "return confirm('Napewno nie zapisywać?');")
-        } else {
-          "#form" #> <h1>Nie masz uprawnień do dodawania postów. Musisz być zalogowany jako nauczyciel.</h1>
-        }
+  def editPage() = {
+    val departmentTuples = ("Aktualności","Aktualności")::PageDepartment.findAll.map(department => {
+      (department.name, department.name)
+    })
+    
+    var id = S.param("id").openOr("")
+    
+    var title = ""
+    var authorId = 0L
+    var department = "Aktualności"
+    var thumbnailLink = ""
+    var introduction = ""
+    var content = ""
+      
+    if(id.length > 11) NewsHead.find(id)  match {
+      case Some(newsHead) => {
+        val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
+        title = newsHead.title
+        authorId = newsHead.authorId
+        thumbnailLink = newsHead.thumbnailLink
+        introduction = newsHead.introduction
+        content = articleContent.content
       }
-
-      //// --------------------------- strona
-      def addPost() = {
-
-        var id = "0"
-        if (idPost.get != 0L) {
-          id = idPost.get.toString
-          val postB = Post.find(id)
-          if (!postB.isEmpty) {
-            val post = postB.get
-            body(post.body.is)
-            title(post.title.is)
+      case _ => {
+        PageHead.find(id) match {
+          case Some(pageHead) => {
+            val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
+            title = pageHead.title
+            department = pageHead.department
+            authorId = pageHead.authorId
+            content = articleContent.content
           }
+          case _ => 
         }
-        def savePost() {
-          var post = id match {
-            case "0" => Post.create
-            case id => Post.find(id) match {
-              case Full(p) => p
-              case _ => throw new IllegalAccessException("Nieprawidłowe id")
-            }
-          }
-          //dodać walidację!
-          if ((id == "0" && isTeacher_?) || (id != "0" && User.currentUser.get.id.is == post.author.obj.get.id.is))
-            post.title(title.get).body(body.get).author(User.currentUser).save
-          else post.title(title.get).body(body.get).save
+      } 
+    }
 
-          S.redirectTo("/index?w=w&id=" + post.id.is.toString)
-
-        }
-
-        def delPost() {
-          Post.find(id) match {
-            case Full(p) => p.delete_!
-            case _ => Unit
-          }
-          S.redirectTo("/index")
-        }
-
-        def disPost() {
-          S.redirectTo("/index")
-        }
-
-        //zmienić na nauczyciela, właściciela wpisu
-        if (isOwner_?(id.toLong)) {
-
-          "#id" #> SHtml.text(id, x => id = x, "type" -> "hidden") &
-            "#title" #> SHtml.text(title, x => title(x), "maxlength" -> "120", "id" -> "title") &
-            "#editor" #> SHtml.textarea(body, x => body(x), "class" -> "wymeditor", "style" -> "width:800px; height:500px", "id" -> "wymeditor") &
-            "#save" #> SHtml.submit("Zapisz!", savePost, "class" -> "wymupdate", "onclick" -> "return isValid();") &
-            "#delete" #> SHtml.submit("Usuń!", delPost, "onclick" -> "return confirm('Na pewno chcesz usunąć?');") &
-            "#discard" #> SHtml.submit("Anuluj!", disPost, "onclick" -> "return confirm('Na pewno nie chcesz zapisać?');")
-
-        } else {
-          "#form" #> <h1>Nie masz uprawnień do dodawania stron. Musisz być zalogowany jako administrator.</h1>
-        }
-      }
-      //////////////// -------------------------------- koniec strony
-
-      def isAdmin_?(): Boolean = {
-        User.currentUser match {
-          case Full(user) => if (user.role.is == "a") true else false
-          case _ => false
-        }
-      }
-
-      def isTeacher_?(): Boolean = {
-        User.currentUser match {
-          case Full(user) => if (user.role.is == "a" || user.role.is == "n" || user.role.is == "d") true else false
-          case _ => false
-        }
-      }
-      // czy obecny użytkownik jest właścicielem posta
-      def isOwner_?(id: Long): Boolean = {
-        if (id == 0) isTeacher_?
+    def save() {
+        if(department == "Aktualności"){
+          saveNews()
+        } 
         else {
-          val post = Post.find(id)
-          if (post != Empty) {
-            User.currentUser match {
-              case Full(user) => if (post.get.author == user) true else false
-              case _ => false
-            }
-          } else false
+          savePage()
+        }
+    }
+    
+    def saveNews() {
+      var isNew = false
+      val newsHead = NewsHead.find(id).getOrElse(NewsHead.create)
+      if(newsHead.authorId == 0L || isOwner(newsHead.authorId)){
+        newsHead.title = title
+        newsHead.introduction = introduction
+        newsHead.thumbnailLink = thumbnailLink
+        val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
+        articleContent.content = content
+        articleContent.save
+        newsHead.content = articleContent._id
+        if(newsHead.authorId == 0L){
+            isNew = true
+            val user = User.currentUser.get
+            newsHead.authorId = user.id
+            newsHead.authorName = user.getFullName
+        }
+        newsHead.save
+        if (isNew) addNewsInfoOnMainPage(newsHead._id.toString, newsHead.title)
+      }
+      S.redirectTo("/pages?w=a&id=" + newsHead._id.toString)
+    }
+    
+    def savePage(){
+     val pageHead = PageHead.find(id).getOrElse(PageHead.create)
+      if(pageHead.authorId == 0L || isOwner(pageHead.authorId)){
+          pageHead.title = title
+          pageHead.department = department
+          val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
+          articleContent.content = content
+          articleContent.save
+          pageHead.content = articleContent._id
+          if(pageHead.authorId == 0L){
+              val user = User.currentUser.get
+              pageHead.authorId = user.id
+              pageHead.authorName = user.getFullName
+          }
+         pageHead.save
+      }
+      S.redirectTo("/pages?w=a&id=" + pageHead._id.toString)
+    }
+
+    def discard() {
+      S.redirectTo("/pages" )
+    }
+    
+    def delete(){
+     {if(id.length > 11) if(isOwner(authorId))  deleteObjectById(id)}
+     S.redirectTo("/pages" )
+    }
+    
+    "#id" #> SHtml.text(id, id = _, "style"->"display:none;") &
+    "#title" #> SHtml.text(title, in => title = in.trim) &
+    "#department" #> SHtml.select(departmentTuples,Full(department), department = _) &
+    "#thumbnail" #> SHtml.text(thumbnailLink , in => thumbnailLink = in.trim, "style" -> "display:none;") &
+    "#introduction" #> SHtml.textarea(introduction, in => introduction  = in.trim) &
+    "#editor" #> SHtml.textarea(content, in => content = in.trim) &
+    "#save" #> SHtml.submit("Zapisz", save, "onclick"->"return isValid()") &
+    "#delete" #> SHtml.submit("Usuń", delete,  "onclick"->"return confirm('Na pewno usunąć wpis?');") &
+    "#discard" #> SHtml.submit("Porzuć", discard, "onclick"->"return confirm('Na pewno porzucić bez zapisu?');") 
+     
+  }
+  
+  private def deleteObjectById(id:String) {
+     NewsHead.find(id)  match {
+      case Some(newsHead) => {
+        val articleContentOpt = ArticleContent.find(newsHead.content)
+        if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
+        newsHead.delete
+      }
+      case _ => {
+        PageHead.find(id) match {
+          case Some(pageHead) => {
+            val articleContentOpt = ArticleContent.find(pageHead.content)
+            if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
+            pageHead.delete
+          }
+          case _ => 
         }
       }
-
-      def isUser_?(): Boolean = {
-        User.currentUser match {
-          case Full(user) => true
-          case _ => false
-        }
-      }
-
     }
   }
-} //package end
+  
+  private def addNewsInfoOnMainPage(id:String, title:String){
+    val mainPageNewInfoList = MainPageNewInfo.findAll
+    val mainPageNewInfo = if(mainPageNewInfoList.isEmpty) MainPageNewInfo.create 
+    					  else mainPageNewInfoList.head
+    val newInNews = NewInNews("/pages?w=w&id=" + id, title)
+    mainPageNewInfo.news = newInNews::(mainPageNewInfo.news)
+    mainPageNewInfo.save
+  }
+
+  private def isOwner(idFromArticle: Long): Boolean = {
+    User.currentUser match {
+      case Full(user) => (idFromArticle == user.id.is || user.role.is == "a")
+      case _ => false
+    }
+  }
+
+}
+
 

@@ -3,65 +3,56 @@
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
     <head_merge>
-        
+         <link rel="stylesheet" href="/style/adminsite.css" />
         <script>function clearForm() {
-            document.getElementById('frm1').reset()
+            document.getElementById('frm1').reset();
+            return false;
         }
-        function setData(ele0) {
-            var ele = ele0.firstChild
-            document.getElementById('id').value = ele.innerHTML
-            ele = ele.nextSibling
-            document.getElementById('shortname').value = ele.innerHTML
-            ele = ele.nextSibling
-            document.getElementById('fullname').value = ele.innerHTML
+        function setData(elem) {
+            var $elem = $(elem);
+            document.getElementById('id').value = $elem.attr('id');
+            var eleTd = $elem.children('td').first();
+            document.getElementById('name').value = eleTd.text();
         }
         function validateForm() {
-            var shortname = $('#shortname');
-            shortname.val(jQuery.trim(shotname.val()));
-            var fullname = $('#fullname');
-            fullname.val(jQuery.trim(fullname.val()));
-            var massage = "";
-            var errors = false;
-            if (shortname.val().length > 20) {
-                errors = true;
-                massage += "Krótka nazwa nie może mieć więcej niż 20 znaków. "
-            }
-            if (fullname.val().length > 120) {
-                errors = true;
-                massage += "Pełna nazwa nie może mieć więcej niż 120 znaków. "
-            }
-            if (errors) { $('#notice').text(message);
-                return false;
-            }
+            var name = $('#name');
+            name.val(jQuery.trim(name.val()));
+            if(name.val().length < 2){
+            	$('#notice').text("* Brak nazwy lub nazwa zbyt krótka");
+            	return false;
+            } 
             else return true;
         }
         </script>
     </head_merge>
 
-<div class="menuside">
+<div class="container_12">
+  <div class="grid_3 new-bullets">
 <h3>Administracja stronami:</h3>
 <div class="lift:Menu.builder?group=admin;i_item:id="></div>
 <a href="/">Powrót</a>
 </div>
 
-<div class="right">
+<div class="grid_9">
 
 <form class="lift:AdminPagesSn.addDepartment?form=POST" id="frm1" onsubmit="validateForm()"><br />
-<h3>Edycja działów w aktualnościach szkoły.</h3><br />
-<table><tr><td>Id: </td><td><input id="id" /></td></tr>
-<tr><td>Krótka nazwa: </td><td><input id="shortname" /></td></tr> 
-<tr><td>Długa nazwa: </td><td><input id="fullname" /> </td></tr> 
-<tr><td></td><td><input id="submitadd" /><input id="submitdel" />
- <input type="button" onclick="clearForm()" value="Czyść!" /> </td></tr>
-</table>
+<fieldset><legend>Edycja działów w aktualnościach szkoły</legend>
+<p><input id="id" /></p>
+<p><label for="name">Nazwa: </label><input id="name" /></p> 
+<p><input id="save" /><input id="delete" />
+ <input type="submit" onclick="return clearForm()" value="Czyść!" /></p>
 <p id="notice"></p>
+</fieldset>
 </form>
 <hr />
-<table><thead><tr><th>Id</th><th>Krótka nazwa</th><th>Pełna nazwa</th></tr></thead>
+<div class="tables">
+<table><thead><tr><th>Nazwa</th></tr></thead>
     <tbody class="lift:AdminPagesSn.departments"> </tbody>
 </table>
 </div>
-<br class="spacer" />
+</div>
+<div class="clear"></div>
+</div>
 
 
 </div>

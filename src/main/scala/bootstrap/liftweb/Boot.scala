@@ -1,34 +1,26 @@
-///*
-// * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
-// *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
-// *
-// *   VRegister is free software: you can redistribute it and/or modify
-// *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
-// *   as published by the Free Software Foundation
-// *
-// *   VRegister is distributed in the hope that it will be useful,
-// *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-// *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// *   GNU General Public License for more details.
-// *
-// *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
-// *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
-// */
-//
+/*
+ * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
+ *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
+ *   See: <http://www.gnu.org/licenses/>.
+ */
 
 package bootstrap.liftweb
 
-import net.liftweb.util._
-import net.liftweb.common._
-import net.liftweb.http._
-import net.liftweb.http.provider._
-import net.liftweb.sitemap._
-import net.liftweb.sitemap.Loc._
-//import net.brosbit4u.model.User
+import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
+import _root_.net.liftweb.http._
+import _root_.net.liftweb.http.provider._
+import _root_.net.liftweb.sitemap._
+import _root_.net.liftweb.sitemap.Loc._
 import Helpers._
-import net.liftweb.mapper.{ DB, By, ConnectionManager, ConnectionIdentifier, Schemifier, DefaultConnectionIdentifier }
+import _root_.net.liftweb.mapper.{ DB, By, ConnectionManager, ConnectionIdentifier, Schemifier, DefaultConnectionIdentifier }
 import java.sql.{ Connection, DriverManager }
-import net.brosbit4u.model._
+import _root_.net.brosbit4u.model._
+import _root_.net.brosbit4u.api._
+import javax.mail._
+import javax.mail.internet._
+import _root_.net.liftweb.mongodb._
 
 object DBVendor extends ConnectionManager {
   def newConnection(name: ConnectionIdentifier): Box[Connection] = {
@@ -51,24 +43,34 @@ object DBVendor extends ConnectionManager {
 class Boot {
   def boot {
 
-    //    if (!DB.jndiJdbcConnAvailable_?) {
     DB.defineConnectionManager(DefaultConnectionIdentifier, DBVendor)
-    println("db added")
+    
+    MongoDB.defineDb(DefaultMongoIdentifier, MongoAddress(MongoHost("127.0.0.1", 27017), "vregister"))
 
     // where to search snippet
     LiftRules.addToPackages("net.brosbit4u")
 
-    Schemifier.schemify(true, Schemifier.infoF _, User, Post, Page,
-      Department, ForumDep, FileStore, ContactMail, ForumCom,
-      ForumThread, Gallery, ExtraData, LinkItem, LinkDepartment,
+    Schemifier.schemify(true, Schemifier.infoF _, User, ForumDep,
+      ForumCom, ForumThread, 
       ClassModel, UserChangeList, MarkMap, Pupil, SubjectName,
       ClassChangeList, PupilChangeList)
+      
+     LiftRules.statelessDispatchTable.append({
+      case Req("img" :: id :: Nil, _, GetRequest) => () => ImageLoader.image(id)
+      case Req("file" :: id :: Nil, _, GetRequest) => () => FileLoader.file(id)
+    })
+      
+      def configMailer(host: String, user: String, password: String) {
+      // Enable TLS support
+      System.setProperty("mail.smtp.starttls.enable", "true");
+      // Set the host name
+      System.setProperty("mail.smtp.host", host) // Enable authentication
+      System.setProperty("mail.smtp.auth", "true") // Provide a means for authentication. Pass it a Can, which can either be Full or Empty
+      Mailer.authenticator = Full(new Authenticator {
+        override def getPasswordAuthentication = new PasswordAuthentication(user, password)
+      })
+    }
 
-    //    val adminList = User.findAll(By(User.role, "a"))
-    //    if (adminList.length == 0) {
-    //      val u  = User.create
-    //      u.lastName("Administrator").email("mail@mail.org").password("123qwerty").validated(true).save
-    //    }
 
     if (DB.runQuery("select * from users where lastname = 'Administrator'")._2.isEmpty) {
       val u = User.create
@@ -76,33 +78,54 @@ class Boot {
     }
 
     val loggedIn = If(() => User.loggedIn_? && User.currentUser.open_!.validated.is,
-      () => RedirectResponse("/"))
+      () => RedirectResponse("/user_mgt/login"))
+      
     val isAdmin = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "a"),
-      () => RedirectResponse("/"))
-    val isSecretariat = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "s"),
-      () => RedirectResponse("/"))
-    val isTeacher = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "n"),
-      () => RedirectResponse("/"))
+      () => RedirectResponse("/user_mgt/login"))
+      
+    val isSecretariat = If(() => {
+      User.currentUser match {
+        case Full(user) => {
+          val role = user.role.is
+          role  == "a" || role == "s" 
+        }
+        case _ => false
+      }
+        } , () => RedirectResponse("/user_mgt/login"))
+      
+    val isTeacher = If(() => {
+      User.currentUser match {
+        case Full(user) => {
+          val role = user.role.is
+         role == "n" || role  == "a" || role == "s" || role == "d"
+        }
+        case _ => false
+        }
+      } , () => RedirectResponse("/user_mgt/login"))
 
     // Build SiteMap::
     def sitemap() = SiteMap(
       List(
-        Menu("Szkoła") / "index" >> LocGroup("public"), // Simple menu form
-        Menu("Galeria") / "gallery" >> LocGroup("public"),
+        Menu("Strona główna") / "index" >> LocGroup("public"), // Simple menu form
+        Menu("Artykuły") / "pages" >> LocGroup("public"),
+        Menu("Galeria") / "gallery" / ** >> LocGroup("public"),
         Menu("Kontakt") / "contact" >> LocGroup("public"),
         Menu("Forum") / "forum" >> LocGroup("public"),
         Menu("Forum Post") / "forumpost" >> LocGroup("extra"),
         Menu("Dziennik") / "vregister" >> LocGroup("public"),
-        Menu("Edytor postów") / "editpost" >> LocGroup("extra"),
-        Menu("Editor stron") / "editpage" >> LocGroup("extra"),
+        Menu("Edytor artykułów") / "editpage" >> LocGroup("extra") >> isTeacher,
+        Menu("Maile kontaktowe") / "admin" / "index" >> LocGroup("admin") >> isAdmin,
         Menu("Stałe strony") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
+        Menu("Ogłoszenia") / "admin" / "anounces" >> LocGroup("admin") >> isAdmin,
         Menu("Działy forum") / "admin" / "forum" >> LocGroup("admin") >> isAdmin,
+        Menu("Linki") / "admin" / "links" >> LocGroup("admin") >> isAdmin,
+        Menu("Slajdy") / "admin" / "slides" >> LocGroup("admin") >> isAdmin,
         Menu("Zmiana hasła") / "admin" / "password" >> LocGroup("admin") >> isAdmin,
         Menu("Sekretariat") / "admin" / "secretariat" >> LocGroup("admin") >> isAdmin,
-        Menu("Maile kontaktowe") / "admin" / "contactmail" >> LocGroup("admin") >> isAdmin,
         Menu("Indeksowanie Picasa") / "admin" / "picasaindex" >> LocGroup("admin") >> isAdmin,
-        Menu("Img") / "imgstorage" >> LocGroup("extra"),
-        Menu("File") / "filestorage" >> LocGroup("extra"),
+        Menu("Img") / "imgstorage" >> LocGroup("extra") >> loggedIn,
+        Menu("Thumb") / "thumbstorage" >> LocGroup("extra") >> loggedIn,
+        Menu("File") / "filestorage" >> LocGroup("extra") >>loggedIn,
         Menu("Nauczyciele") / "secretariat" / "index" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Klasy") / "secretariat" / "classes" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Wychowawcy") / "secretariat" / "bringup" >> LocGroup("secretariat") >> isSecretariat,
@@ -126,6 +149,10 @@ class Boot {
     LiftRules.setSiteMapFunc(sitemap)
     
     LiftRules.statelessRewrite.prepend(NamedPF("ClassRewrite") {
+        case RewriteRequest(
+            ParsePath("gallery" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "gallery" ::  Nil, Map("id" -> id)  )	
 		case RewriteRequest(
             ParsePath("teacher" :: "index" :: classSchool :: Nil, _, _,_), _, _) =>
           RewriteResponse(
@@ -168,6 +195,8 @@ class Boot {
     LiftRules.loggedInTest = Full(() => User.loggedIn_?)
 
     LiftRules.passNotFoundToChain = true
+    
+    configMailer("smtp.gmail.com", "20logdansk@gmail.com","secret")
 
     LiftRules.liftRequest.append {
       case Req("extra" :: _, _, _) => false

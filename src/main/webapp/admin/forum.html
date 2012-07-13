@@ -3,6 +3,7 @@
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
 <head_merge>
+ <link rel="stylesheet" href="/style/adminsite.css" />
     <script>function clearForm() {
         document.getElementById('frm2').reset()
     }
@@ -28,29 +29,33 @@
     </script>
 </head_merge>
     
-<div class="menuside">
+<div class="container_12">
+ <div class="grid_3 new-bullets">
 <h3>Administracja stronami:</h3>
 <div class="lift:Menu.builder?group=admin;i_item:id="></div>
 <a href="/">Powrót</a>
 </div>
 
-<div class="right">
+<div class="grid_9">
 
 <form class="lift:AdminPagesSn.addForumDep?form=POST" id="frm2"><br />
-<h3>Edycja działów na Forum.</h3><br />
-<table><tr><td>Id</td><td><input id=""id" /></td></tr>
-<tr><td>Nazwa</td> <td><input id="name" /></td> </tr>
-<tr><td></td><td><input id="submitadd" /><input id="submitdel" /><input type="button" onclick="clearForm()" value="Czyść!" /> </td></tr></table>
+<fieldset><legend>Edycja działów na Forum</legend>
+<p><label for="id">Id</label><input id="id" /></p>
+<p><label for="name">Nazwa</label><input id="name" /></p>
+<p><input id="submitadd" /><input id="submitdel" />
+<input type="button" onclick="clearForm()" value="Czyść!" /> </p>
 <p id="notice"></p>
+</fieldset>
 </form>
-
 <hr />
+<div class="tables">
 <table><thead><tr><th>Id</th><th>Nazwa</th></tr></thead>
     <tbody class="lift:AdminPagesSn.forumDepartments"> </tbody>
 </table>
 </div>
-
-<br class="spacer" />
+</div>
+<div class="clear"></div>
+</div>
 
 </div>
 </body></html>

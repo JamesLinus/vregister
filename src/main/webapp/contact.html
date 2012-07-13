@@ -1,40 +1,44 @@
- <<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
 <head_merge><link rel="stylesheet" type="text/css" href="/style/contact.css" /></head_merge>
-<div class="contact">
- <h2><span>Zespół Kształcenia </span></h2><h2><span> Podstawowego i Gimnazjalnego nr 26 </span></h2> 
- <h2><span>w Gdańsku</span></h2>
- <h2>Szkoła Podstawowa nr 70</h2>
-<h2>Gimnazjum nr 46</h2>
-<h2> ul. VII Dwór 6 </h2>
-<h2>80-301 Gdańsk</h2>
-<h2><span>Gdańska Szkoła Floretu - GSF</span></h2>
-<br /><hr />
-<h2>Dane kontaktowe:</h2><br/>
-<p>
-adres e-mail: <a href="mailto:zkpig26poczta@internetdsl.pl">zkpig26_AT_poczta.internetdsl.pl</a> <br/> telefon:/fax: 58 556 00 14</p><br/> 
-<h2>Nasza szkoła na mapie: </h2>
-<br/>
-<iframe width="640" height="480" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.pl/maps/ms?oe=utf-8&amp;client=firefox-a&amp;ie=UTF8&amp;hl=pl&amp;msa=0&amp;msid=105350817934856833726.000474e432f5946989e6a&amp;ll=54.387855,18.574598&amp;spn=0.002999,0.006866&amp;z=15&amp;output=embed"></iframe><br /><small>Pokaż <a href="http://maps.google.pl/maps/ms?oe=utf-8&amp;client=firefox-a&amp;ie=UTF8&amp;hl=pl&amp;msa=0&amp;msid=105350817934856833726.000474e432f5946989e6a&amp;ll=54.387855,18.574598&amp;spn=0.002999,0.006866&amp;z=15&amp;source=embed" style="color:#0000FF;text-align:left">ZKPiG nr 26 w Gdańsku</a> na większej mapie</small>
-</div>
 
-<br /><hr />
-<form class="lift:ContactSn.getData?form=POST contact"> 
-<h2>Formularz kontaktowy:</h2>
-<strong>Temat:</strong><br />
-<input id="theme" /><br />
-<strong>Treść:</strong><br />
-<textarea id="content" ></textarea> <br />
-<strong>Wybierz adresata:</strong><br />
-<select id="select"></select><br />
-<strong>Podpis:</strong><br />
-<input id="sign" /><br />
-<strong>Adres mail:</strong><br />
-<input id="mail" /><br />
-<input type="submit" id="submit" /><br />
-</form >
+<div class="container_12 ">
+ <div class="grid_6">
+                    <h1>Kontakt</h1>
+                 
+ <h2>XX Liceum Ogólnokształcące im. Zbigniewa Herberta</h2>
+<h2> ul. Dobrowolskiego 6 </h2>
+<h2> Gdańsk</h2>
+<br/><br/>
+                    <h2>Formularz kontaktowy</h2>
+                    <form class="lift:ContactSn.getData" id="contact_form">
+                        <fieldset>
+                            <p><label for="name">Temat:</label>
+                                <input type="text" id="theme" /></p>
+                            
+                            <p><label for="select">Do kogo:</label>
+                                <input type="text" id="select"/></p>    
+                            <p><label for="content">Treść:</label>
+                                <textarea name="content" id="" cols="20" rows="10"></textarea></p>
+                                <p><label for="email">Twój email:</label>
+                                <input type="text" name="email"/></p>
+                            <input type="submit" id="submit" />
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="grid_6">
+                    <h1>Our Offices</h1>
+                   <iframe  class="map frame"  width="459" height="300" frameborder="0" scrolling="no"
+ marginheight="0" marginwidth="0" src="https://maps.google.pl/maps?q=54.361095,18.587533&amp;num=1&amp;t=h&amp;hl=pl&amp;ie=UTF8&amp;z=14&amp;ll=54.361708,18.590283&amp;output=embed"></iframe>
+                    <p><img src="/style/images/phone.png" alt="Telefon" /> Tel: 0122223432</p>
+                    <p><img src="/style/images/print.png" alt="Fax" /> Fax: 0122223432</p>
+                    <p><img src="/style/images/email.png" alt="Email" /> Email: sekretariat w xxlo.pl</p>
+                </div>
+            </div>
+            <div class="clear"></div>
+
 
 </div>
 </body></html>

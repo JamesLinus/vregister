@@ -1,0 +1,9 @@
+Added plugins:
+addImage
+YouTube
+Formula
+audio
+
+Change css:
+Kama - editor.css remove width auto
+neon_ckeditor.css - add new file
