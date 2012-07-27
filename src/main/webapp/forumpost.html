@@ -3,58 +3,80 @@
 <body class="lift:content_id=main">
 <div id="main" class="lift:surround?with=default;at=content">
 <head_merge><link rel="stylesheet" type="text/css" href="/style/forum.css" />
-<script type="text/javascript" src="/jquery/jquery.js" ></script>
-<script type="text/javascript" src="/wymeditor/jquery.wymeditor.js" ></script>
-
+<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" >
 jQuery(function() {
-    jQuery('#commentwindow').wymeditor({lang:'pl',
-     toolsItems: [
-    {'name': 'Bold', 'title': 'Strong', 'css': 'wym_tools_strong'}, 
-    {'name': 'Italic', 'title': 'Emphasis', 'css': 'wym_tools_emphasis'},
-    {'name': 'Superscript', 'title': 'Superscript', 'css': 'wym_tools_superscript'},
-    {'name': 'Subscript', 'title': 'Subscript', 'css': 'wym_tools_subscript'},
-    {'name': 'InsertOrderedList', 'title': 'Ordered_List', 'css': 'wym_tools_ordered_list'},
-    {'name': 'InsertUnorderedList', 'title': 'Unordered_List', 'css': 'wym_tools_unordered_list'},
-    {'name': 'Indent', 'title': 'Indent', 'css': 'wym_tools_indent'},
-    {'name': 'Outdent', 'title': 'Outdent', 'css': 'wym_tools_outdent'},
-    {'name': 'Undo', 'title': 'Undo', 'css': 'wym_tools_undo'},
-    {'name': 'Redo', 'title': 'Redo', 'css': 'wym_tools_redo'},
-    {'name': 'CreateLink', 'title': 'Link', 'css': 'wym_tools_link'},
-    {'name': 'Unlink', 'title': 'Unlink', 'css': 'wym_tools_unlink'},
-    {'name': 'InsertImage', 'title': 'Image', 'css': 'wym_tools_image'},
-    {'name': 'InsertTable', 'title': 'Table', 'css': 'wym_tools_table'},
-    {'name': 'Paste', 'title': 'Paste_From_Word', 'css': 'wym_tools_paste'},
-    {'name': 'Preview', 'title': 'Preview', 'css': 'wym_tools_preview'},
-    
-  ],
-  containersItems: [
-    {'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'},
-    {'name': 'Blockquote', 'title': 'Blockquote', 'css': 'wym_containers_blockquote'},
-    {'name': 'Pre', 'title': 'Preformatted', 'css': 'wym_containers_pre'}
-  ],
-  logoHtml: ''
+     CKEDITOR.replace( 'content',{
+            width : 700, 
+            height: 200,
+            enterMode : CKEDITOR.ENTER_BR,
+            shiftEnterMode: CKEDITOR.ENTER_BR,
+            toolbar : [ [ 'Link','Unlink','Anchor' ],
+            [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
+            [ 'Find','Replace','-','SelectAll' ],
+            [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote'],
+            [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] ]
+        });
 });
 
-});
 </script>
 </head_merge>
 	<!-- oczątek wnętrza strony -->	
-	<div class="menuside">
-		<div id="loginfo"> <span class="lift:ForumPostSn.logInfo" /></div>
-		<h2><span>Działy forum:</span></h2>
-		<table class="lift:ForumPostSn.departments" ></table>
-		<br class="spacer" />	
-	</div>
+	
+	<div class="container_12">
+    <div   class="grid_9">
+    <div class="lift:page.ForumPostSn.showThread forum" >
+     <h1>Dział</h1>
+                  <table >
+                  <thead>
+                    <tr>
+                      <th><strong id="threadtitle">Nie zmieniony tytuł</strong><a id="threaddelete" 
+                      href="/forumpost/id?del=1">
+                            <img src="/style/images/delico.png" /></a>
+                      </th>
+                    </tr>
+                    </thead>
+                       <tbody><tr class="firstcomment"><td><div>Treść</div><hr/><p>Podpis i data</p></td></tr>
+                       <tr class="comments"><td><div>Treść </div><hr/><p>Podpis i data</p>
+                            <a href="/forumpost/id?del=1">
+                            <img src="/style/imgages/delico.png" /></a></td>
+                       </tr>
+                       </tbody>
+                  </table>
+                </div>
+    
+    <h1>Dodaj komentarz</h1>
+    <form class="lift:page.ForumPostSn.addComment" method="POST">
+      <fieldset>
+          <input id="id" />
+          <p><input id="content" /></p>
+          <p><input id="save" /></p>
+       </fieldset>
+    </form>
+    
+    </div>
+    
+    
+    
+    <div id="sidebar" class="grid_3" >
+    <h1>Działy forum:</h1>
+     <div class="lift:page.ForumPostSn.departments">
+       <ul><li></li></ul></div>
+    </div>
+    <div class="clear"></div>
+    <div class="lift:page.ForumPostSn.deleteCommentOrThread"><span id="deletecommentorthread"></span></div>
+    </div>
+	
+</div>	
+	
+	
+	
+	
+	
+
         <div class="lift:ForumPostSn.showThread"> </div>
 		
-	<form class="lift:ForumPostSn.newComment formatka" method="POST" id="forms" >
-            <fieldset>
-		<legend>Dodaj komentarz</legend>
-		  <input id="idThread" />
-                <label>Treść</label><input id="content" /><br />
-		<input id="add" />
-	</fieldset></form>
+	
 	<br class="spacer" />
 
 </div></body></html>

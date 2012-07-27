@@ -34,7 +34,7 @@ CKEDITOR.plugins.add( 'addImage',
               },
 	      {
 	       type : 'html',
-	       html : '<iframe src="/imagestorage" width="100%" height="350px" frameborder="0" onload="getImageURLfromIFrame(this)" ></iframe>'
+	       html : '<iframe src="/imgstorage" width="100%" height="350px" frameborder="0" onload="getImageURLfromIFrame(this)" ></iframe>'
 	      }
             ]
           },

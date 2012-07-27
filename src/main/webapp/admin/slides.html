@@ -4,7 +4,11 @@
 <div id="main" class="lift:surround?with=default;at=content">
     <head_merge>
          <link rel="stylesheet" href="/style/adminsite.css" />
+         <script type="text/javascript" src="/jquery/mytables.js"></script>
         <script>
+        $(document).ready(function(){
+        	colorTables();
+        });
         function clearForm() {
             document.getElementById('frm1').reset()
             document.getElementById('newInfo').innerHTML = "Nowy slajd";
@@ -52,7 +56,7 @@
 
 <div class="grid_9">
 
-<form class="lift:AdminPagesSn.addSlide?form=POST" id="frm1" onsubmit="validateForm()"><br />
+<form class="lift:page.AdminPagesSn.addSlide?form=POST" id="frm1" onsubmit="validateForm()"><br />
 <fieldset><legend>Edycja slajdów</legend>
 <p id="newInfo">Nowy slajd</p>
 <p><input id="id" /></p>
@@ -67,7 +71,7 @@
 <hr />
 <div class="tables">
 <table><thead><tr><th>Podgląd</th><th>Odnośnik</th><th>Opis</th></tr></thead>
-    <tbody class="lift:AdminPagesSn.slideList"><tr></tr> </tbody>
+    <tbody class="lift:page.AdminPagesSn.slideList"><tr></tr> </tbody>
 </table>
 </div>
 <hr/>

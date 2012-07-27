@@ -4,24 +4,26 @@
 <div id="main" class="lift:surround?with=default;at=content">
 <head_merge>
  <link rel="stylesheet" href="/style/adminsite.css" />
-    <script>function clearForm() {
-        document.getElementById('frm2').reset()
+  <script type="text/javascript" src="/jquery/mytables.js"></script>
+        <script>
+        $(document).ready(function(){
+            colorTables();
+        });
+        function clearForm() {
+        document.getElementById('frm2').reset();
+        return false;
     }
-    function setData(ele0) {
-        ele = ele0.firstChild
-        document.getElementById('id').value = ele.innerHTML
-        ele = ele.nextSibling
-        document.getElementById('name').value = ele.innerHTML
+    function setData(elem) {
+        $elem = $(elem);
+        document.getElementById('id').value = $elem.attr('id');
+        document.getElementById('name').value = $elem.children('td').first().text();
     }
     function validateForm() {
             var name = $('#name');
             name.val(jQuery.trim(shotname.val()));
             var errors = false;
-            if (name.val().length > 40) {
-                errors = true;
-                massage += "Nazwa nie może mieć więcej niż 40 znaków. "
-            }
-            if (errors) { $('#notice').text(message);
+            if (name.val().length < 3) {
+            	 $('#notice').text("Brak nazwy lub nazwa za krótka.");
                 return false;
             }
             else return true;
@@ -37,20 +39,20 @@
 </div>
 
 <div class="grid_9">
-
-<form class="lift:AdminPagesSn.addForumDep?form=POST" id="frm2"><br />
-<fieldset><legend>Edycja działów na Forum</legend>
-<p><label for="id">Id</label><input id="id" /></p>
+<h1>Edycja działów na Forum</h1>
+<form class="lift:page.AdminPagesSn.addForumDepartment" method="POST" id="frm2"><br />
+<fieldset>
+<p><input id="id" /></p>
 <p><label for="name">Nazwa</label><input id="name" /></p>
-<p><input id="submitadd" /><input id="submitdel" />
-<input type="button" onclick="clearForm()" value="Czyść!" /> </p>
+<p><input id="save" /><input id="delete" />
+<input type="submit" onclick="return clearForm()" value="Czyść!" /> </p>
 <p id="notice"></p>
 </fieldset>
 </form>
 <hr />
 <div class="tables">
-<table><thead><tr><th>Id</th><th>Nazwa</th></tr></thead>
-    <tbody class="lift:AdminPagesSn.forumDepartments"> </tbody>
+<table><thead><tr><th>Nazwa</th></tr></thead>
+    <tbody class="lift:page.AdminPagesSn.forumDepartments"><tr></tr> </tbody>
 </table>
 </div>
 </div>

@@ -51,13 +51,15 @@
 	bottom:0px;
 	background:#000;
 	color:#fff;
-	font-size: 12px; /*my*/
-	opacity:0.8; /* Overridden by captionOpacity setting */
+	font-size: 18px; /*my*/
+	opacity: 0.8; /* Overridden by captionOpacity setting */
 	width:100%;
+	text-align: center;
+	padding: 8px 0 8px 0;
 	z-index:8;
 }
 .nivo-caption p {
-	padding:5px;
+	padding:10px;
 	margin:0;
 }
 .nivo-caption a {
@@ -88,12 +90,7 @@
 .nivo-controlNav a.active {
 	font-weight:bold;
 }
-/* from nivo help my*/
-.nivoSlider {
-    position:relative;
-    background:url(/style/images/loading.gif) no-repeat 50% 50%;
-}
-.
+
 .nivoSlider a {
     border:0;
     display:block;

@@ -1,126 +1,123 @@
 /*
  * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *
- *   VRegister is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
- *   as published by the Free Software Foundation
- *
- *   VRegister is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
- *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
+ *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
+ *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet {
+package net.brosbit4u.snippet.page
 
-    import _root_.scala.xml.{ NodeSeq, Unparsed }
-    import _root_.net.liftweb.util._
-    import _root_.net.liftweb.common._
-    import net.brosbit4u.model._
-    //import _root_.net.liftweb.mapper._
-    import _root_.net.liftweb.http.{ S, SHtml, RequestVar }
-    import Helpers._
-    import java.util.Date
-    import net.brosbit4u.lib.Formater
+import scala.xml.{ NodeSeq, Unparsed }
+import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
+import _root_.net.brosbit4u.model.page._
+import _root_.net.brosbit4u.model._
+import _root_.net.liftweb.http.{ S, SHtml, RequestVar }
+import Helpers._
+import java.util.Date
+import _root_.net.brosbit4u.lib.Formater
 
-    class ForumPostSn extends UsersOperations {
+class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
 
-      object id extends RequestVar[Long]({
-        try {
-          S.param("id").getOrElse("0").toLong
-        } catch {
-          case _ => 0L
-        }
-      })
+	val id = S.param("id").getOrElse("")
+	val threadHead:ForumThreadHead = 
+	  ForumThreadHead.find(id) match {
+	  case Some(forumThreadHead) => forumThreadHead
+	  case _ => S.redirectTo("/forum");ForumThreadHead.create
+	}
+	val threadContent = ForumThreadContent.find(threadHead.content).getOrElse(ForumThreadContent.create)
+	if(threadContent._id != threadHead.content) threadHead.content = threadContent._id
 
-      def departments(node: NodeSeq): NodeSeq = {
-        val depart = ForumDep.findAll()
-        val n = <ul>
-                  <li><a href={ "forum?id=0" }>Najnowsze</a></li>
-                  { for (d <- depart) yield { <li><a href={ "forum?id=" + d.id.toString }>{ d.name.is }</a></li> } }
-                </ul>
-        n
-      }
-
-      //pokazuje wątek
-      def showThread(): NodeSeq = {
-        if (id.get == 0) {
-          ".threadpots" #> <h1>Nieprawidłowy URL</h1>
-        }
-
-        val postB = ForumThread.find(id.is)
-        postB match {
-          case Empty => {
-            S.redirectTo("/forum")
-            return <h1>Nieprawidłowy URL</h1>
-          }
-          case _ => Unit
-        }
-        val post = postB.get
-
-        val coments: List[ForumCom] = post.comments.toList
-        //usuwanie komentarza przez admina
-        S.param("dp").getOrElse("0") match {
-          case "0" => Unit
-          case idCom => {
-            ForumCom.find(idCom) match {
-              case Full(comment) => {
-                if (isAdmin) {
-                  comment.delete_!
-                  S.redirectTo("/forumpost?id=" + id.toString)
-                  return <h1>Komentarz usunięty!S</h1>
-                } else S.notice("Nie admin!")
-              }
-              case _ => S.notice("Brak komentarza: " + idCom); Unit
-            }
-          }
-        }
-
-        var nr = 0
-        val n = <div class="forum">
-                  <h2><span>{ post.department.obj.get.name }</span></h2>
-                  <table>
-                    <tr class="header2"><td colspan="4">{ post.title }</td></tr>
-                    {
-                      for (com <- coments) yield {
-                        nr += 1
-                        <tr class={ if (nr % 2 == 0) "row1" else "row2" }>
-                          <td><div class="comment">
-                                { Unparsed(com.content.get) }<br/>
-                                _____<br/>
-                                <img src="style/images/author_mini.png"/>{ com.author.obj.get.getFullName }<img src="style/images/data_mini.png"/>{ Formater.formatTime(com.createdAt.is) }
-                                { if (isAdmin) <a href={ "forumpost?id=" + id.toString + "&dp=" + com.id.is.toString } onclick=" return confirm('Na pewno usunąć post?');"><img src="style/images/delpost.png" style="float:right;"/></a> }
-                              </div></td>
-                        </tr>
-                      }
-                    }
-                  </table>
-                </div>
-        n
-      }
-
-      //formatka dodania wpisu do wątku
-      def newComment(): CssSel = {
-        if (!isLoged) return "#forms" #> <h3>Zaloguj się aby odpowiedzieć  (login i hasło uzyskasz w szkole)</h3>
-        var content = ""
-
-        def addComment() {
-          val post = ForumThread.find(id.is).get
-          val coment = ForumCom.create.content(content).thread(post).author(User.currentUser)
-          post.comments += coment
-          post.lastPoster(User.currentUser).lastTime(new Date()).save
-        }
-        "#content" #> SHtml.textarea(content, x => { println(content); content = x }, "id" -> "commentwindow") &
-          "#idThread" #> SHtml.text(id.is.toString, x => id(x.toLong), "type" -> "hidden") &
-          "#add" #> SHtml.submit("Dodaj!", addComment, "class" -> "wymupdate")
-      }
-
-    }
-
+  def departments() = {
+    "li" #> ForumDepartment.findAll.map(forumDepart => {
+      <li><a href={ "/forum/" + forumDepart._id.toString }>{ forumDepart.name }</a></li>
+    })
   }
-} //end of packages
+
+  def showThread() = {
+    
+        "h1 *" #> threadHead.department &
+        "#threadtitle" #> threadHead.title &
+        "#threaddelete" #> {if(isAdmin){<a href={"/forumpost/"+threadHead._id.toString + "?del=1"}>
+        						<img src="/style/images/delico.png" style="float:right;" 
+        						onclick="return confirm('Czy na pewno usunąć wątek?');"/></a>} else <a></a>} &
+        ".firstcomment *" #> <td><div>{Unparsed(threadContent.content)}</div><hr/>
+        						<p>#0<span class="fullname">{threadHead.authorName}</span>
+        						<span class="date">{Formater.formatDate(new Date(threadHead._id.getTime()))}</span>
+        						</p></td>  &
+        ".comments" #> threadContent.comments.map(comment => {
+        	"div *" #> Unparsed(comment.content) & 
+        	"p" #> <p><span>{"#" + comment.id.toString}</span>
+        			  <span class="fullname">{comment.authorName}</span>
+        			 <span class="date">{comment.date}</span>
+        			 </p> &
+          "a" #> {if(isAdmin){<a href={"/forumpost/" + threadHead._id.toString + "?clr=" + comment.id.toString}>
+                    <img src="/style/images/delico.png" style="float:right;" 
+          			onclick="return confirm('Czy na pewno usunąć komentarz?');"/>
+          				</a>} else <a></a> }
+        })
+        
+  }
+    
+  //formatka dodania wpisu do wątku
+  def addComment(): CssSel = {
+    if (!isLoged) return "fieldset" #> <h3>Zaloguj się aby odpowiedzieć  (login i hasło uzyskasz w szkole)</h3>
+    var content = ""
+
+    def save() {
+      if(isLoged){
+        val user = User.currentUser.get
+        val newId = threadContent.comments match {
+          case Nil => 1
+          case list => list.last.id + 1
+        }
+        val comment = Comment(newId, user.getFullName, 
+        		user.id, Formater.formatTime(new Date()), content)
+        threadContent.comments = threadContent.comments :+ comment
+
+      threadHead.count = threadContent.comments.length
+      threadHead.lastInfo = threadContent.getLastInfo
+      updateForumInfo(comment.date, threadHead.title, threadHead._id.toString)
+      threadContent.save
+      threadHead.save
+      S.redirectTo("/forumpost/"+ threadHead._id.toString)
+      }
+    }
+    
+    "#id" #> SHtml.text(threadHead._id.toString, x => x, "type" -> "hidden") &
+    "#content" #> SHtml.textarea(content, x => { println(content); content = x.trim }) &   
+    "#save" #> SHtml.submit("Dodaj!", save)
+  }
+  
+  
+  def deleteCommentOrThread() = {
+    if(isAdmin){
+       val deleteThread = S.param("del").openOr("")
+       val clearComment = tryo(S.param("clr").openOr("").toInt).openOr(0)
+       if(deleteThread == "1"){
+         println("delete thread!!!!!!!!!!")
+         threadContent.delete
+         threadHead.delete
+         S.redirectTo("/forum")
+       }
+       if(clearComment > 0){
+         threadContent.comments = threadContent.comments.map(comment => {
+           if(comment.id == clearComment){
+             Comment(comment.id, comment.authorName, comment.authorId, comment.date, 
+                 "<strong>Treść niezgodna z regulaminem została usunięta przez administratora</strong>")
+           } 
+           else comment
+         })
+         threadContent.save
+         S.redirectTo("/forumpost/" + threadHead._id.toString)
+       }
+    }
+    "#deletecommentorthread" #> <span></span>
+  }
+  
+  //experimental - for replace save in addComment
+  def updateComments(comment:Comment){
+    
+  }
+
+}

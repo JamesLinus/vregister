@@ -5,14 +5,14 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.model
+package net.brosbit4u.model.page
 
 import _root_.net.liftweb.mongodb._
 import java.util.Date
 import org.bson.types.ObjectId
 
 case class Slide(id:Int, src:String, link:String, description:String)
-case class NewInForum(link:String, title:String)
+case class NewInForum(link:String, title:String, date:String)
 case class NewInNews(link:String, title:String)
 case class LinkItem(link:String, description:String)
 case class LinkGroup(department:String, var links:List[LinkItem])

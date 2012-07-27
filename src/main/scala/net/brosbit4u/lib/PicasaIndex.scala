@@ -6,6 +6,7 @@
 
 package net.brosbit4u.lib
 
+import _root_.net.brosbit4u.model.page._
 import net.brosbit4u.model._
 import java.net.URL
 import javax.mail._

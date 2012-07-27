@@ -5,12 +5,13 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet
+package net.brosbit4u.snippet.page
 
 import _root_.scala.xml.{ NodeSeq }
 import _root_.net.liftweb.util._
 import Mailer._
 import _root_.net.liftweb.common._
+import _root_.net.brosbit4u.model.page._
 import _root_. net.brosbit4u.model._
 import _root_.net.brosbit4u.lib._
 import _root_.net.liftweb.http.{ SHtml, S }

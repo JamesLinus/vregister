@@ -5,12 +5,13 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet
+package net.brosbit4u.snippet.page
 
 import java.util.Date
 import scala.xml.{ NodeSeq, Text, XML, Unparsed }
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
+import _root_.net.brosbit4u.model.page._
 import _root_.net.brosbit4u.model._
 import _root_.net.liftweb.http.{ S, SHtml, RequestVar }
 import _root_.net.liftweb.mapper.{ Ascending, OrderBy, By }
@@ -59,7 +60,8 @@ class AdminPagesSn {
     "#id" #> SHtml.text(id, x => id = x, "style" -> "display:none;", "id" -> "id") &
       "#name" #> SHtml.text(name, x => name = x.trim, "maxlength" -> "30", "id" -> "name") &
       "#save" #> SHtml.submit("Zapisz!", addDepartment, "onclick" -> "return validateForm()") &
-      "#delete" #> SHtml.submit("Usuń!", delDepartment, "onclick" -> "return confirm('Na pewno chcesz usunąć dział i wszystkie strony działu?');")
+      "#delete" #> SHtml.submit("Usuń!", delDepartment, 
+          "onclick" -> "return confirm('Na pewno chcesz usunąć dział i wszystkie strony działu?');")
   }
 
   def departments(n: NodeSeq): NodeSeq = {
@@ -76,54 +78,39 @@ class AdminPagesSn {
 
   ////////////////////////////////////////////////////////////////////
   /** dodawanie działu do forum*/
-  def addForumDep() = {
-    //if (!isAdmin_?) return <h1>Nie masz uprawnień do edycji!</h1>
+  def addForumDepartment() = {
     var id = ""
     var name = ""
 
-    def addDep(): Unit = {
-      var inInt = 0
-      id = id.trim
-      var dep = ForumDep.create
-      try {
-        if (id.length > 0) inInt = id.toInt
-      } catch { case _ => return }
-      if (inInt > 0) {
-        dep = ForumDep.find(id).get
-      }
-      dep.name(name)
-      dep.save
+    def save() = {
+      val forumDepartment = ForumDepartment.find(id).getOrElse(ForumDepartment.create)
+      forumDepartment.name = name
+      forumDepartment.save
     }
 
-    def delDep(): Unit = {
-      var inInt = 0
-      id = id.trim
-      try {
-        if (id.length > 0) inInt = id.toInt
-      } catch { case _ => return }
-      if (inInt > 0) {
-        val dep = ForumDep.find(id).get
-        if (dep.db_can_delete_?) dep.delete_!
-      }
-    }
+    def delete(): Unit = {
+        if (id.length > 20) {
+          ForumDepartment.find(id) match {
+            case Some(forumDepartment) => forumDepartment.delete
+            case _ => 
+          }
+        }
+      } 
 
-    "#id" #> SHtml.text(id, x => id = x, "size" -> "6", "readonly" -> "readonly", "id" -> "id") &
-      "#name" #> SHtml.text(name, x => name = x, "size" -> "40", "maxlength" -> "40", "id" -> "name") &
-      "#submitadd" #> SHtml.submit("Zapisz!", addDep, "onclick" -> "return validateForm()") &
-      "#submitdel" #> SHtml.submit("Usuń!", delDep, "onclick" -> "return confirm('Na pewno chcesz usunąć dział i wszystkie wątki w dziale?');")
+    "#id" #> SHtml.text(id, x => id = x, "style" -> "display:none;", "id" -> "id") &
+      "#name" #> SHtml.text(name, x => name = x.trim, "size" -> "40", "maxlength" -> "40", "id" -> "name") &
+      "#save" #> SHtml.submit("Zapisz!", save, "onclick" -> "return validateForm()") &
+      "#delete" #> SHtml.submit("Usuń!", delete, 
+          "onclick" -> "return confirm('Na pewno chcesz usunąć dział i wszystkie wątki w dziale?');")
 
   }
 
-  def forumDepartments(node: NodeSeq): NodeSeq = {
-    val dep = ForumDep.findAll(OrderBy(ForumDep.name, Ascending))
-    var n: NodeSeq = <tbody>{
-      for (d <- dep) yield {
-        <tr onclick={ "setData(this)" }>
-          <td>{ d.id.is.toString }</td><td>{ d.name.is }</td>
-        </tr>
-      }
-    }</tbody>
-    n
+  def forumDepartments() = {
+    "tr" #> ForumDepartment.findAll.map(forumDepartment => {
+      <tr onclick={"setData(this)"} id={forumDepartment._id.toString} >
+      <td>{forumDepartment.name}</td>
+      </tr>
+    })
   }
 
   //////////////////////////////////////////////////////////////////////
@@ -239,17 +226,15 @@ class AdminPagesSn {
     var firstName = ""
     var lastName = ""
     var email = ""
-    var password = ""
     def save() {
       val user = User.find(id).openOr(User.create)
       if (id != "0" && id != "") {
         val userChangeList = UserChangeList.create
         userChangeList.firstName(user.firstName.is).lastName(user.lastName.is).email(user.email.is)
-          .passStr(password).user(user).date(new Date()).save
+          .user(user).date(new Date()).save
       }
-      user.firstName(firstName).lastName(lastName).email(email).password(password).role("s").validated(true)
-      if (password != "--------") user.password(password).passStr(password)
-      user.save
+      user.firstName(firstName).lastName(lastName).email(email)
+      				.role("s").save
     }
     def delete() {
       User.find(id) match {
@@ -261,7 +246,6 @@ class AdminPagesSn {
     "#firstName" #> SHtml.text(firstName, firstName = _, "id" -> "firstName", "maxlength" -> "30") &
     "#lastName" #> SHtml.text(lastName, lastName = _, "id" -> "lastName", "maxlength" -> "40") &
     "#email" #> SHtml.text(email, email = _, "id" -> "email", "maxlength" -> "48") &
-    "#password" #> SHtml.text(password, password = _, "id" -> "password", "readonly" -> "readonly", "maxlength" -> "12") &
     "#submit" #> SHtml.submit("Dodaj", save, "onclick" -> "return validate()") &
     "#delete" #> SHtml.submit("Usuń", delete, "onclick" -> "return validID()")
   }
@@ -279,7 +263,6 @@ class AdminPagesSn {
         <td>{ user.lastName.is }</td>
         <td>{ user.firstName.is }</td>
         <td>{ user.email.is }</td>
-        <td>{ user.passStr.is }</td>
       </tr>
     })
   }
@@ -323,7 +306,7 @@ class AdminPagesSn {
 	  
 	  "#id" #> SHtml.text(id, id = _, "id"->"id","style"->"display:none;") &
 	  "#title" #> SHtml.text(title, title = _, "id"->"title","maxlength"-> "40") &
-	  "#body" #> SHtml.textarea(content, content = _, "id"->"body","rows"->"10") & 
+	  "#content" #> SHtml.textarea(content, content = _, "id"->"content","rows"->"10") & 
 	  "#submit" #> SHtml.submit("Zapisz" ,save, "onclick"->"return validate();") &
 	  "#delete" #> SHtml.submit("Usuń", delete, "onclick"->"return areYouSure();")
   }

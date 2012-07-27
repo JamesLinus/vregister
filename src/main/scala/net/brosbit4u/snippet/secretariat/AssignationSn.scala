@@ -31,6 +31,7 @@ package net.brosbit4u {
     import net.brosbit4u.model._
 
     class AssignationSn {
+      /*
       //tabela z przedmiotami
       def bringupList() = {
         //var out:NodeSeq = NodeSeq.Empty
@@ -131,7 +132,7 @@ package net.brosbit4u {
         "#pupilOffClass"  #> pupilOffClass.map(p => {<tr><td>{p.fullInfoString}</td></tr>})
      }
      
-     
+     */
       
     
      }

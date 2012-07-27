@@ -11,10 +11,10 @@ import _root_.net.liftweb.http.{ SHtml, S, SessionVar }
 import _root_.net.liftweb.common._
 import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
 import Helpers._
-import net.brosbit4u.model._
+import _root_.net.brosbit4u.model._
 
 class BaseTeacher {
-		
+		/*
 		def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName) &
 		"#choosenclass" #> { 
 				if(ClassChoose.is == 0) Text("Wybierz klasę!")
@@ -24,5 +24,5 @@ class BaseTeacher {
 						else Text(cl.open_!.classString)
 				}
 	  
-		}
+		} */
 }

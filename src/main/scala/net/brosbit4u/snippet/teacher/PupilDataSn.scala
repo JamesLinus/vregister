@@ -27,7 +27,7 @@ import Helpers._
 import net.brosbit4u.model._
 
 class PupilDataSn extends BaseTeacher {
-  
+  /*
   def dataTable() = {
 	val idClass = ClassChoose.is
 	if (idClass == 0) S.redirectTo("teacher/index")
@@ -72,5 +72,6 @@ class PupilDataSn extends BaseTeacher {
          "#dataEdit" #> SHtml.text(dataStr, (x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
          "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
       }
+      */
   
 }

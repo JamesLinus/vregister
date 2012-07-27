@@ -18,9 +18,11 @@
 package net.brosbit4u {
   package model {
 
+    import _root_.net.liftweb.http.S
     import _root_.net.liftweb.mapper._
     import _root_.net.liftweb.util._
     import _root_.net.liftweb.common._
+    import Mailer._
 
     /**
      * The singleton that has methods for accessing the database
@@ -37,8 +39,20 @@ package net.brosbit4u {
     		  							</div></div>
                                      </lift:surround>)
       // comment this line out to require email validations
-      override def skipEmailValidation = true
-
+      override def skipEmailValidation = false
+      
+       override def createUserMenuLoc = Empty
+       override def editUserMenuLoc = Empty
+       
+       override def afterCreate = List(user => Mailer.sendMail(From("automat"), Subject("konto szkolne"), 
+           To(user.email.is),XHTMLMailBodyType(<div>
+        		   <h2>{"Witaj " + user.getFullName}</h2>
+        		   <p>Założono nowe konto w XX LO, aby dokończyć rejestrację wejdź na poniższy link</p>
+        		   <a href={"http//xxlo.pl/user_mgt/validate_user/" + user.userIdAsString }></a>
+        		   </div>)))
+      
+      override def afterValidation  = List( (user) => { S.redirectTo("/user_mgt/change_password")})
+     
     }
 
     /**
@@ -48,10 +62,12 @@ package net.brosbit4u {
       def getSingleton = User // what's the "meta" server
 
       object role extends MappedString(this, 1)
-      object gen extends MappedBoolean(this)
+      object scratched extends MappedBoolean(this){
+         override def defaultValue = false
+      }
       object phone extends MappedString(this, 12)
-      object passStr extends MappedString(this, 12)
-      object timePass extends MappedDateTime(this)
+      //object passStr extends MappedString(this, 12)
+      //object timePass extends MappedDateTime(this)
 
       def getFullName = firstName.is + " " + lastName.is
       def getFullNameReverse = lastName.is + " " + firstName.is

@@ -5,12 +5,13 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet
+package net.brosbit4u.snippet.page
 
 import java.util.Date
-import _root_.scala.xml.{ NodeSeq, Unparsed, Text }
+import _root_.scala.xml.{ NodeSeq, Unparsed, Text}
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
+import _root_.net.brosbit4u.model.page._
 import _root_.net.brosbit4u.model._
 import _root_.net.brosbit4u.lib._
 import _root_.net.liftweb.mapper.{ OrderBy, By, Descending, Ascending }
@@ -57,8 +58,10 @@ class PagesSn extends UsersOperations {
         					<h1>{pageHead.title}</h1>
         					<div id="pagebody">{Unparsed(contentOption.getOrElse(ArticleContent.create).content)}</div>
         					<hr/>
-        					<p id="pageinfo"><span>{pageHead.authorName}</span>
-        					<span>{Formater.formatTime(new Date(pageHead._id.getTime()))}</span></p>
+        					<p id="pageinfo"><span class="fullname">{pageHead.authorName}</span>
+        					<span class="date">{Formater.formatTime(new Date(pageHead._id.getTime()))}</span>
+        					{if(isOwner(pageHead.authorId)) <span class="edit"><a href={"/editpage/"+pageHead._id.toString}>Edytuj</a></span> 
+        					else <span></span> } </p>
         				  </div>
       }
       case _ => S.redirectTo("/pages?w=a")   
@@ -74,13 +77,14 @@ class PagesSn extends UsersOperations {
     "#pagecontent *" #> latestNewses.map( newsHead => {
       val link = "/pages?w=w&id=" + newsHead._id.toString
      <div class="pageshort">
-    	<a href={link}><img src={newsHead.thumbnailLink} class="frame" /></a>
+    		  <a href={link}><img src={newsHead.thumbnailLink} class="frame" /></a>
     	<p class="pageinfo"> 
-    	<span class="pageshorthead"><a href={link}>{newsHead.title}</a></span>
-    	<span class="pageauthor">{newsHead.authorName}</span> 
-    	<span class="pagedate">{Formater.formatTime(new Date(newsHead._id.getTime()))}</span>
+    	<span class="title"><a href={link}>{newsHead.title}</a></span><br/>
+    	<span class="fullname">{newsHead.authorName}</span> 
+    	<span class="date">{Formater.formatTime(new Date(newsHead._id.getTime()))}</span>
     	</p>
-    	<p class="pageshort">{Unparsed(newsHead.introduction)} <a href={link}> dalej >></a></p>
+    	<p class="pageintroduction">
+    	{Unparsed(newsHead.introduction)} <a href={link}> Czytaj dalej >></a></p>
     	</div> 
     }) &
     "#allnewses" #> oldNewses.map(newsHead => {
@@ -95,11 +99,13 @@ class PagesSn extends UsersOperations {
     NewsHead.find(id) match {
       case Some(newsHead) => {
         val contentOption = ArticleContent.find(newsHead.content)
+         "#pagedepartment *" #> Text("Aktualności") &
         "#pagecontent" #> <div id="pagecontent">
-    	  <img src={newsHead.thumbnailLink}  class="frame" />  <h1>Tutuł artykułu - wygląd niewsa</h1> 
-    	  <p class="pageinfo"> <span class="pageauthor">{newsHead.authorName}</span> 
-    	  <span class="pagedate">{Formater.formatTime(new Date(newsHead._id.getTime()))}</span>
-    	  <span class="pageedit">"<a href="/editpage">Edytuj</a></span>
+    	  <img src={newsHead.thumbnailLink}  class="frame" />  <h1>{newsHead.title}</h1> 
+    	  <p class="pageinfo"> <span class="fullname">{newsHead.authorName}</span> 
+    	  <span class="date">{Formater.formatTime(new Date(newsHead._id.getTime()))}</span>
+    	  {if(isOwner(newsHead.authorId)) <span class="edit"><a href={"/editpage/"+newsHead._id.toString}>Edytuj</a></span> 
+    	  else <span></span> }
     	  </p>
     	  <p class="pageintroduction">{Unparsed(newsHead.introduction)}</p>
     	  <div class="pagebody">{Unparsed(contentOption.getOrElse(ArticleContent.create).content)}</div>

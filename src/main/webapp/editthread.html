@@ -1,0 +1,88 @@
+<html>
+
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+<head_merge>
+<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+<script>
+$(document).ready(function(){
+    
+    CKEDITOR.replace( 'content',{
+        width : 700, 
+        height: 200,
+        enterMode : CKEDITOR.ENTER_BR,
+        shiftEnterMode: CKEDITOR.ENTER_BR,
+        toolbar : [ [ 'Link','Unlink','Anchor' ],
+        [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
+        [ 'Find','Replace','-','SelectAll' ],
+        [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote'],
+        [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
+        ['Font'] ]
+    });
+    
+    
+});
+
+function isValid() {
+  var title = document.getElementById('title').value;
+  var bool = true;
+  var info = 'Uzupełnij najpierw:';
+  title = jQuery.trim(title);
+  if (title == '') {
+    bool = false;
+    info = info + ' tytuł.';
+  }
+  if (!bool) {
+    alert(info);
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function isWhite(str) {
+    for (i = 0; i < str.length; i++) {
+        if (str.charAt(i) != ' ') return false;
+    }
+    return true;
+}
+
+function discardChange(){
+	if(confirm("Na pewno porzucić edycję?")) {
+		window.location = "/forum";
+		return false;
+		}
+	else return false;
+	
+}
+
+</script>
+<style> form label {font-weight: bold; float:left; width:100px;}</style>
+</head_merge>
+<div id="alerts">
+        <noscript>
+            <p>
+                <strong>Aby korzystać ze strony musisz włączyć JavaScript</strong>
+            </p>
+        </noscript>
+    </div>
+<div class="container_12">  
+<form  class="lift:page.ForumEditSn.editThread" method="POST">
+<h1>Edycja wątku</h1>
+    <fieldset>
+        <input id="id" type="text" />
+        <p><label for="title">Tytuł:</label> <input id="title" type="text"/></p>
+        <p><label for="department">Dział:</label> <select id="department"></select></p>
+        <p><h2>Treść</h2><textarea id="content"></textarea></p>
+        <p>
+            <input type="submit" id="save"/>
+            <input type="submit" id="delete" />
+            <input value="Anuluj"  type="submit" id="discard" onclick="return discardChange()"/>
+        </p>
+                </fieldset>
+</form>
+
+</div>
+</div>
+</body>
+</html>

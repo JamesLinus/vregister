@@ -1,4 +1,4 @@
-package net.brosbit4u.model
+package net.brosbit4u.model.page
 
 import _root_.net.liftweb.mongodb._
 import java.util.Date

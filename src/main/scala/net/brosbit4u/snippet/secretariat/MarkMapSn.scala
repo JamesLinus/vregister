@@ -29,7 +29,7 @@ package net.brosbit4u {
 
     class MarkMapSn {
 
-      /** zwraca listę klas w tabeli*/
+      /*
       def markList(in: NodeSeq): NodeSeq = {
 
         val markList: List[MarkMap] = MarkMap.findAll(OrderBy(MarkMap.name, Ascending))
@@ -83,7 +83,7 @@ package net.brosbit4u {
           "dataD" -> SHtml.text(dataStrD, (x) => dataStrD = x, "id" -> "dataD", "type" -> "hidden"),
           "submit" -> SHtml.submit("Zapisz zmiany!", processEntry, "onclick" -> "createData()"))
 
-      }
+      } */
     }
 
   }

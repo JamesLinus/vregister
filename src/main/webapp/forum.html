@@ -4,60 +4,42 @@
 <div id="main" class="lift:surround?with=default;at=content">	
 <head_merge><link rel="stylesheet" type="text/css" href="/style/forum.css" />
 <script type="text/javascript" src="/jquery/jquery.js" ></script>
-<script type="text/javascript" src="/wymeditor/jquery.wymeditor.js" ></script>
-
-<script type="text/javascript" >
-jQuery(function() {
-    jQuery('#commentwindow').wymeditor({lang:'pl',
-     toolsItems: [
-    {'name': 'Bold', 'title': 'Strong', 'css': 'wym_tools_strong'}, 
-    {'name': 'Italic', 'title': 'Emphasis', 'css': 'wym_tools_emphasis'},
-    {'name': 'Superscript', 'title': 'Superscript', 'css': 'wym_tools_superscript'},
-    {'name': 'Subscript', 'title': 'Subscript', 'css': 'wym_tools_subscript'},
-    {'name': 'InsertOrderedList', 'title': 'Ordered_List', 'css': 'wym_tools_ordered_list'},
-    {'name': 'InsertUnorderedList', 'title': 'Unordered_List', 'css': 'wym_tools_unordered_list'},
-    {'name': 'Indent', 'title': 'Indent', 'css': 'wym_tools_indent'},
-    {'name': 'Outdent', 'title': 'Outdent', 'css': 'wym_tools_outdent'},
-    {'name': 'Undo', 'title': 'Undo', 'css': 'wym_tools_undo'},
-    {'name': 'Redo', 'title': 'Redo', 'css': 'wym_tools_redo'},
-    {'name': 'CreateLink', 'title': 'Link', 'css': 'wym_tools_link'},
-    {'name': 'Unlink', 'title': 'Unlink', 'css': 'wym_tools_unlink'},
-    {'name': 'InsertImage', 'title': 'Image', 'css': 'wym_tools_image'},
-    {'name': 'InsertTable', 'title': 'Table', 'css': 'wym_tools_table'},
-    {'name': 'Paste', 'title': 'Paste_From_Word', 'css': 'wym_tools_paste'},
-    {'name': 'Preview', 'title': 'Preview', 'css': 'wym_tools_preview'},
-    
-  ],
-  containersItems: [
-    {'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'},
-    {'name': 'Blockquote', 'title': 'Blockquote', 'css': 'wym_containers_blockquote'},
-    {'name': 'Pre', 'title': 'Preformatted', 'css': 'wym_containers_pre'}
-  ],
-  logoHtml: ''
-});
-
-});
-</script>
 </head_merge>
 	<!-- oczątek wnętrza strony -->	
-	<div class="menuside">
-            <div id="loginfo"> <span class="lift:ForumSn.logInfo"> </span></div>
-		<h2><span>Działy forum:</span></h2>
-                <div class="lift:ForumSn.departments"></div>
-		<br class="spacer" />
-	</div>
-        <div class="lift:ForumSn.showThreads" ></div>		
+	<div class="container_12">
+    <div   class="grid_9">
+    <div class="lift:page.ForumSn.showThreadsTable forum" >
+     <h1>Dział</h1><br/>
+                  <table>
+                  <thead>
+                    <tr class="header1">
+                     <th class="col1">Wątek</th>
+                      <th class="col2">Posty</th><th class="col3">Ostatni</th>
+                    </tr>
+                    </thead>
+                       <tbody><tr id="tbodytr"><td></td></tr></tbody>
+                  </table>
+                  
+                  
+    </div>
+    
+    <div class="lift:page.ForumSn.linkAddNewThread">
+    <br/><br/>
+                  <a href="" id="linkaddnewthread"></a>
+    </div>
+    <br/><br/>
+    </div>
+    
+    
+    <div id="sidebar" class="grid_3" >
+    <h1>Działy forum</h1>
+     <div class="lift:page.ForumSn.departments">
+       <ul><li></li></ul></div>
+    </div>
+    <div class="clear"></div>
+    
+    </div>
+	 		
 
-	<form class="lift:ForumSn.newThread?form=POST formatka" method="POST">
-            <fieldset>
-	<legend>Dodawanie nowego wątku</legend>
-	<input id="idThread" type="hidden" />
-	<strong>Temat:</strong><br /><input id="title" /><br />
-        <strong>Treść:</strong><br /><textarea id="content" ></textarea><br />
-	<input type="submit" id="add" />
-        <p id="notice"></p>
-            </fieldset>
-	</form>
-	<br class="spacer" />		
 </div>
     </body></html>

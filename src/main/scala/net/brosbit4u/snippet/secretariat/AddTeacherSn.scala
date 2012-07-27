@@ -25,82 +25,68 @@ package net.brosbit4u {
     import _root_.java.util.{ Date, Random, GregorianCalendar, TimeZone }
     import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
     import Helpers._
-    import net.brosbit4u.model._
+    import _root_.net.brosbit4u.model._
+    import  _root_.net.liftweb.http.js.JsCmds._
+    import  _root_.net.liftweb.http.js.JsCmd
+    import  _root_.net.liftweb.http.js.JE._
 
     class AddTeacherSn {
 
       def teacherList() = {
-        //var out:NodeSeq = NodeSeq.Empty
         val teachers: List[User] = User.findAll(By(User.role, "n"))
 
         "tr" #> teachers.map(teacher => {
-          "tr [class]" #> { if (teacher.validated.is) "" else "scratched" } &
-            ".iduser" #> <td>{ teacher.id.is.toString }</td> &
+          "tr [class]" #> { if (teacher.scratched.is) "scratched" else "" } &
+          "tr [id]" #> teacher.id.is.toString &
+            ".id" #> <td>{ teacher.id.is.toString }</td> &
             ".firstname" #> <td>{ teacher.firstName.is }</td> &
             ".lastname" #> <td>{ teacher.lastName.is }</td> &
-            ".email" #> <td>{ teacher.email.is }</td> &
-            ".password" #> <td>{ teacher.passStr.is }</td> &
+            ".email" #> <td>{ teacher.email.is }</td>  &
             ".phone" #> <td>{ teacher.phone.is }</td>
         })
 
       }
-      def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName)
       
-
-      /** dodanie formatki i obsługa */
-      def formItem() = {
-        var dataStr = ""
-
-        def processEntry() {
-          //println(dataStr);
-          //zakłądam że  przyjdzie prawidłowy string lub go nie ma
-          //S.notice(dataStrEA)
-          //val date = new Date()
-          val date = new GregorianCalendar(TimeZone.getTimeZone("Europe/Warsaw")).getTime
-          val xml = XML.loadString(dataStr)
-          (xml \ "user").map(userXml => {
-            val id = (userXml \ "@id").toString
-            //println("Found id ::::::::::: " + id)
-            val validated = if ((userXml \ "@scratch").toString == "t") false else true;
-            val firstName = (userXml \ "firstName").text
-            val lastName = (userXml \ "lastName").text
-            val email = (userXml \ "email").text
-            val passStr = (userXml \ "password").text
-            val phone = (userXml \ "phone").text
-            val idInt = try { id.toInt } catch { case _ => 0 }
-            val user = User.find(id).openOr(User.create)
-            if (validated) {
-              if (idInt > 0) {
-                val ucl = UserChangeList.create
-                ucl.firstName(user.firstName).lastName(user.lastName).email(user.email).
-                  phone(user.phone).passStr(passStr).date(date).user(user).save
-              }
-              user.firstName(firstName).lastName(lastName).email(email).phone(phone).role("n").validated(true)
-              if (passStr != "--------") user.passStr(passStr).password(passStr)
-              user.save
-            } else {
-              if (idInt > 0) user.validated(false).save
-            }
-          })
+       def editAjax() = {
+    var userId = ""
+    var lastName = ""
+    var firstName = ""
+    var telephone = ""
+    var email = ""  
+      
+    def save() =  {
+      val user = User.find(userId).openOr(User.create)
+      user.lastName(lastName).firstName(firstName).phone(telephone).email(email).
+      role("n").scratched(false).save
+      userId = user.id.toString
+      JsFunc("insertRow", userId).cmd
+    }
+    
+    def delete() = {
+      User.find(userId) match {
+        case Full(user) => {
+          user.scratched(true).validated(false).save
+          JsFunc("deleteRow", userId).cmd
         }
-
-        "#dataEdit" #> SHtml.text(dataStr, (x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
-          "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
-
+        case _ => Alert("Nie ma takiego użytkownika")
       }
+    }
+    
+   
+   
 
-      def sketchTeacher(xmlStr: String) {
-        val xml = XML.loadString(xmlStr)
-        val allNodes = xml \ "sketch"
-        allNodes.map(node => {
-          val id = (node \ "@id").toString
-          User.find(id) match {
-            case Full(user) => user.validated(false)
-            case _ =>
-          }
-        })
+    val form = "#id" #> SHtml.text(userId, userId = _, "readonly"-> "readonly") &
+      "#lastname" #> SHtml.text(lastName, lastName = _) &
+       "#firstname" #> SHtml.text(firstName, firstName = _) &
+       "#email" #> SHtml.text(email, email = _) &
+       "#telephone" #> SHtml.text(telephone, telephone = _) &
+       "#delete" #> SHtml.ajaxSubmit("Usuń", delete, "type"->"image", 
+           "onclick" -> "return confirm('Na pewno usunąć użytkownika?')") &
+      "#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image",
+          "onclick" -> "return validateForm();") andThen SHtml.makeFormsAjax
 
-      }
+      "form" #> (in => form(in))
+       }
     }
 
   }

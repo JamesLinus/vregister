@@ -28,6 +28,7 @@ package net.brosbit4u {
     import net.brosbit4u.model.{ User, SubjectName, SubjectChangeList }
 
     class SubjectSn {
+      /*
       //tabela z przedmiotami
       def subjectList() = {
         //var out:NodeSeq = NodeSeq.Empty
@@ -80,7 +81,7 @@ package net.brosbit4u {
         "#dataEdit" #> SHtml.text(dataStr, (x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
           "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
 
-      }
+      } */
     }
 
   }

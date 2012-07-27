@@ -49,9 +49,9 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("net.brosbit4u")
+    LiftRules.addToPackages("net.brosbit4u.snippet.page")
 
-    Schemifier.schemify(true, Schemifier.infoF _, User, ForumDep,
-      ForumCom, ForumThread, 
+    Schemifier.schemify(true, Schemifier.infoF _, User, 
       ClassModel, UserChangeList, MarkMap, Pupil, SubjectName,
       ClassChangeList, PupilChangeList)
       
@@ -111,9 +111,10 @@ class Boot {
         Menu("Galeria") / "gallery" / ** >> LocGroup("public"),
         Menu("Kontakt") / "contact" >> LocGroup("public"),
         Menu("Forum") / "forum" >> LocGroup("public"),
-        Menu("Forum Post") / "forumpost" >> LocGroup("extra"),
+        Menu("Edycja wątku") / "editthread" / ** >> LocGroup("extra") >> loggedIn,
+        Menu("Forum Post") / "forumpost" / ** >> LocGroup("extra"),
         Menu("Dziennik") / "vregister" >> LocGroup("public"),
-        Menu("Edytor artykułów") / "editpage" >> LocGroup("extra") >> isTeacher,
+        Menu("Edytor artykułów") / "editpage" / ** >> LocGroup("extra") >> isTeacher,
         Menu("Maile kontaktowe") / "admin" / "index" >> LocGroup("admin") >> isAdmin,
         Menu("Stałe strony") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
         Menu("Ogłoszenia") / "admin" / "anounces" >> LocGroup("admin") >> isAdmin,
@@ -153,6 +154,22 @@ class Boot {
             ParsePath("gallery" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(
             "gallery" ::  Nil, Map("id" -> id)  )	
+         case RewriteRequest(
+            ParsePath("forumpost" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "forumpost" ::  Nil, Map("id" -> id)  )	
+        case RewriteRequest(
+            ParsePath("forum" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "forum" ::  Nil, Map("id" -> id)  )	
+        case RewriteRequest(
+            ParsePath("editthread" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "editthread" ::  Nil, Map("id" -> id)  )
+        case RewriteRequest(
+            ParsePath("editpage" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "editpage" ::  Nil, Map("id" -> id)  )
 		case RewriteRequest(
             ParsePath("teacher" :: "index" :: classSchool :: Nil, _, _,_), _, _) =>
           RewriteResponse(
@@ -196,7 +213,7 @@ class Boot {
 
     LiftRules.passNotFoundToChain = true
     
-    configMailer("smtp.gmail.com", "20logdansk@gmail.com","secret")
+    configMailer("smtp.gmail.com", "20logdansk@gmail.com","noting")
 
     LiftRules.liftRequest.append {
       case Req("extra" :: _, _, _) => false

@@ -29,6 +29,7 @@ package net.brosbit4u {
     import net.brosbit4u.lib.Formater
 
     class PupilSn {
+      /*
       def pupilList() = {
         //var out:NodeSeq = NodeSeq.Empty
         val pupils: List[Pupil] = Pupil.findAll() //jak ustawić kolejność od nazwiska???
@@ -119,7 +120,7 @@ package net.brosbit4u {
 //        val classesL: List[(String, String)] = ClassModel.findAll(OrderBy(ClassModel.level, Ascending), OrderBy(ClassModel.division, Ascending)).map(c => (c.id.is.toString, c.level.is + c.division.is + "(" + c.id.is.toString + ")"))
 //        bind("F", in, "classmenu" -> SHtml.select(classesL, Full(classesL.head._2), c => classStr = c),
 //          "submit" -> SHtml.submit("Ułóż!", makeOrder, "onclick" -> "return areyousure()"))
-//      }
+//      } */
     }
 
   }

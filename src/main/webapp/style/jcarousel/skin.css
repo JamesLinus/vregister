@@ -21,6 +21,8 @@
     width: 146px; /**/
     height: 110px; /**/
     border: 1px solid #fff;
+    background:none;
+    padding: 0;
 }
 
 .jcarousel-skin-tango .jcarousel-item-horizontal {
