@@ -3,124 +3,69 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=secret;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
-                    var $dTable = $();
-                    $(document).ready(function() {
-                      
-                        $dTable = $('#fullList').dataTable();
-                        
-                        $('#formAdd').dialog({
-                            autoOpen: false,
-                            height: 350,
-                            width: 500,
-                            modal: true
-                        });
-                        
-                        $dTable.children('tbody').children('tr').click( function () {
-                            var data = $dTable.fnGetData( this );
-                            $('#formAdd').dialog('open');
-                            insertData(data);
-                          } );
-                    });  
-                    
-                    function resetForm(){
-                        document.getElementsByTagName('form')[0].reset();
-                    }
-                    
-                    function insertRow(id){
-                    	 document.getElementById('id').value = id.toString();
-                    	 var position = getPosition();
-                    	 var col0 = userId.toString();
-                         var col1 = document.getElementById('lastname').value;
-                         var col2 = document.getElementById('firstname').value;
-                         var col3 =document.getElementById('email').value;
-                         var col4 = document.getElementById('telephone').value;
-                         var totalSize =  $dTable.fnGetNodes().length;
-                    	 if(position >= 0 && position < totalSize ) {
-                    		 $dTable.fnUpdate([col0, col1, col2, col3, col4], position);
-                    	 } 
-                    	 else {
-                    		 $dTable.fnAddData([col0, col1, col2, col3, col4]);
-                    	 }
-                    }
-                    
-                    
-                    function deleteRow(id) {            	 
-                        var $tr = $("#" + id);
-                        if($tr){
-                        	$tr.attr('class','scratched');
-                        }
-                    }
-            
-                    function showAddRow(){
-                    	resetForm();
-                        $('#formAdd').dialog('open');
-                    }
-                    
-                    function getNext(){
-                        var position = getPosition();
-                        var totalSize =  $dTable.fnGetNodes().length;
-                        if (position == -1) position = 0;
-                        else if(position == 0) position = totalSize -1;
-                            else position--;
-                         var data = $dTable.fnGetData(position );
-                         insertData(data);      
-                    }
-
-                    function getPrevious(){
-                    	var position = getPosition();
-                        var totalSize =  $dTable.fnGetNodes().length;
-                        if (position == -1) position = 0;
-                        else if(position == totalSize-1) position = 0;
-                            else position ++;
-                        var data = $dTable.fnGetData(position);
-                        insertData(data);
-                    }
-                    
-                    function insertData(data){
-                    	document.getElementById('id').value = data[0];
+                         
+                $(document).ready(function(){
+                	init_dataTable();
+               
+                	$('#formAdd').dialog({
+                        autoOpen : false,
+                        height : 350,
+                        width : 500,
+                        modal : true
+                    });
+ 
+                	
+                	$dTable.insertData = function (data) {
+                        $dTable.idInput.value = data[0];
                         document.getElementById('lastname').value = data[1];
                         document.getElementById('firstname').value = data[2];
                         document.getElementById('email').value = data[3];
                         document.getElementById('telephone').value = data[4];
                     }
-                    
-                    function getPosition(){
-                    	 var id = document.getElementById('id').value;
-                         var tr = document.getElementById(id);
-                         if(tr){
-                        	 return $dTable.fnGetPosition(tr);
-                         }
-                         else return -1;
+                	
+                	$dTable.getDataArray = function(id){
+                		var array = new Array();
+                        array[0] = id.toString();
+                        array[1] = document.getElementById('lastname').value;
+                        array[2] = document.getElementById('firstname').value;
+                        array[3] = document.getElementById('email').value;
+                        array[4] = document.getElementById('telephone').value;
+                        return array;
+                	}      
+                              	
+                });
+                
+               
+                
+               function validateForm() {
+                    var isError = false;
+                    clearFormsAddInfo();
+                    var firstName = jQuery.trim($('#firstname').val());
+                    if (!validateName(firstName)) {
+                        $('#firstnameinfo').text(info);
+                        isError = true;
                     }
-          
-                    function validateForm() {
-                        var isError = false;
-                        clearFormsAddInfo();
-                        var firstName = jQuery.trim($('#firstname').val());
-                        if (!validateName(firstName)) {
-                            $('#firstnameinfo').text(info);
-                            isError = true;
-                        }
-                        var lastName = jQuery.trim($('#lastname').val());
-                        if (!validateName(lastName)) {
-                            $('#lastnameinfo').text(info);
-                            isError = true;
-                        }
-                        var email = jQuery.trim($('#email').val());
-                        if (!validateEmail(email)) {
-                            $('#emailinfo').text(info);
-                            isError = true;
-                        }
-                        var phone = jQuery.trim($('#telephone').val());
-                        if (!validatePhone(phone)) {
-                            $('#telephoneinfo').text(info);
-                            isError = true;
-                        }
-                        return !isError;
+                    var lastName = jQuery.trim($('#lastname').val());
+                    if (!validateName(lastName)) {
+                        $('#lastnameinfo').text(info);
+                        isError = true;
                     }
-                   
+                    var email = jQuery.trim($('#email').val());
+                    if (!validateEmail(email)) {
+                        $('#emailinfo').text(info);
+                        isError = true;
+                    }
+                    var phone = jQuery.trim($('#telephone').val());
+                    if (!validatePhone(phone)) {
+                        $('#telephoneinfo').text(info);
+                        isError = true;
+                    }
+                    return !isError;
+                }
+                
                 </script>
                 <style >
                     #errorInfo { font-style: italic; font-weight: bold; color: red;}
@@ -152,11 +97,11 @@
                 <p><label for="telephone">Telefon:</label>
                    <input id="telephone" type="text" size="9" maxlength="12"  /><br/>
                    <span id="telephoneinfo" class="errorInfo"></span></p>   
-                <p><input type="image" src="/style/images/previco.png" onclick="getPrevious();" id="preview"/>
+                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
                     <input type="image"  src="/style/images/saveico.png"  id="save"/>
                     <input type="image" src="/style/images/delico.png" id="delete"/>
                     <input type="image" src="/style/images/resetico.png" onclick="resetForm();" id="reset"/>
-                    <input type="image" src="/style/images/nextico.png" onclick="getNext();" id="next"/>                
+                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
                 </p>
                 <p id="addInfo"></p>
                 </form>
@@ -164,8 +109,8 @@
 
 
 
-                <h3>Przegląd i edycja nauczycieli </h3><hr />
-                <input type="image" src="/style/images/addico.png" onclick="showAddRow()" />
+                <h3>Przegląd i edycja nauczycieli </h3><hr /><label for="newadd">Dodaj: </label>
+                <input id="newadd" type="image" src="/style/images/addico.png" onclick="showAddRow();" />
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
                     <thead>
                         <tr><th>ID</th><th>Nazwisko</th><th>Imię</th><th>E-Mail</th>

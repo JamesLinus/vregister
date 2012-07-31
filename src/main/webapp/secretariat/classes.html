@@ -3,96 +3,46 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=secret;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                 <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
-                var $dTable = $();
-                $(document).ready(function() {
-                  
-                    $dTable = $('#fullList').dataTable();
-                    
+                
+                $(document).ready(function(){
+                    init_dataTable();
+               
                     $('#formAdd').dialog({
-                        autoOpen: false,
-                        height: 350,
-                        width: 500,
-                        modal: true
+                        autoOpen : false,
+                        height : 350,
+                        width : 500,
+                        modal : true
                     });
+ 
                     
-                    $dTable.children('tbody').children('tr').click( function () {
-                        var data = $dTable.fnGetData( this );
-                        $('#formAdd').dialog('open');
-                        insertData(data);
-                      } );
-                });  
-                
-                function resetForm(){
-                    document.getElementsByTagName('form')[0].reset();
-                }
-                
-                function insertRow(id){
-                     document.getElementById('id').value = id.toString();
-                     var position = getPosition();
-                     var col0 = userId.toString();
-                     var col1 = document.getElementById('level').value; ???
-                     var col2 = document.getElementById('division').value;
-                     var col3 =document.getElementById('description').value;
-                     var totalSize =  $dTable.fnGetNodes().length;
-                     if(position >= 0 && position < totalSize ) {
-                         $dTable.fnUpdate([col0, col1, col2, col3], position);
-                     } 
-                     else {
-                         $dTable.fnAddData([col0, col1, col2, col3]);
-                     }
-                }
-                
-                
-                function deleteRow(id) {                 
-                    var $tr = $("#" + id);
-                    if($tr){
-                        $tr.attr('class','scratched');
+                    $dTable.insertData = function (data) {
+                        $dTable.idInput.value = data[0];
+                        var select = document.getElementById('level');
+                        setSelectedIndex(select,data[1]);
+                        document.getElementById('division').value = data[2];
+                        select = document.getElementById('teacher');
+                        setSelectedIndex(select,data[3]);
+                        document.getElementById('description').value = data[4];
                     }
-                }
-        
-                function showAddRow(){
-                    resetForm();
-                    $('#formAdd').dialog('open');
-                }
+                    
+                    $dTable.getDataArray = function(id){
+                        var array = new Array();
+                        array[0] = id.toString();
+                        var select = document.getElementById('level');
+                        array[1] =select.options[select.selectedIndex].value;
+                        array[2] = document.getElementById('division').value;
+                        select = document.getElementById('teacher');
+                        array[3] = select.options[select.selectedIndex].value;
+                        array[4] = document.getElementById('description').value;
+                        return array;
+                    }      
+                                
+                });
+                 
                 
-                function getNext(){
-                    var position = getPosition();
-                    var totalSize =  $dTable.fnGetNodes().length;
-                    if (position == -1) position = 0;
-                    else if(position == 0) position = totalSize -1;
-                        else position--;
-                     var data = $dTable.fnGetData(position );
-                     insertData(data);      
-                }
-
-                function getPrevious(){
-                    var position = getPosition();
-                    var totalSize =  $dTable.fnGetNodes().length;
-                    if (position == -1) position = 0;
-                    else if(position == totalSize-1) position = 0;
-                        else position ++;
-                    var data = $dTable.fnGetData(position);
-                    insertData(data);
-                }
-                
-                function insertData(data){
-                    document.getElementById('id').value = data[0];
-                    document.getElementById('level').value = data[1];???
-                    document.getElementById('division').value = data[2];
-                    document.getElementById('description').value = data[3];
-                }
-                
-                function getPosition(){
-                     var id = document.getElementById('id').value;
-                     var tr = document.getElementById(id);
-                     if(tr){
-                         return $dTable.fnGetPosition(tr);
-                     }
-                     else return -1;
-                }
-      
                 function validateForm() {
                     return true;
                 }
@@ -108,49 +58,52 @@
 </div>
             <div class="container_12">              
                 
-                <div class="lift:AddTeacherSn.testAjax" id="formAdd" style="display: none;" title="Dodawanie nowych użytkowników">
+                <div class="lift:ClassSn.editAjax" id="formAdd" style="display: none;" title="Dodawanie nowych użytkowników">
                 <form  method="POST">
                <p><label for="id">Id:</label>
                   <input id="id" type="text" />
                 </p> 
                <p><label for="level">Poziom:</label>
-                  <select id="level"><option>0</option><option>1</option>
-                                    <option>2</option><option>3</option><option>4</option>
-                                    <option>5</option><option>6</option></select>><br/>
+                  <input id="level" /><br/>
                   <span id="levelinfo" class="errorInfo"></span>
                 </p>
-                <p><label for="division">Imię:</label>
+                <p><label for="division">Oddział:</label>
                    <input id="division" type="text"  maxlength="2"/><br/>
                    <span id="divisioninfo" class="errorInfo"></span>
                 </p>
-                <p><label for="description">Adres email:</label>
-                   <textarea id="description"></textarea> /><br/>
+                <p><label for="teacher">Wychowawca:</label>
+                  <input id="teacher" />
+                                  <br/>
+                  <span id="teacherinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="description">Opis:</label>
+                   <input id="description" /><br/>
                    <span id="descriptioninfo" class="errorInfo"></span>
                 </p>
-                <p><input type="image" src="/style/images/previco.png" onclick="getPrevious();" id="preview"/>
+                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
                     <input type="image"  src="/style/images/saveico.png"  id="save"/>
                     <input type="image" src="/style/images/delico.png" id="delete"/>
                     <input type="image" src="/style/images/resetico.png" onclick="resetForm();" id="reset"/>
-                    <input type="image" src="/style/images/nextico.png" onclick="getNext();" id="next"/>                
+                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
                 </p>
                 <p id="addInfo"></p>
                 </form>
                 </div>
 
                 <h3>Edycja oddziałów </h3><hr />
-                <input type="image" src="/style/images/addico.png" onclick="showAddUser()" />
+                <label for="newadd">Nowa klasa:</label>
+                <input id="newadd" type="image" src="/style/images/addico.png" onclick="showAddRow()" />
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
                     <thead>
-                        <thead>
-                        <tr><th>ID</th><th>Poziom</th><th>Oddział</th><th>Opis</th></tr>
-                    </thead>
+                        <tr><th>ID</th><th>Poziom</th><th>Oddział</th><th>Wychowawca</th><th>Opis</th></tr>
                     </thead>
                     <tbody class="lift:ClassSn.classList">
                         <tr >
                             <td class="id"></td>
                             <td  class="level"></td>
                             <td  class="division"></td>
-                            <td class="descript"></td>
+                            <td class="teacher"></td>
+                            <td class="description"></td>
                         </tr>
                     </tbody>
                 </table>

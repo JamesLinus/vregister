@@ -52,8 +52,7 @@ class Boot {
     LiftRules.addToPackages("net.brosbit4u.snippet.page")
 
     Schemifier.schemify(true, Schemifier.infoF _, User, 
-      ClassModel, UserChangeList, MarkMap, Pupil, SubjectName,
-      ClassChangeList, PupilChangeList)
+      ClassModel, MarkMap, SubjectName)
       
      LiftRules.statelessDispatchTable.append({
       case Req("img" :: id :: Nil, _, GetRequest) => () => ImageLoader.image(id)
@@ -129,11 +128,9 @@ class Boot {
         Menu("File") / "filestorage" >> LocGroup("extra") >>loggedIn,
         Menu("Nauczyciele") / "secretariat" / "index" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Klasy") / "secretariat" / "classes" >> LocGroup("secretariat") >> isSecretariat,
-        Menu("Wychowawcy") / "secretariat" / "bringup" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Uczniowie") / "secretariat" / "pupils" >> LocGroup("secretariat") >> isSecretariat,
-        Menu("Przydział klas") / "secretariat" / "pupiltoclass" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Przedmioty") / "secretariat" / "subjects" >> LocGroup("secretariat") >> isSecretariat,
-        Menu("Dzwonki") / "secretariat" / "bells" >> LocGroup("secretariat") >> isSecretariat,
+        //Menu("Dzwonki") / "secretariat" / "bells" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Wybór dziennika") / "teacher" / "index" / ** >> LocGroup("teacher") >> isTeacher,
         Menu("Dane ucznia") / "teacher" / "pupil_data" / **  >> LocGroup("teacher") >> isTeacher,
         Menu("Rodzice ucznia") / "teacher" / "parent_data" / ** >> LocGroup("teacher") >> isTeacher,

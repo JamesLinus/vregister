@@ -28,7 +28,7 @@ package net.brosbit4u {
       object name extends MappedString(this, 40)
       object short extends MappedString(this, 5)
       object nr extends MappedInt(this)
-      object validated extends MappedBoolean(this)
+      object scratched extends MappedBoolean(this)
     }
 
     object SubjectName extends SubjectName with LongKeyedMetaMapper[SubjectName] {

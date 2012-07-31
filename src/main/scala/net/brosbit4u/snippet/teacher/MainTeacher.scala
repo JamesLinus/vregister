@@ -1,23 +1,10 @@
-
-/*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
+/* Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *
- *   VRegister is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
- *   as published by the Free Software Foundation
- *
- *   VRegister is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
- *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
- *   
+ *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
+ *   See: <http://www.gnu.org/licenses/>.
  */
-
-package net.brosbit4u.snippet
+package net.brosbit4u { 
+  package snippet {
 
 import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
 import _root_.scala.xml.{ NodeSeq, Text, XML }
@@ -31,17 +18,19 @@ import net.brosbit4u.model._
 object ClassChoose extends SessionVar[Int](0)
 
 class MainTeacher  {
-  /*
-		def logedInUser() = "#username" #> Text(User.currentUser.open_!.getFullName) &
-		"#choosenclass" #> { 
+  
+		def logedInUser() = {
+		  "#username" #> Text(User.currentUser.open_!.getFullName) &
+		  "#choosenclass" #> { 
 				if(ClassChoose.is == 0) Text("Wybierz klasę!")
 				else {
 						val cl = ClassModel.find(ClassChoose.is)
 						if (cl.isEmpty) Text("Wybierz klasę!!")
 						else Text(cl.open_!.classString)
 				}
-	  
+		  }
 		}
+	  
   
 	def classList() = {
 		val classParamStr = S.param("class").openOr("0")
@@ -49,7 +38,7 @@ class MainTeacher  {
 		if(paramClass != 0) {
 			ClassChoose.set(paramClass)
 		}
-		val classes = ClassModel.findAll(OrderBy(ClassModel.level, Ascending)).filter(_.validated.is)
+		val classes = ClassModel.findAll(OrderBy(ClassModel.level, Ascending)).filter(_.scratched.is)
 		"a" #> classes.map(classItem => {
 				"a" #> <a href={"/teacher/index/"+ classItem.id.toString}>{classItem.classString}</a>
 			}) &
@@ -62,7 +51,10 @@ class MainTeacher  {
 						else Text(cl.open_!.classString)
 				}
 		} 
-	} */
+	} 
 
 
 }
+
+  }}
+

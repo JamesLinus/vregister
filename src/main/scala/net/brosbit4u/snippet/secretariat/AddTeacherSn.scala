@@ -33,7 +33,7 @@ package net.brosbit4u {
     class AddTeacherSn {
 
       def teacherList() = {
-        val teachers: List[User] = User.findAll(By(User.role, "n"))
+        val teachers: List[User] = User.findAll(By(User.role, "n"),OrderBy(User.id, Ascending))
 
         "tr" #> teachers.map(teacher => {
           "tr [class]" #> { if (teacher.scratched.is) "scratched" else "" } &
@@ -59,14 +59,14 @@ package net.brosbit4u {
       user.lastName(lastName).firstName(firstName).phone(telephone).email(email).
       role("n").scratched(false).save
       userId = user.id.toString
-      JsFunc("insertRow", userId).cmd
+      JsFunc("$dTable.insertRow", userId).cmd
     }
     
     def delete() = {
       User.find(userId) match {
         case Full(user) => {
           user.scratched(true).validated(false).save
-          JsFunc("deleteRow", userId).cmd
+          JsFunc("$dTable.deleteRow", userId).cmd
         }
         case _ => Alert("Nie ma takiego użytkownika")
       }
@@ -83,7 +83,7 @@ package net.brosbit4u {
        "#delete" #> SHtml.ajaxSubmit("Usuń", delete, "type"->"image", 
            "onclick" -> "return confirm('Na pewno usunąć użytkownika?')") &
       "#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image",
-          "onclick" -> "return validateForm();") andThen SHtml.makeFormsAjax
+          "onclick" -> "return editForm.validate();") andThen SHtml.makeFormsAjax
 
       "form" #> (in => form(in))
        }

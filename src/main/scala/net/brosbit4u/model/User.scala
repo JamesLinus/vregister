@@ -66,8 +66,14 @@ package net.brosbit4u {
          override def defaultValue = false
       }
       object phone extends MappedString(this, 12)
-      //object passStr extends MappedString(this, 12)
-      //object timePass extends MappedDateTime(this)
+      object secondName extends MappedString(this, 30)
+      object birthDate extends MappedDate(this)
+      object birthPlace extends MappedString(this, 30)
+      object pesel extends MappedString(this, 11)
+      object classId extends MappedLongForeignKey(this, ClassModel);
+      object classInfo extends MappedString(this, 3){
+        override def defaultValue = "-"
+      }
 
       def getFullName = firstName.is + " " + lastName.is
       def getFullNameReverse = lastName.is + " " + firstName.is

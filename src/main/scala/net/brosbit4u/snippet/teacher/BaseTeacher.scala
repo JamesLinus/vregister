@@ -3,7 +3,9 @@
  * and open the template in the editor.
  */
 
-package net.brosbit4u.snippet
+package net.brosbit4u {
+  
+package snippet {
 
 import _root_.scala.xml.{ Text }
 import _root_.net.liftweb.util._
@@ -26,3 +28,5 @@ class BaseTeacher {
 	  
 		} */
 }
+
+}}
