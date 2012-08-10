@@ -20,7 +20,6 @@ object ClassChoose extends SessionVar[Int](0)
 class MainTeacher  {
   
 		def logedInUser() = {
-		  "#username" #> Text(User.currentUser.open_!.getFullName) &
 		  "#choosenclass" #> { 
 				if(ClassChoose.is == 0) Text("Wybierz klasę!")
 				else {

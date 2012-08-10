@@ -1,286 +1,204 @@
-
 <!DOCTYPE html>
 <html>
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
-                <script>
-                    $(document).ready(function() {
-                        $('#fullList').children('tbody').children('tr').each(function(){
-                            $(this).dblclick(function(){beginEdit(this);});
-                        });
-                    
-                        $('#formAdd').dialog({
-                            autoOpen: false,
-                            height: 280,
-                            width: 500,
-                            modal: true,
-                            close: function(){
-                                whenCloseForm();
-                            }
-                        });
+                <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
+                <script type="text/javascript" charset="utf-8">
+                
+                $(document).ready(function(){
+                    init_dataTable(true);
+               
+                    $('#formAdd').dialog({
+                        autoOpen : false,
+                        height : 550,
+                        width : 650,
+                        modal : true
                     });
-                       //hide pupil list, ?????????
-                    function hideColumnFamily(number){
+ 
                     
-                    }
-                        
-                    function User() {
-                        var id = "";
-                        var nr = "";
-                        var secondName = "";
-                        var email = "";
-                        var password = "";
-                        var phone = "";
-                        var address = "";
-                    }
-                    
-                    function clearEditedUser(){
-                        editedUser.id = "";
-                        editedUser.nr = "";
-                        editedUser.secondName = "";
-                        editedUser.email = "";
-                        editedUser.password = "";
-                        editedUser.phone = "";
-                        editedUser.address = "";
-                    }
-                    //globals 
-                    var $editedRow = $();
-                    var users = new Array();
-                    var editedUser = new User();
-                    //create data to send on server
-                    function createXML() {
-                        var xmlStr = "<root>";
-                        for(i in users){
-                            xmlStr += '<user id="';
-                            xmlStr += users[i].id;
-                            xmlStr += '"/><nr>';
-                            xmlStr += users[i].nr;
-                            xmlStr += '</nr><secondName>';
-                            xmlStr += users[i].secondName;
-                            xmlStr += '</secondName><email>';
-                            xmlStr += users[i].email;
-                            xmlStr += '</email><password>';
-                            xmlStr += users[i].password;
-                            xmlStr += '</password><phone>';
-                            xmlStr += users[i].phone;
-                            xmlStr += '</phone><address>';
-                            xmlStr += users[i].address;
-                            xmlStr += '</address></user>';
-                        }
-                        xmlStr += "</root>";
-                        $('#editData').val(xmlStr);
-                        return true;
+                    $dTable.insertData = function (data) {
+                        $dTable.idInput.value = data[0];
+                        var select = document.getElementById('number');
+                        setSelectedIndex(select,data[1]);
+                        document.getElementById('reversefullname').value = data[2];
+                        document.getElementById('secondname').value = data[3] ;
+                        document.getElementById('email').value = data[4] ;
+                        document.getElementById('pesel').value = data[5] ;
+                        document.getElementById('birthdate').value = data[6] ;
+                        document.getElementById('birthplace').value = data[7] ;
+                        document.getElementById('birthdistrict').value = data[8] ;
+                        document.getElementById('phone').value = data[9] ;
+                        document.getElementById('address').value = data[10] ;
                     }
                     
-                    function loadFromRow(){
-                        clearEditedUser();
-                        editedUser.id = $editedRow.attr('id');
-                        $('#idPupil').text(editedUser.id);
-                        $editedRow.children().each(function(index){
-                            switch(index){
-                                case 0:
-                                    editedUser.nr = this.innerHTML;
-                                    $('#classNumberAdd').text(this.innerHTML);
-                                    break;
-                                case 1:
-                                    $('#pupilNameAdd').text(this.innerHTML);
-                                    break;
-                                case 2:
-                                    editedUser.secondName = this.innerHTML;
-                                    $('#secondNameAdd').val(this.innerHTML);
-                                    break;
-                                case 3:
-                                    editedUser.email = this.innerHTML;
-                                    $('#emailAdd').val(this.innerHTML);
-                                    break;
-                                case 4:
-                                    editedUser.password = this.innerHTML;
-                                    $('#passwordAdd').val(this.innerHTML);
-                                    break;
-                                case 5:
-                                    editedUser.phone = this.innerHTML;
-                                    $('#phoneAdd').val(this.innerHTML);
-                                    break;
-                                case 6: 
-                                    editedUser.address = this.innerHTML;
-                                    $('#addressAdd').val(this.innerHTML);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-                    }
+                    $dTable.getDataArray = function(id){
+                    	alert('getDataArray ' + id);
+                        var array = new Array();
+                        array[0] = id.toString();
+                        var select = document.getElementById('number');
+                        array[1] = select.options[select.selectedIndex].value;
+                        array[2] =  document.getElementById('reversefullname').value;
+                        array[3] = document.getElementById('secondname').value;
+                        array[4] = document.getElementById('email').value;
+                        array[5] = document.getElementById('pesel').value;
+                        array[6] = document.getElementById('birthdate').value;
+                        array[7] = document.getElementById('birthplace').value;
+                        array[8] = document.getElementById('birthdistrict').value;
+                        array[9] = document.getElementById('phone').value;
+                        array[10] = document.getElementById('address').value;
+                        alert(array);
+                        return array;
+                    }   
+                    
                    
-                    function saveRow(){
-                        var tmpUser = new User();
-                        tmpUser.secondName = jQuery.trim($('#secondNameAdd').val());
-                        tmpUser.email = jQuery.trim($('#emailAdd').val());
-                        tmpUser.password = jQuery.trim($('#passwordAdd').val());
-                        tmpUser.phone = jQuery.trim($('#phoneAdd').val());
-                        tmpUser.address = jQuery.trim($('#addressAdd').val());
-                        $editedRow.children('td').each(function(index){
-                            switch(index){
-                                case 2:
-                                    $(this).text(tmpUser.secondName);
-                                    break;
-                                case 3:
-                                    $(this).text(tmpUser.email);
-                                    break;
-                                case 4:
-                                    $(this).text(tmpUser.password);
-                                    break;
-                                case 5:
-                                    $(this).text(tmpUser.phone);
-                                    break;
-                                case 6:
-                                    $(this).text(tmpUser.address);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-                        if (editedUser.secondName != tmpUser.secondName || tmpUser.email != editedUser.email || tmpUser.password != editedUser.password || tmpUser.phone !=  editedUser.phone || tmpUser.address != editedUser.address){
-                            tmpUser.id = editedUser.id;
-                            tmpUser.nr = editedUser.nr;
-                            var foundUser = false;
-                            for(i in users){
-                                if (users[i].id == tmpUser.id){
-                                    users[i] = tmpUser;
-                                    foundUser = true;
-                                    break;
-                                }
-                            }
-                            if (!foundUser) users.push(tmpUser);
-                        }
-                        $('#editRows').val(users.length.toString());
-                        if(users.length > 0){
-                            $('#saveButton').show();
-                        }
-                    }
+                    $dTable.fnSetColumnVis( 10, false );
+                    $dTable.fnSetColumnVis( 9, false );
                     
-                    function beginEdit(elem){
-                        $editedRow= $(elem);
-                        $("#formAdd").dialog("open");
-                        loadFromRow();
-                    }
                     
-                    function nextUser(){
-                        saveRow();
-                        $newRow = $editedRow.next('tr');
-                        if($newRow.is('tr')){
-                            $editedRow = $newRow;
-                            loadFromRow();
-                        }
-                    }
+                 
+                   $dTable.showMainData = function(elem){
+                	 
+                       $dTable.fnSetColumnVis( 3, true );
+                       $dTable.fnSetColumnVis( 2, true );
+                       $dTable.fnSetColumnVis( 4, true );
+                       $dTable.fnSetColumnVis( 5, true );
+                       $dTable.fnSetColumnVis( 6, true );
+                       $dTable.fnSetColumnVis( 7, true );
+                       $dTable.fnSetColumnVis( 8, true );
+                       $dTable.fnSetColumnVis( 10, false );
+                       $dTable.fnSetColumnVis( 9, false );
+                   }
+                   $dTable.showAddressData = function(elem){
+                	 
+                		   $dTable.fnSetColumnVis( 3, false );
+                           $dTable.fnSetColumnVis( 4, false );
+                           $dTable.fnSetColumnVis( 5, false );
+                           $dTable.fnSetColumnVis( 6, false );
+                           $dTable.fnSetColumnVis( 7, false );
+                           $dTable.fnSetColumnVis( 8, false );
+                           $dTable.fnSetColumnVis( 10, true );
+                           $dTable.fnSetColumnVis( 9, true );
+                		  
+                	} 
+                	
+                    	
                     
-                    function previousUser(){
-                        $newRow = $editedRow.prev('tr');
-                        saveRow();
-                        if($newRow.is('tr')){
-                            $editedRow = $newRow;
-                            loadFromRow();
-                        }
-                    }
-                    
-                    function whenCloseForm(){
-                        saveRow();
-                        $editedRow = null;
-                    }
-                    
-                    function genPass(){
-                        var pass = $('#passwordAdd').val();
-                        if (pass == "" || pass == "--------"){
-                            $('#passwordAdd').val(mkPass());
-                        } else {
-                            if (confirm('Czy na pewno chcesz zresetować hasło?')){
-                                $('#passwordAdd').val(mkPass());
-                            }
-                        } 
-                    }
+                                
+                });
+                 
+                
+                function validateForm() {
+                    return true;
+                }
+               
                 </script>
+                <style >
+                    #errorInfo { font-style: italic; font-weight: bold; color: red;}
+                    .scratched td {text-decoration: line-through;}
+                    input[readonly] {background: buttonface;}
+                </style>
             </head_merge>
 
-            <div id="centrum">
-                <div id="infoHead">
-                    <div class="lift:PupilDataSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username">Imię i Nazwisko </p> Wybrany dziennik:  <p id="choosenclass">Klasa</p></div>
-                    <form class="lift:PupilDataSn.formItem" method="POST">
-                        <fieldset  style="width:200px;display: inline;">
-                            <legend>Status zmian</legend>
-                            <label for="editRows">Do zmiany:</label><input id="editRows" type="text" readonly="true" value="0" size="2" />
-                            <input id="dataEdit" />
-                            <input style="display:none;" id="saveButton" onclick="return createData()" src="/style/images/saveico.png" type="image" />
-                            <input id="submit"/>
-
-                        </fieldset></form>
-                </div> <!--inofhead-->
-                <br  />
-
-
-
-                <h1>Dane uczniów</h1>
-
-                <hr  />
-
-
-
-                <div >
-                    <table id="fullList">
-
-                        <thead><tr><th colspan="2"></th><th colspan="4">Dane</th><th colspan="5">Dane z księgi</th></tr>
-                            <tr><th>Nr</th><th>Nazwisko i Imię</th>
-                                <th>Drugie imię</th><th>E-mail</th><th>Hasło</th><th>Telefon</th><th>Adres</th>
-                                <th>Pesel</th><th>Data urodzenia</th>
-                                <th>Miejsce urodzenia</th><th>Województwo</th>
-                            </tr></thead>
-                        <tbody class="l:PupilDataSn.dataTable"><tr><td></td></tr></tbody>
-                    </table>
-                </div>
-
-                <div id="formAdd" style="display: none;" title="Edycja danych uczniów">
-                    <table>
-                        <tr><td id="classNumberAdd">2</td><td id="pupilNameAdd">Kowalski Józef</td><td id="idPupil">234234</td></tr>
-                        <tr>
-                            <td><label for="secondNameAdd">Drugie imię:</label></td>
-                            <td><input id="secondNameAdd" type="text" size="20" maxlength="32"/></td>
-                            <td><span id="secondNameAddInfo" class="errorInfo"></span></td>
-                        </tr>
-                        <tr>
-                            <td><label for="emailAdd">Email:</label></td>
-                            <td><input id="emailAdd" type="text" size="20" maxlength="32"/></td>
-                            <td><span id="emailAddInfo" class="errorInfo"></span></td>
-                        </tr>
-                        <tr>
-                            <td><label for="passwordAdd">Hasło:</label></td>
-                            <td><input id="passwordAdd" type="text" size="20" readonly="readonly"/></td>
-                            <td><input type="image" name="genPass" src="/style/images/randomico.png" onclick="genPass()" title="Generuj hasło" /></td>
-                        </tr>
-                        <tr>
-                            <td><label for="phoneAdd">Telefon:</label></td>
-                            <td><input id="phoneAdd" type="text" size="10" maxlength="9" /></td>
-                            <td><span id="phoneAddInfo" class="errorInfo"></span></td>
-                        </tr>
-                        <tr>
-                            <td><label for="addressAdd">Adres:</label></td>
-                            <td colspan="2"><input id="addressAdd" type="text" size="40" maxlength="80" /></td>
-                        </tr>
-                        <tr>
-                            <td><input title="Poprzedni uczeń" type="image" src="/style/images/previco.png" name="previous" onclick="previousUser()" /></td>
-                            <td></td>
-                            <td><input type="image" title="Następny uczeń" name="next" onclick="nextUser()" src="/style/images/nextico.png" value="" />
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
-
+            <div class="container_12">              
+                
+                <div class="lift:PupilDataSn.editAjax" id="formAdd" style="display: none;" title="Dane uczniów">
+                <form  method="POST">
+               <p><label for="id">Id:</label>
+                  <input id="id" type="text" />
+                </p> 
+               <p><label for="reversefullname">Nazwisko i imię:</label>
+                  <input id="reversefullname" type="text" readonly="readonly"/><br/>
+                  <span id="reversefullnameinfo" class="errorInfo"></span>
+                </p>
+                 <p><label for="number">Numer w dzienniku:</label>
+                   <input id="number" /><br/>
+                   <span id="numberinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="secondname">Drugie imię:</label>
+                  <input id="secondname" maxlength="30"/><br/>
+                  <span id="secondnameinfo" class="errorInfo"></span>
+                </p>
+                 <p><label for="email">E-mail:</label>
+                  <input id="email" maxlength="50"/><br/>
+                  <span id="emailinfo" class="errorInfo"></span>
+                </p>
+                 <p><label for="pesel">PESEL:</label>
+                  <input id="pesel" type="text" readonly="readonly"/><br/>
+                  <span id="peselinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="birthdate">Data urodzenia:</label>
+                   <input id="birthdate" type="text"  readonly="readonly"/><br/>
+                   <span id="birthdateinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="birthplace">Miejsce urodzenia:</label>
+                   <input id="birthplace" type="text"  maxlength="30"/><br/>
+                   <span id="birthplaceinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="birthdistrict">Województwo urodzenia:</label>
+                   <input id="birthdistrict" type="text"  maxlength="40"/><br/>
+                   <span id="birthdistrictinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="phone">Telefon:</label>
+                   <input id="phone" type="text"  maxlength="12"/><br/>
+                   <span id="phoneinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="address">Adres:</label>
+                   <input id="address" maxlength="120"/><br/>
+                   <span id="addressinfo" class="errorInfo"></span>
+                </p>
+                
+                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
+                    <input type="image"  src="/style/images/saveico.png"  id="save"/>
+                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
+                </p>
                 <p id="addInfo"></p>
-            </div>
+                </form>
+                </div>
 
-        </div>
+
+
+                <h3>Dane uczniów </h3><hr />
+                <div id="radio">
+        <input type="radio" id="radio1" name="radio" checked="checked" onclick="$dTable.showMainData();" /><label for="radio1">Główne dane</label>
+        <input type="radio" id="radio2" name="radio"  onclick="$dTable.showAddressData();"/><label for="radio2">Adres i telefon</label>
+    </div>
+              
+                
+                <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
+                   
+                   <thead>
+                       <tr>
+                       <th>ID</th><th>Nr</th><th>Nazwisko i Imię</th>
+                        <th>Drugie imię</th><th>E-mail</th><th>PESEL</th>
+                                <th>Data urodzenia</th>
+                                <th>Miejsce urodzenia</th><th>Województwo urodzenia</th>
+                                 <th>Telefon</th><th>Adres</th>
+                       </tr>
+                   </thead>
+
+                    <tbody class="lift:PupilDataSn.dataTable">
+                        <tr >
+                            <td class="id"></td>
+                            <td class="number"></td>
+                            <td  class="reversefullname"></td>
+                            <td class="secondname"></td>
+                            <td class="email"></td>
+                            <td class="pesel"></td>
+                            <td class="birthdate"></td>
+                            <td class="birthplace"></td>
+                            <td class="birthdistrict"></td>
+                            <td class="phone"></td>
+                            <td class="address"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
     </body>
 </html>
+
 
 
 

@@ -69,11 +69,16 @@ package net.brosbit4u {
       object secondName extends MappedString(this, 30)
       object birthDate extends MappedDate(this)
       object birthPlace extends MappedString(this, 30)
+      object birthDisctrict extends MappedString(this, 40)
+      object address extends MappedText(this)
       object pesel extends MappedString(this, 11)
       object classId extends MappedLongForeignKey(this, ClassModel);
       object classInfo extends MappedString(this, 3){
         override def defaultValue = "-"
       }
+      object classNumber extends MappedInt(this)
+      object father extends MappedLongForeignKey(this, User)
+      object mather extends MappedLongForeignKey(this, User)
 
       def getFullName = firstName.is + " " + lastName.is
       def getFullNameReverse = lastName.is + " " + firstName.is

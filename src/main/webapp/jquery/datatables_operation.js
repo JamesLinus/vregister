@@ -28,9 +28,78 @@ $.fn.dataTableExt.oApi.fnGetAdjacentTr  = function ( oSettings, nTr, bNext )
 };
 
 
-function init_dataTable(){
+function init_dataTable(teacher){
+	if(teacher){
+		$dTable = $('#fullList').dataTable({
+			"sPaginationType": "two_button",
+			"bFilter": false,
+			"iDisplayLength": 50,
+			"bLengthChange": false,
+			"aoColumnDefs": [
+			                 { "bSortable": false, "aTargets": [ 0 ] },
+			                 { "bSortable": false, "aTargets": [ 1 ] },
+			                 { "bSortable": false, "aTargets": [ 2 ] },
+			                 { "bSortable": false, "aTargets": [ 3 ] },
+			                 { "bSortable": false, "aTargets": [ 4 ] },
+			                 { "bSortable": false, "aTargets": [ 5 ] },
+			                 { "bSortable": false, "aTargets": [ 6 ] },
+			                 { "bSortable": false, "aTargets": [ 7 ] },
+			                 { "bSortable": false, "aTargets": [ 8 ] },
+			                 { "bSortable": false, "aTargets": [ 9 ] },
+			                 { "bSortable": false, "aTargets": [ 10 ] }
+			               ] ,
+		    "oLanguage": {
+		        "sSearch": "Filtruj wiersze: ",
+		        "sZeroRecords": "Brak danych do wyświetlenia",
+		        "sInfoEmpty": "Brak danych do wyświetlenia",
+		        "sEmptyTable": "Brak danych do wyświetlenia",
+		        "sInfo": "Widzisz wiersze od _START_ do _END_  z wszystkich _TOTAL_",
+		        "oPaginate": {
+		        	"sPrevious": "<<",
+			        "sNext": ">>",
+			        "sFirst": "Początek",
+			        "sLast": "Koniec",
+		        },
+		        "sInfoFiltered": " - odfiltrowano z _MAX_ wierszy",
+		        "sLengthMenu": 'Pokaż <select>'+
+		        '<option value="10">40</option>'+
+		        '<option value="20">80</option>'+
+		        '<option value="30">120</option>'+
+		        '<option value="-1">całość</option>'+
+		        '</select> wierszy'
+		        
+		      }
+		    });
+	}
+	else {
+		$dTable = $('#fullList').dataTable({
+			"sPaginationType": "two_button",
+			"bFilter": true,
+		    "oLanguage": {
+		        "sSearch": "Filtruj wiersze: ",
+		        "sZeroRecords": "Brak danych do wyświetlenia",
+		        "sInfoEmpty": "Brak danych do wyświetlenia",
+		        "sEmptyTable": "Brak danych do wyświetlenia",
+		        "sInfo": "Widzisz wiersze od _START_ do _END_  z wszystkich _TOTAL_",
+		        "oPaginate": {
+		        	"sPrevious": "<<",
+			        "sNext": ">>",
+			        "sFirst": "Początek",
+			        "sLast": "Koniec",
+		        },
+		        "sInfoFiltered": " - odfiltrowano z _MAX_ wierszy",
+		        "sLengthMenu": 'Pokaż <select>'+
+		        '<option value="10">40</option>'+
+		        '<option value="20">80</option>'+
+		        '<option value="30">120</option>'+
+		        '<option value="-1">całość</option>'+
+		        '</select> wierszy'
+		        
+		      }
+		    });
+	}
 	
-	$dTable = $('#fullList').dataTable();
+	
 	
 	$dTable.setClickRow = function(){
 		$dTable.children('tbody').children('tr').click(function() {
@@ -92,7 +161,6 @@ function init_dataTable(){
      }
 	 
 	 $dTable.insertRow =  function(id) {   	
-		
              var position = $dTable.getPosition(id);
              var data = $dTable.getDataArray(id);
              if (position >= 0 && position < $dTable.tableSize) {

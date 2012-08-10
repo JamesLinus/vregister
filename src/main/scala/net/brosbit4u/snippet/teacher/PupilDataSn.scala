@@ -8,62 +8,91 @@ package net.brosbit4u {
   package snippet {
 
 
-import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
-import _root_.scala.xml.{ NodeSeq, Text, XML }
-import _root_.net.liftweb.util._
-import _root_.net.liftweb.http.{ SHtml, S }
-import _root_.net.liftweb.common._
-import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
-import Helpers._
-import net.brosbit4u.model._
+ import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
+ import _root_.scala.xml.{ NodeSeq, Text, XML }
+ import _root_.net.liftweb.util._
+ import _root_.net.liftweb.http.{ SHtml, S }
+ import _root_.net.liftweb.common._
+ import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
+ import Helpers._
+ import _root_.net.brosbit4u.model.{ User, ClassModel }
+ import _root_.net.brosbit4u.lib.Formater
+ import  _root_.net.liftweb.http.js.JsCmds._
+ import  _root_.net.liftweb.http.js.JsCmd
+ import  _root_.net.liftweb.http.js.JE._
 
-class PupilDataSn extends BaseTeacher {
-  /*
+class PupilDataSn extends MainTeacher {
+  
+  
   def dataTable() = {
 	val idClass = ClassChoose.is
 	if (idClass == 0) S.redirectTo("teacher/index")
-    val classT = ClassModel.find(idClass)
-    val pupils = Pupil.findAll(By(Pupil.classIn, classT))
+    val classModel = ClassModel.find(idClass) match {
+	  case Full(theClass) => theClass
+	  case _ => S.redirectTo("teacher/index")
+	}
+    val pupils = User.findAll(By(User.classId, classModel))
    
-    "tr" #> pupils.map(pupil => {
-        val user = pupil.user.obj.open_!
-		<tr id={pupil.id.is.toString}><td></td><td>{user.getFullNameReverse}</td>
-          <td>{pupil.secondName.is}</td><td>{user.email.is}</td><td>{user.passStr.is}</td>
-         <td>{user.phone.is}</td><td>{pupil.address.is}</td>
-         <td>{pupil.pesel.is}</td><td>{pupil.birthDate.is.toString}</td><td>{pupil.birthPlace.is}</td>
-          <td>{pupil.birthDistrict.is}</td></tr>
-    })
+     "tr" #> pupils.map(pupil => {
+          "tr [class]" #> { if (pupil.scratched.is)  "scratched" else "" } &
+            ".id *" #> pupil.id.is.toString &
+            ".number *" #> pupil.classNumber.is.toString &
+            ".reversefullname *" #>  pupil.getFullNameReverse  &
+            ".secondname *" #> pupil.secondName.is &
+            ".email *" #> pupil.email.is & 
+            ".phone *" #> pupil.phone.is &
+            ".pesel *" #> pupil.pesel.is &
+            ".birthdate *" #> Formater.formatDate(pupil.birthDate.is) &
+            ".birthplace *" #> pupil.birthPlace.is &
+            ".birthdistrict *" #> pupil.birthDisctrict &
+            ".address *" #> pupil.address.is 
+            
+        })
   }
   
-  //poprawić
-  def formItem() = {
-        var dataStr = ""
-        def processEntry(){
-          val idClassStr = S.param("class").openOr("0")
-          val user = User.currentUser.open_! 
-          val classT = ClassModel.findAll(By(ClassModel.teacher, user))
-          
-          ///sprawdź czy to wychowawca danego ucznia
+  def editAjax() = {
+    var id = ""
+    var secondName = ""
+    var number = ""
+    var email = ""
+    var phone = ""
+    var birthPlace = ""
+    var birthDistrict = ""
+    var address = ""
+    var errorInfo = ""
       
-      
-          val xml = XML.loadString(dataStr)
-          (xml \ "user").map(userXml => {
-            val id = (userXml \ "@id").toString
-            val secondName =(userXml \ "secondName").text
-            val password = (userXml \ "password").text
-            val phone = (userXml \ "phone").text
-            val email = (userXml \ "email").text
-            val address = (userXml \ "address").text
-            val pupil = Pupil.find(id).open_!
-         
-            
-          })
+    def save():JsCmd =  {
+      User.find(id) match {
+        case Full(pupil) => {
+          pupil.address(address.trim).birthPlace(birthPlace.trim).
+          secondName(secondName.trim).birthDisctrict(birthDistrict.trim).
+          email(email.trim).classNumber(tryo(number.toInt).openOr(0)).phone(phone.trim).save
+          id = pupil.id.toString
+          JsFunc("$dTable.insertRow", id).cmd
         }
-        
-         "#dataEdit" #> SHtml.text(dataStr, (x) => dataStr = x, "id" -> "dataEdit", "type" -> "hidden") &
-         "#submit" #> SHtml.submit("", processEntry, "style" -> "display:none;")
+        case _ => Alert("Nie ma takiego ucznia")
       }
-      */
+    }
+    
+    val numbers= (1 to 40).toList.map(i => (i.toString, i.toString))
+
+    val form = "#id" #> SHtml.text(id, id = _, "readonly"-> "readonly") &
+       "#number" #> SHtml.select(numbers, Full("40"), number = _ ) &
+       "#secondname" #> SHtml.text(secondName, secondName = _) &
+        "#email" #> SHtml.text(email, email = _) &
+       "#phone" #> SHtml.text(phone, phone = _) &
+       "#birthplace" #> SHtml.text(birthPlace, birthPlace = _) &
+       "#birthdistrict" #> SHtml.text(birthDistrict, birthDistrict = _) &
+       "#address" #> SHtml.text(address, address = _) &
+       "#addInfo *" #> errorInfo &
+      "#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image",
+          "onclick" -> "return validateForm();") andThen SHtml.makeFormsAjax
+
+      "form" #> (in => form(in))
+   }
+  
+  
+      
   
 }
 

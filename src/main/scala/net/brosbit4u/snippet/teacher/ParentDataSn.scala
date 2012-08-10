@@ -26,7 +26,7 @@ import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
 import Helpers._
 import net.brosbit4u.model._
 
-class ParentDataSn extends BaseTeacher {
+class ParentDataSn  {
   /*
 	def dataTable() = {
 	val idClass = ClassChoose.is
