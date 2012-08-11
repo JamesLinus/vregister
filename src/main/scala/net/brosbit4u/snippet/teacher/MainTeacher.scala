@@ -4,7 +4,7 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 package net.brosbit4u { 
-  package snippet {
+  package snippet.teacher {
 
 import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
 import _root_.scala.xml.{ NodeSeq, Text, XML }
@@ -15,45 +15,37 @@ import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
 import Helpers._
 import net.brosbit4u.model._
 
-object ClassChoose extends SessionVar[Int](0)
+object ClassChoose extends SessionVar[Long](0L)
+object ClassString extends SessionVar[String]("Nie wybrano!")
 
-class MainTeacher  {
+class MainTeacher {
   
-		def logedInUser() = {
-		  "#choosenclass" #> { 
-				if(ClassChoose.is == 0) Text("Wybierz klasę!")
-				else {
-						val cl = ClassModel.find(ClassChoose.is)
-						if (cl.isEmpty) Text("Wybierz klasę!!")
-						else Text(cl.open_!.classString)
-				}
-		  }
-		}
 	  
   
 	def classList() = {
 		val classParamStr = S.param("class").openOr("0")
-		val paramClass = try{ classParamStr.toInt } catch {case e => 0}
-		if(paramClass != 0) {
-			ClassChoose.set(paramClass)
-		}
+		val paramClass = tryo(classParamStr.toInt).getOrElse(0)
 		val classes = ClassModel.findAll(OrderBy(ClassModel.level, Ascending)).filter(_.scratched.is)
+		if(paramClass != 0) {
+		   val choosenClass = classes.filter(theClass => theClass.id.is == paramClass)
+		   choosenClass match {
+		     case Nil => 
+		     case list => {
+		       val theClass = list.head
+		       ClassChoose.set(theClass.id.is)
+		       ClassString.set(theClass.classString)
+		     }
+		   }
+		}
+		
 		"a" #> classes.map(classItem => {
 				"a" #> <a href={"/teacher/index/"+ classItem.id.toString}>{classItem.classString}</a>
 			}) &
-		"#username" #> Text(User.currentUser.open_!.getFullName) &
-		"#choosenclass" #> { 
-				if(ClassChoose.is == 0) Text("Wybierz klasę!")
-				else {
-						val cl = ClassModel.find(ClassChoose.is)
-						if (cl.isEmpty) Text("Wybierz klasę!!")
-						else Text(cl.open_!.classString)
-				}
-		} 
-	} 
-
-
+		"#choosenclass *" #> {if(ClassChoose.is == 0) "niewybrano!"
+								else ClassString.is }
+		}
 }
+	
 
-  }}
+}}
 

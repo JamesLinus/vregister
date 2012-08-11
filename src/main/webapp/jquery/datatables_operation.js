@@ -35,19 +35,6 @@ function init_dataTable(teacher){
 			"bFilter": false,
 			"iDisplayLength": 50,
 			"bLengthChange": false,
-			"aoColumnDefs": [
-			                 { "bSortable": false, "aTargets": [ 0 ] },
-			                 { "bSortable": false, "aTargets": [ 1 ] },
-			                 { "bSortable": false, "aTargets": [ 2 ] },
-			                 { "bSortable": false, "aTargets": [ 3 ] },
-			                 { "bSortable": false, "aTargets": [ 4 ] },
-			                 { "bSortable": false, "aTargets": [ 5 ] },
-			                 { "bSortable": false, "aTargets": [ 6 ] },
-			                 { "bSortable": false, "aTargets": [ 7 ] },
-			                 { "bSortable": false, "aTargets": [ 8 ] },
-			                 { "bSortable": false, "aTargets": [ 9 ] },
-			                 { "bSortable": false, "aTargets": [ 10 ] }
-			               ] ,
 		    "oLanguage": {
 		        "sSearch": "Filtruj wiersze: ",
 		        "sZeroRecords": "Brak danych do wyświetlenia",
@@ -164,7 +151,9 @@ function init_dataTable(teacher){
              var position = $dTable.getPosition(id);
              var data = $dTable.getDataArray(id);
              if (position >= 0 && position < $dTable.tableSize) {
-                 $dTable.fnUpdate(data, position);
+            	 $dTable.showAll();
+                 $dTable.fnUpdate(data, position, 0, false);
+                 $dTable.setBeginShow();
                  var tr = $dTable.getTrNodeContainsId(id);
                  if (tr) {
                      $(tr).removeClass('scratched');

@@ -5,7 +5,7 @@
  */
 
 package net.brosbit4u {
-  package snippet {
+  package snippet.teacher {
 
 
  import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
@@ -21,7 +21,7 @@ package net.brosbit4u {
  import  _root_.net.liftweb.http.js.JsCmd
  import  _root_.net.liftweb.http.js.JE._
 
-class PupilDataSn extends MainTeacher {
+class PupilDataSn extends BaseTeacher {
   
   
   def dataTable() = {

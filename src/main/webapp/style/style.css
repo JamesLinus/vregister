@@ -37,13 +37,12 @@ span.testimonial-message {font:30px/36px Georgia, "Times New Roman", Times, seri
 #menu ul li ul {list-style:none;float:right;margin:0px;background-color:#FFF;}
 #menu ul li ul li{font:11px/18px "Helvetica", Arial, sans-serif;color:#000000;text-decoration:none;padding:0px 3px 1px 3px;}
 #menu ul li {margin-right:15px;display:inline;}
-#menu ul li a.active {border-bottom:3px solid #2DA8F8;}
-#menu ul li  {font:20px/25px "Helvetica", Arial, sans-serif;color:#D2D2D2;text-shadow: 0px 1px 1px #000000;text-decoration:none; 
+#menu ul li span {font-size:17px; padding: 0 5px 0 5px;font-style:italic;color: #aaa;}
+#menu ul li  {font:17px/20px "Helvetica", Arial, sans-serif;color:#D2D2D2;text-shadow: 0px 1px 1px #000000;text-decoration:none; 
 	padding: 0 0 3px 0; background: none; }
 #menu ul li a {color:#D2D2D2;text-shadow: 0px 1px 1px #000000;text-decoration:none; padding-bottom:3px;}
 ul li.dir:hover{background-color: #FFF; -moz-border-radius-topleft: 5px;-moz-border-radius-topright: 5px;}
 #menu ul li.last {margin-right:0px;}
-#menu span {font-size:12px; padding: 0 5px 0 5px;}
 
 /* Side menu */
 #sidebar ul { list-style: none outside none;margin-top: 10px;margin-bottom:20px;}

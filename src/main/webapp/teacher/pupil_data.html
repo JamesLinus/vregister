@@ -16,7 +16,8 @@
                         width : 650,
                         modal : true
                     });
- 
+                    
+                    $( "#radio" ).buttonset();
                     
                     $dTable.insertData = function (data) {
                         $dTable.idInput.value = data[0];
@@ -34,7 +35,6 @@
                     }
                     
                     $dTable.getDataArray = function(id){
-                    	alert('getDataArray ' + id);
                         var array = new Array();
                         array[0] = id.toString();
                         var select = document.getElementById('number');
@@ -52,25 +52,21 @@
                         return array;
                     }   
                     
-                   
-                    $dTable.fnSetColumnVis( 10, false );
-                    $dTable.fnSetColumnVis( 9, false );
-                    
                     
                  
-                   $dTable.showMainData = function(elem){
+                   $dTable.showMainData = function(){
                 	 
                        $dTable.fnSetColumnVis( 3, true );
-                       $dTable.fnSetColumnVis( 2, true );
                        $dTable.fnSetColumnVis( 4, true );
                        $dTable.fnSetColumnVis( 5, true );
                        $dTable.fnSetColumnVis( 6, true );
                        $dTable.fnSetColumnVis( 7, true );
                        $dTable.fnSetColumnVis( 8, true );
-                       $dTable.fnSetColumnVis( 10, false );
                        $dTable.fnSetColumnVis( 9, false );
+                       $dTable.fnSetColumnVis( 10, false );
                    }
-                   $dTable.showAddressData = function(elem){
+                   
+                   $dTable.showAddressData = function(){
                 	 
                 		   $dTable.fnSetColumnVis( 3, false );
                            $dTable.fnSetColumnVis( 4, false );
@@ -78,16 +74,31 @@
                            $dTable.fnSetColumnVis( 6, false );
                            $dTable.fnSetColumnVis( 7, false );
                            $dTable.fnSetColumnVis( 8, false );
-                           $dTable.fnSetColumnVis( 10, true );
                            $dTable.fnSetColumnVis( 9, true );
+                           $dTable.fnSetColumnVis( 10, true );
+                           
                 		  
-                	} 
-                	
-                    	
+                   }
+                   
+                   $dTable.showAll = function(){
+                       
+                       $dTable.fnSetColumnVis( 3, true );
+                       $dTable.fnSetColumnVis( 4, true );
+                       $dTable.fnSetColumnVis( 5, true );
+                       $dTable.fnSetColumnVis( 6, true );
+                       $dTable.fnSetColumnVis( 7, true );
+                       $dTable.fnSetColumnVis( 8, true );
+                       $dTable.fnSetColumnVis( 9, true );
+                       $dTable.fnSetColumnVis( 10, true );
+                } 
+                   $dTable.setBeginShow = function(){
+                       $dTable.showMainData();  
+                   }
                     
+                   $dTable.setBeginShow();
                                 
                 });
-                 
+                
                 
                 function validateForm() {
                     return true;
@@ -102,8 +113,11 @@
             </head_merge>
 
             <div class="container_12">              
+                 <div class="lift:teacher.ParentDataSn.choosenClass choosenclass">
+                    <h1>Przeglądasz klasę: <span id="choosenclass">4C</span></h1>
+                </div>
                 
-                <div class="lift:PupilDataSn.editAjax" id="formAdd" style="display: none;" title="Dane uczniów">
+                <div class="lift:teacher.PupilDataSn.editAjax" id="formAdd" style="display: none;" title="Dane uczniów">
                 <form  method="POST">
                <p><label for="id">Id:</label>
                   <input id="id" type="text" />
@@ -178,7 +192,7 @@
                        </tr>
                    </thead>
 
-                    <tbody class="lift:PupilDataSn.dataTable">
+                    <tbody class="lift:teacher.PupilDataSn.dataTable">
                         <tr >
                             <td class="id"></td>
                             <td class="number"></td>

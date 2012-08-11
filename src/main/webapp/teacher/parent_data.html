@@ -3,66 +3,231 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
+                <script type="text/javascript" charset="utf-8">
                 
+                $(document).ready(function(){
+                    init_dataTable(true);
+               
+                    $('#formAdd').dialog({
+                        autoOpen : false,
+                        height : 600,
+                        width : 600,
+                        modal : true
+                    });
+                    
+                    $( "#radio" ).buttonset();
+ 
+                    
+                    $dTable.insertData = function (data) {
+                        $dTable.idInput.value = data[0];
+                        document.getElementById('number').value = data[1];
+                        document.getElementById('reversefullname').value = data[2];
+                        document.getElementById('lastnamefather').value = data[3];
+                        document.getElementById('firstnamefather').value = data[4];
+                        document.getElementById('emailfather').value = data[5] ;
+                        document.getElementById('phonefather').value = data[6];
+                        document.getElementById('addressfather').value = data[7] ;
+                        document.getElementById('lastnamemather').value = data[8];
+                        document.getElementById('firstnamemather').value = data[9];
+                        document.getElementById('emailmather').value = data[10] ;
+                        document.getElementById('phonemather').value = data[11];
+                        document.getElementById('addressmather').value = data[12] ;
+                    }
+                    
+                    $dTable.getDataArray = function(id){
+                        var array = new Array();
+                        array[0] = id.toString();
+                        array[1] = document.getElementById('number').value;
+                        array[2] = document.getElementById('reversefullname').value;
+                        array[3] = document.getElementById('lastnamefather').value;
+                        array[4] = document.getElementById('firstnamefather').value;
+                        array[5] = document.getElementById('emailfather').value;
+                        array[6] = document.getElementById('phonefather').value;
+                        array[7] = document.getElementById('addressfather').value;
+                        array[8] = document.getElementById('lastnamemather').value;
+                        array[9] = document.getElementById('firstnamemather').value;
+                        array[10] = document.getElementById('emailmather').value;
+                        array[11] = document.getElementById('phonemather').value;
+                        array[12] = document.getElementById('addressmather').value;
+                        alert(array);
+                        return array;
+                    }   
+                    
+                 
+                   $dTable.showFather = function(){
+                     
+                       $dTable.fnSetColumnVis( 3, true );
+                       $dTable.fnSetColumnVis( 4, true );
+                       $dTable.fnSetColumnVis( 5, true );
+                       $dTable.fnSetColumnVis( 6, true );
+                       $dTable.fnSetColumnVis( 7, true );
+                       $dTable.fnSetColumnVis( 8, false );
+                       $dTable.fnSetColumnVis( 9, false );
+                       $dTable.fnSetColumnVis( 10, false );
+                       $dTable.fnSetColumnVis( 11, false );
+                       $dTable.fnSetColumnVis( 12, false );
+                   }
+                   
+                   $dTable.showMather = function(){
+                     
+                           $dTable.fnSetColumnVis( 3, false );
+                           $dTable.fnSetColumnVis( 4, false );
+                           $dTable.fnSetColumnVis( 5, false );
+                           $dTable.fnSetColumnVis( 6, false );
+                           $dTable.fnSetColumnVis( 7, false );
+                           $dTable.fnSetColumnVis( 8, true );
+                           $dTable.fnSetColumnVis( 9, true );
+                           $dTable.fnSetColumnVis( 10, true );
+                           $dTable.fnSetColumnVis( 11, true );
+                           $dTable.fnSetColumnVis( 12, true );
+                    } 
+                   $dTable.showAll = function(){
+                       
+                       $dTable.fnSetColumnVis( 3, true );
+                       $dTable.fnSetColumnVis( 4, true );
+                       $dTable.fnSetColumnVis( 5, true );
+                       $dTable.fnSetColumnVis( 6, true );
+                       $dTable.fnSetColumnVis( 7, true );
+                       $dTable.fnSetColumnVis( 8, true );
+                       $dTable.fnSetColumnVis( 9, true );
+                       $dTable.fnSetColumnVis( 10, true );
+                       $dTable.fnSetColumnVis( 11, true );
+                       $dTable.fnSetColumnVis( 12, true );
+                } 
+                   $dTable.setBeginShow = function(){
+                	   $dTable.showFather();  
+                   }
+                    
+                   $dTable.setBeginShow();
+                   
+                    
+                                
+                });
+                 
+                
+                function validateForm() {
+                    return true;
+                }
+               
+                </script>
+                <style >
+                    #errorInfo { font-style: italic; font-weight: bold; color: red;}
+                    .scratched td {text-decoration: line-through;}
+                    input[readonly] {background: buttonface;}
+                </style>
             </head_merge>
 
-            <div id="centrum">
-                <div id="infoHead">
-                    <div class="lift:ParentDataSn.logedInUser userName" style="width:200px;display: inline;">Jesteś zalogowany jako: <p id="username"></p></div>
-                   <form class="lift:ParentDataSn.formItem" method="POST">
-                        <fieldset  style="width:200px;display: inline;">
-                            <legend>Status zmian</legend>
-                            <label for="editRows">Do zmiany:</label><input id="editRows" type="text" readonly="true" value="0" size="2" />
-                            <input id="dataEdit" />
-                            <input style="display:none;" id="saveButton" onclick="return createData()" src="/style/images/saveico.png" type="image" />
-                            <input id="submit"/>
-
-                        </fieldset></form>
-                </div> <!--inofhead-->
-                <br  />
-
-
- 
-            <h2>Podstawowe dane rodziców</h2>
-                
-       
-	<hr  />
-		<table id="fullList" border="0" cellpadding="2" cellspacing="2" >
-		<thead>
-			<tr><th>Nr</th><th class="nameList">Nazwisko i imię</th><th class="nameList" >Imię</th><th title="Ojciec/Matka">O/M</th><th>Nazwisko rodzica</th><th>Imię rodzica</th><th>E-Mail</th><th>Hasło</th><th>Telefon</th><th>Akcje</th></tr>
-			
-			
-                </thead>
-		   
-        <tbody class="lift:ParentDataSn.dataTable"><tr><td>nr</td><td>nazwisko</td><td rowspan="2" >imie</td>
-        <td>M</td><td>Nazwisko</td><td>Imię</td><td>hasło</td><td>email</td><td>telefon</td><td><button>Edytuj</button></td></tr>
-        </tbody>
-           </table>
-                
-                
-                    <p id="addInfo"></p>
+            <div class="container_12">              
+                <div class="lift:teacher.ParentDataSn.choosenClass choosenclass">
+                    <h1>Przeglądasz klasę: <span id="choosenclass">4C</span></h1>
                 </div>
-                <br  />
+                <div class="lift:teacher.ParentDataSn.editAjax" id="formAdd" style="display: none;" title="Dane uczniów">
+                <form  method="POST">
+               <p><label for="id">Id:</label>
+                  <input id="id" type="text" />
+                </p> 
+               <p><label for="reversefullname">Nazwisko i imię:</label>
+                  <input id="reversefullname" type="text" readonly="readonly"/><br/>
+                </p>
+                 <p style="border-bottom:1px solid #555;padding-bottom: 10px;">
+                 <label for="number">Numer:</label>
+                   <input id="number" type="text" readonly="readonly"/><br/>
+                </p>
+                <p><label for="lastnamefather">Nazwisko Ojca:</label>
+                  <input id="lastnamefather" maxlength="30"/><br/>
+                  <span id="lastnamefatherinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="firstnamefather">Imię Ojca:</label>
+                  <input id="firstnamefather" maxlength="30"/><br/>
+                  <span id="firstnamefatherinfo" class="errorInfo"></span>
+                </p>
+                 <p><label for="emailfather">E-mail Ojca:</label>
+                  <input id="emailfather" maxlength="50"/><br/>
+                  <span id="emailfatherinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="phonefather">Telefon Ojca:</label>
+                   <input id="phonefather" type="text"  maxlength="12"/><br/>
+                   <span id="phonefatherinfo" class="errorInfo"></span>
+                </p>
+                <p style="border-bottom:1px solid #555;padding-bottom: 10px;">
+                <label for="addressfather">Adres Ojca:</label>
+                   <input id="addressfather" maxlength="120"/><br/>
+                   <span id="addressfatherinfo" class="errorInfo"></span>
+                </p>
+                 <p><label for="lastnamemather">Nazwisko Matki:</label>
+                  <input id="lastnamemather" maxlength="30"/><br/>
+                  <span id="lastnamematherinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="firstnamemather">Imię Matki:</label>
+                  <input id="firstnamemather" maxlength="30"/><br/>
+                  <span id="firstnamematherinfo" class="errorInfo"></span>
+                </p>
+                 <p><label for="emailmather">E-mail Matki:</label>
+                  <input id="emailmather" maxlength="50"/><br/>
+                  <span id="emailmatherinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="phonemather">Telefon Matki:</label>
+                   <input id="phonemather" type="text"  maxlength="12"/><br/>
+                   <span id="phonematherinfo" class="errorInfo"></span>
+                </p>
+                <p><label for="addressmather">Adres Matki:</label>
+                   <input id="addressmather" maxlength="120"/><br/>
+                   <span id="addressmatherinfo" class="errorInfo"></span>
+                </p>
+                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
+                    <input type="image"  src="/style/images/saveico.png"  id="save"/>
+                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
+                </p>
+                <p id="addInfo"></p>
+                </form>
+                </div>
 
-        </div>
+
+
+                <h3>Dane rodziców </h3><hr />
+     <div id="radio">
+        <input type="radio" id="radio1" name="radio" checked="checked" onclick="$dTable.showFather();" /><label for="radio1">Dane Ojca</label>
+        <input type="radio" id="radio2" name="radio"  onclick="$dTable.showMather();"/><label for="radio2">Dane Matki</label>
+    </div>
+              
+                
+                <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
+                   
+                   <thead>
+                       <tr>
+                           <th>ID</th><th>Nr</th><th>Uczeń</th>
+                           <th>Nazwisko Ojca</th><th>Imię Ojca</th><th>E-mail Ojca</th>
+                           <th>Telefon Ojca</th><th>Adres Ojca</th>
+                           <th>Nazwisko Matki</th><th>Imię Matki</th><th>E-mail Matki</th>
+                           <th>Telefon Matki</th><th>Adres Matki</th>
+                       </tr>
+                   </thead>
+
+                    <tbody class="lift:teacher.ParentDataSn.dataTable">
+                        <tr >
+                            <td class="id"></td>
+                            <td class="number"></td>
+                            <td  class="reversefullname"></td>
+                            <td class="lastnamefather"></td>
+                            <td class="firstnamefather"></td>
+                            <td class="emailfather"></td>
+                            <td class="phonefather"></td>
+                            <td class="addressfather"></td>
+                            <td class="lastnamemather"></td>
+                            <td class="firstnamemather"></td>
+                            <td class="emailmather"></td>
+                            <td class="phonemather"></td>
+                            <td class="addressmather"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
     </body>
 </html>
 
 
 
-
-
-
-<div class="lift:surround?with=register;at=content">
-    <head><script type="text/javascript" src="/scripts/log_data_parent.js" ></script></head>
-   
-<span class="lift:LogDataSn.makeMenuRegister"><ul><li>menu1</li><li>menu2 itd...</li></ul></span>
-		
-        <div id="centrum">
-           
-	 </div> <!-- koniec dodawania -->
- 
-      
-</div>
 
