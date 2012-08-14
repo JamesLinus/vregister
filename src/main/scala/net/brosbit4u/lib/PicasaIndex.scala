@@ -34,7 +34,7 @@ class PicasaIndex {
     val feedUrl: URL = new URL("https://picasaweb.google.com/data/feed/api/user/" + email + "?kind=album")
 
     val myUserFeed: UserFeed = myService.getFeed(feedUrl, classOf[UserFeed]);
-    val albumEntries = asJavaList(myUserFeed.getAlbumEntries())
+    val albumEntries = bufferAsJavaList(myUserFeed.getAlbumEntries())
     var galList: List[Gallery] = Nil
 
     Gallery.drop

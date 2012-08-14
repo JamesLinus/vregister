@@ -15,12 +15,14 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet
+package net.brosbit4u {
+ package snippet.page {
 
 import _root_.scala.xml.{ NodeSeq, Unparsed }
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
 import _root_.net.brosbit4u.model._
+import page._
 import _root_.net.liftweb.http.{ S, SHtml}
 import Helpers._
 
@@ -172,5 +174,7 @@ class EditSn {
   }
 
 }
+
+ }}
 
 
