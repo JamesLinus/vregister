@@ -14,7 +14,6 @@ import _root_.net.liftweb.mongodb.DefaultMongoIdentifier
 object FileLoader {
   
   def file(idWithExtension: String): Box[LiftResponse] = {
-    println("FileLoader id= " + idWithExtension)
     val id = idWithExtension.split('.').head
     var outputStream = new ByteArrayOutputStream()
     var mime = ""

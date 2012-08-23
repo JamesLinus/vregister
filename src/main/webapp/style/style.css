@@ -7,7 +7,7 @@ body { font:13px/1.4em "Helvetica", Arial, sans-serif;}
 #header-pages {height:86px;margin:10px 10px 5px 10px;}
 #content{width:100%;margin-top:-100px;padding-bottom:10px;min-height:200px;background-color:#FFF;padding-top: 100px;}
 .shadow {background:#FFF url(/style/images/content-bg.png) no-repeat top center;}
-#logo {margin-top:5px;}
+#logo {margin-top:1px;}
 #slider {height:330px;margin-bottom:0px;position:relative;}
 #footer {width:100%;color:#FFF; padding:20px 0;}
 #footer h1 {text-shadow: 0px 1px 1px #000000;}
@@ -56,7 +56,7 @@ ul li.dir:hover{background-color: #FFF; -moz-border-radius-topleft: 5px;-moz-bor
 #gallery { margin: 10px auto; background-color: white; text-align: center; width: 820px;}
 
 /*contact form */
-input[type="text"] {height:22px;border:1px solid #CCCCCC;width:325px;}
+input[type="text"], input[type="password"] {height:22px;border:1px solid #CCCCCC;width:325px;}
 #contact_form {margin:10px 0px;width:430px;}
 #contact_form textarea {border:1px solid #CCCCCC;width:325px;}
 #contact_form label {float:left;width:100px;}
@@ -108,10 +108,16 @@ h1.image-home {background:url(/style/images/home_32.png) no-repeat left center; 
 
 .pageshort {
 	border-bottom: 1px dotted black;
+	min-height: 110px;
 }
 .pageintroduction {
 	padding: 0;
 	font-weight: bold;
+}
+
+.pageintroduction a { 
+	float: right;
+	margin-right:50px;
 }
 
 #pagedepartment {
@@ -121,6 +127,7 @@ h1.image-home {background:url(/style/images/home_32.png) no-repeat left center; 
 	}
 
 #pagecontent h1 {
+	margin: 30px 0 30px 0;
 	font-size: 26px;
 }
 

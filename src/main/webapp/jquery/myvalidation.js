@@ -4,6 +4,14 @@
 //zapisuje aktualną informację o błędach
 var info = ""
 
+function validateText(name){
+    if (name.length < 3) {
+        info = "Za mało liter";
+        return false;
+    } 
+    return true;
+}
+	
 function validateName(name){
     if (name.length < 3) {
         info = "Za mało liter";

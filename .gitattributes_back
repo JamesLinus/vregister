@@ -1,0 +1,14 @@
+
+/src/main/webapp/style/images/fern.jpg merge=ours
+/src/main/webapp/style/images/logo.png merge=ours
+/src/main/webapp/style/images/favicon.ico merge=ours
+/src/main/webapp/style/images/gallery.png merge=ours
+/src/main/webapp/style/images/home.png merge=ours
+/src/main/webapp/style/images/pages.png merge=ours
+/src/main/webapp/style/images/register.png merge=ours
+/src/main/webapp/style/images/mail.png merge=ours
+/src/main/webapp/style/images/vacat.png merge=ours
+
+/src/main/webapp/templates-hidden/* merge=ours
+/src/main/webapp/contact.html merge=ours
+

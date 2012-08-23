@@ -9,7 +9,10 @@ import _root_.net.liftweb.mongodb._
 import java.util.Date
 import org.bson.types.ObjectId
 
-case class Comment(id:Int, authorName:String, authorId:Long, date:String, content:String)
+case class Comment(id:ObjectId, authorName:String, authorId:String, date:String, content:String) {
+  def mapString = Map[String,String](("id"->id.toString),("authorName"->authorName),
+		  			("authorId"-> authorId),("date"->date),("content"->content))
+}
 
 object ForumThreadContent extends MongoDocumentMeta[ForumThreadContent] {
   override def collectionName = "forumthreadcontent"
@@ -20,14 +23,8 @@ object ForumThreadContent extends MongoDocumentMeta[ForumThreadContent] {
 case class ForumThreadContent(var _id: ObjectId,
 					 		var content:String, var comments:List[Comment]) 
 							extends MongoDocument[ForumThreadContent] {
-  def getLastInfo() = {
-     if(comments.length > 0) {
-       val lastComment = comments.last
-       "<span class='fullname'>%s<span><br/><span class='date'>%s<span>".format(lastComment.authorName,lastComment.date)
-       }
-     else ""
-  }
   def meta = ForumThreadContent
+  
 }
 
 

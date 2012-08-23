@@ -10,6 +10,7 @@ package net.brosbit4u.snippet.page
 import java.util.Date
 import scala.xml.{ NodeSeq, Text, XML, Unparsed }
 import _root_.net.liftweb.util._
+import _root_.net.brosbit4u.lib.MailConfig
 import _root_.net.liftweb.common._
 import _root_.net.brosbit4u.model.page._
 import _root_.net.brosbit4u.model._
@@ -20,16 +21,13 @@ import JsCmds._
 import JE._
 import Helpers._
 import org.bson.types.ObjectId
+import _root_.net.liftweb.json.JsonDSL._
 
 class AdminPagesSn {
 
   object notice extends RequestVar[String]("")
-  ///!!!!!!dodać wszędzie sprawdzanie czy to admin
-
-  //zrobić walidację maila
 
   def addDepartment() = {
-    //      if (!isAdmin_?) return <h1>Nie masz uprawnień do edycji!</h1>
     var id = ""
     var name = ""
 
@@ -76,8 +74,6 @@ class AdminPagesSn {
     node
   }
 
-  ////////////////////////////////////////////////////////////////////
-  /** dodawanie działu do forum*/
   def addForumDepartment() = {
     var id = ""
     var name = ""
@@ -113,8 +109,7 @@ class AdminPagesSn {
     })
   }
 
-  //////////////////////////////////////////////////////////////////////
-  //dodawanie adresów kontakowych mail do wysyłania maili ze strony
+
   def addContactMail() = {
     var id = ""
     var email = ""
@@ -152,7 +147,7 @@ class AdminPagesSn {
 
   }
 
-  //wyświetlanie listy adresów kontaktowych szkoły
+  /** school contacts mail */
   def contactMails() = {
     val contactMails = ContactMail.findAll
     "tr" #>  contactMails.map(contactMail => {
@@ -161,14 +156,14 @@ class AdminPagesSn {
     })
   }
 
-  //zmiana hasła admina
+  /** change admin password*/
   def changePassword() = {
     var password1 = ""
     var password2 = ""
     var notice = ""
     def changePass() {
       if (password1 == "" || password1 != password2) return
-      if (isAdmin_?) { if (User.currentUser.get.password(password1).save) notice = "Hasło zapisano" else notice = "Nieudany zapis hasła" }
+      User.currentUser.get.password(password1).save
     }
 
     "#password1" #> SHtml.text(password1, x => password1 = x.trim, "type" -> "password", "id" -> "pass1") &
@@ -177,49 +172,42 @@ class AdminPagesSn {
       "#notice" #> Text(notice)
   }
 
-  ///dodawanie linków
   def addLinks() = {
     var xmlDataStr = ""
     def add() {
-      val mainPageNewInfo = getMainPageNewInfo()
-      var allLinks:List[LinkGroup] = Nil
+      val mainPageLinks = getMainPageLinks
+      var linkDepartments:List[LinkDepartment] = Nil
       var xmlData = XML.loadString(xmlDataStr)
       (xmlData \ "links").foreach(links => {
         val nameDep = (links \ "@name").toString
-        val linkGroup = LinkGroup(nameDep,Nil)
+        var linksList:List[Link] = Nil 
         (links \ "link").foreach(link => {
           val title = (link \ "@title").toString
           val url = (link \ "@src").toString
-          linkGroup.links = LinkItem(url, title) :: linkGroup.links 
+          linksList = Link(url, title) :: linksList 
         })
-        allLinks = linkGroup :: allLinks
+        linkDepartments = LinkDepartment(nameDep, linksList) :: linkDepartments
       })
-      mainPageNewInfo.links = allLinks
-      mainPageNewInfo.save
+      mainPageLinks.links = linkDepartments
+      mainPageLinks.save
       S.redirectTo("/admin/links")
     }
     "#xmlData" #> SHtml.text(xmlDataStr, xmlDataStr = _, "style" -> "display:none;") &
       "#submit" #> SHtml.submit("ZAPISZ", add, "onclick" -> "return saveAll()")
   }
-  // wyślietlanie konfiguracji linków
+
   def showLinks() = {
-    val mainPageNewInfo = getMainPageNewInfo()
-        ".divDepartment" #> mainPageNewInfo.links.map(linkGroup => {
-      ".nameDep" #> <input value={linkGroup.department} type="text"/> &
+    val mainPageLinks = getMainPageLinks
+   
+        ".divDepartment" #> mainPageLinks.links.map(linkGroup => {
+      ".nameDep" #> <input value={linkGroup.name} type="text"/> &
       ".linkTr" #> linkGroup.links.map(link => {
-        	".nameLink" #> <td>{ link.description }</td> &
-            ".urlLink" #> <td>{ link.link}</td>
+        	".nameLink" #> <td>{ link.title}</td> &
+            ".urlLink" #> <td>{ link.url}</td>
         	})
         })
     }
    
-
-  def isAdmin_?(): Boolean = {
-    User.currentUser match {
-      case Full(user) => if (user.role.is == "a") true else false
-      case _ => false
-    }
-  }
 
   def editSecretariat() = {
     var id = ""
@@ -273,34 +261,23 @@ class AdminPagesSn {
 	  var content = ""
 	    
 	  def save(){
-        val idInt =  if(id == "") 0 else id.trim.toInt
-        val mainPageNewInfo = getMainPageNewInfo()
-	    var anounces = mainPageNewInfo.anounces
-	    if(idInt <= 0) {
-	      val idList = anounces.map(anounce => anounce.id)
-	      val newId = if(idList.isEmpty) 1 else idList.max + 1
-	      anounces = Anounce(newId, title.trim, content.trim)::anounces 
-	    }
-	    else {
-	      val anounce = Anounce(idInt, title.trim, content.trim)
-	      anounces = anounces.filter(_.id < idInt):::(anounce::anounces.filter(_.id > idInt))
-	    }
-	    
-	    mainPageNewInfo.anounces = anounces
-	    mainPageNewInfo.save
+	    val mainPageData = MainPageData.find(id) match {
+          case Some(mainPageData) => mainPageData
+          case _ => {
+            val tmpMainPageData = MainPageData.create
+            tmpMainPageData.key = Keys.anounce.toString
+            tmpMainPageData
+          }
+        }
+	    mainPageData.title = title.trim
+	    mainPageData.content = content.trim
+	    mainPageData.save
 	  }
       
 	  def delete(){
-	    val idInt =  if(id == "") 0 else id.trim.toInt
-	    if (idInt > 0){
-          val mainPageNewInfo = getMainPageNewInfo()
-          mainPageNewInfo.anounces match {
-            case Nil =>
-            case anounces => {
-              mainPageNewInfo.anounces = anounces.filter(_.id < idInt) ::: anounces.filter(_.id > idInt)
-              mainPageNewInfo.save
-            }
-          }
+	    MainPageData.find(id) match {
+	      case Some(mainPageData) => mainPageData.delete
+	      case _ =>
 	    }
 	  }
 	  
@@ -312,10 +289,9 @@ class AdminPagesSn {
   }
   
   def anounceList() = {
-    val mainPageNewInfo = getMainPageNewInfo()
-    val anounces =  mainPageNewInfo.anounces
+    val anounces = getMainPageDataWithAnounces
     "tr" #> anounces.map(anounce => {
-    		<tr id={anounce.id.toString} onclick="setData(this);" ><td>{anounce.title}</td><td>{Unparsed(anounce.content)}</td></tr>
+    		<tr id={anounce._id.toString} onclick="setData(this);" ><td>{anounce.title}</td><td>{Unparsed(anounce.content)}</td></tr>
     	})
   }
 
@@ -327,35 +303,24 @@ class AdminPagesSn {
     var link = ""
       
     def save(){
-      val idInt =  if(id == "") 0 else try {id.trim.toInt} finally 0
-      val mainPageNewInfo = getMainPageNewInfo()
-      var slides = mainPageNewInfo.slides
-      if(idInt <= 0) {
-	      val idList = slides.map(slide => slide.id)
-	      val newId = if(idList.isEmpty) 1 else idList.max + 1
-	      slides = Slide(newId, src.trim, link.trim, descript.trim)::slides 
-	    }
-	    else {
-	      val slide = Slide(idInt, src.trim, link.trim, descript.trim)
-	      slides = slides.filter(_.id < idInt):::(slide::slides.filter(_.id > idInt))
-	    }
-	    
-	    mainPageNewInfo.slides = slides
-	    mainPageNewInfo.save
-      
+      val mainPageData = MainPageData.find(id) match {
+        case Some(mainPageData) => mainPageData
+        case _ => {
+          val tmpMainPageData = MainPageData.create
+          tmpMainPageData.key = Keys.slide.toString
+          tmpMainPageData
+        }
+      }
+      mainPageData.title = descript
+      mainPageData.src = src
+      mainPageData.link = link
+      mainPageData.save
     }
+    
     def delete() {
-      val idInt =  if(id == "") 0 else id.trim.toInt
-      
-      if(idInt > 0){
-    	val mainPageNewInfo = getMainPageNewInfo()
-        mainPageNewInfo.slides match {
-            case Nil =>
-            case slides => {
-              mainPageNewInfo.slides = slides.filter(_.id < idInt) ::: slides.filter(_.id > idInt)
-              mainPageNewInfo.save
-            }
-          }
+      MainPageData.find(id) match {
+        case Some(mainPageData) => mainPageData.delete
+        case _ =>
       }
     }
     
@@ -368,20 +333,37 @@ class AdminPagesSn {
   }
   
   def slideList() = {
-    val mainPageNewInfo = getMainPageNewInfo()
-    val slides = mainPageNewInfo.slides
+    val slides = getMainPageDataWithSlides
     "tr" #> slides.map(slide => {
-    		<tr id={slide.id.toString} onclick="setData(this);" >
-    		<td><img src={slide.src.toString} style="width:40%;height:40%;" /></td>
-    		<td>{slide.link}</td><td>{slide.description}</td></tr>
+    		<tr id={slide._id.toString} onclick="setData(this);" >
+    		<td><img src={slide.src} style="width:300px;height:100px;" /></td>
+    		<td>{slide.link}</td><td>{slide.title}</td></tr>
     	})
   }
   
-  private def getMainPageNewInfo() =  {
-     val mainPageNewInfoList = MainPageNewInfo.findAll
-     val mainPageNewInfo = if(mainPageNewInfoList.isEmpty) MainPageNewInfo.create 
-        					  else mainPageNewInfoList.head
-      mainPageNewInfo
+  
+  
+  def addMailConfig() = {
+    val mailConfig = new MailConfig
+    var (host,user,password) = mailConfig.getConfig
+    
+    def save(){
+      mailConfig.configureMailer(host, user, password)
+    }
+    
+     "#host" #> SHtml.text(host, host = _) &
+    "#user" #> SHtml.text(user, user = _) &
+    "#password1" #> SHtml.password(password, password = _) &
+    "#save" #> SHtml.submit("Zapisz!", save) 
+  }
+  
+  private def getMainPageDataWithSlides = MainPageData.findAll(("key"->Keys.slide.toString))
+  
+  private def getMainPageDataWithAnounces = MainPageData.findAll(("key"->Keys.anounce.toString))
+  
+ private def getMainPageLinks = MainPageLinks.findAll match {
+    case head::list => head
+    case _ => MainPageLinks.create
   }
 
 }

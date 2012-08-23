@@ -34,10 +34,10 @@ class ParentDataSn extends BaseTeacher {
   
   def dataTable() = {
 	val idClass = ClassChoose.is
-	if (idClass == 0) S.redirectTo("teacher/index")
+	if (idClass == 0) S.redirectTo("/teacher/index")
     val classModel = ClassModel.find(idClass) match {
 	  case Full(theClass) => theClass
-	  case _ => S.redirectTo("teacher/index")
+	  case _ => S.redirectTo("/teacher/index")
 	}
     val pupils = User.findAll(By(User.classId, classModel))
    

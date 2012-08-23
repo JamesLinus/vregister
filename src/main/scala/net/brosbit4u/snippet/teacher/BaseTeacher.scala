@@ -29,7 +29,9 @@ class BaseTeacher  {
 	  if(user.id.is == theClass.teacher.obj.get.id.is || user.role == "a" ) true
 	  else false
 	}
-
+	
+	protected def isAdmin = User.currentUser.get.role.is == "a"
+	
 }
 
   }}

@@ -44,20 +44,17 @@ class FilesSn {
   object linkpath extends RequestVar[String]("")
   var fileHold: Box[FileParamHolder] = Empty
   var mimeType = ""
-  var fileName = ""
+  var fullFileName = ""
   var mimeTypeFull = ""
     
   def addImage() = {
     
     def isCorrect = readImage()
     
-    val bufferedImageTYPE = if (mimeType == ".jpeg") BufferedImage.TYPE_INT_RGB else BufferedImage.TYPE_INT_ARGB
-    
     def save() {
-      if (isCorrect) {
-        val fileName = fileHold.get.fileName
+      if (isCorrect) {       
         val imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
-        val resizedImageBuf = resizeImageWithProportion(imageBuf, 600, bufferedImageTYPE)
+        val resizedImageBuf = resizeImageWithProportion(imageBuf, 600)
         var outputStream = new ByteArrayOutputStream()
         ImageIO.write(resizedImageBuf, mimeType.substring(1), outputStream)
         val inputStream = new ByteArrayInputStream(outputStream.toByteArray())
@@ -65,7 +62,7 @@ class FilesSn {
           val fs = new GridFS(db)
           val inputFile = fs.createFile(inputStream)
           inputFile.setContentType(mimeTypeFull)
-          inputFile.setFilename(fileName)
+          inputFile.setFilename(fullFileName)
           inputFile.save
           linkpath( "/img/" + inputFile.getId().toString() + mimeType)
         }
@@ -81,12 +78,11 @@ class FilesSn {
   def addThumbnail() = {
    
     def isCorrect = readImage()
-    val bufferedImageTYPE = if (mimeType == ".jpeg") BufferedImage.TYPE_INT_RGB else BufferedImage.TYPE_INT_ARGB
 
     def save() {
       if (isCorrect) {
         val imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
-        val resizedImageBuf = resizeImageWithProportion(imageBuf, 100, bufferedImageTYPE)
+        val resizedImageBuf = resizeImageWithProportion(imageBuf, 100)
         var outputStream = new ByteArrayOutputStream()
         ImageIO.write(resizedImageBuf, mimeType.substring(1), outputStream)
         val inputStream = new ByteArrayInputStream(outputStream.toByteArray())
@@ -95,7 +91,7 @@ class FilesSn {
           val fs = new GridFS(db)
           val inputFile = fs.createFile(inputStream)
           inputFile.setContentType(mimeTypeFull)
-          inputFile.setFilename(fileName)
+          inputFile.setFilename(fullFileName)
           inputFile.save
           linkpath ("/img/" + inputFile.getId().toString() + mimeType)
         }
@@ -104,7 +100,7 @@ class FilesSn {
 
     "#file" #> SHtml.fileUpload(fileUploaded => fileHold = Full(fileUploaded)) &
       "#submit" #> SHtml.submit("Dodaj!", save) &
-      "#linkpath" #> <span id="linkpath">{linkpath.is}</span>
+      "#linkpath" #> <span id="linkpath" style="display:none;">{linkpath.is}</span>
   }
   
   private def readImage():Boolean =  {
@@ -112,9 +108,8 @@ class FilesSn {
       case Full(FileParamHolder(_, mime, _, data)) => {
         if (mime.startsWith("image/")) {
           mimeType = "." + mime.split("/").last
-          mimeTypeFull = mime.toString
-          fileName = fileHold.get.fileName.split('.').dropRight(1).mkString("") + mimeType
-          S.notice(mime.toString)
+          mimeTypeFull = mime.toString.toLowerCase()
+          fullFileName = fileHold.get.fileName.split('.').dropRight(1).mkString("") + mimeType
           println("mimetype is good")
           true
         } else {
@@ -136,38 +131,42 @@ class FilesSn {
   }
   
 
-  private def resizeImageWithProportion(imageBuf: BufferedImage, maxDimension: Int, bufferedImageType: Int): BufferedImage = {
+  private def resizeImageWithProportion(imageBuf: BufferedImage, maxDimension: Int): BufferedImage = {
+    val bufferedImageTYPE = getImageType
     var imageBufferOut: BufferedImage = imageBuf
     val width = imageBuf.getWidth
     val height = imageBuf.getHeight
     if (width > maxDimension || height > maxDimension) {
       if (width > height) {
-        val image: java.awt.Image = imageBuf.getScaledInstance(maxDimension, (height.toDouble * maxDimension.toDouble / width.toDouble).toInt, Image.SCALE_SMOOTH)
-        imageBufferOut = new BufferedImage(maxDimension, (height.toDouble *maxDimension.toDouble / width.toDouble).toInt, bufferedImageType)
+        val image: java.awt.Image = imageBuf.getScaledInstance(maxDimension, 
+            (height.toDouble * maxDimension.toDouble / width.toDouble).toInt, Image.SCALE_SMOOTH)
+        imageBufferOut = new BufferedImage(maxDimension, 
+            (height.toDouble *maxDimension.toDouble / width.toDouble).toInt, bufferedImageTYPE)
         imageBufferOut.getGraphics.drawImage(image, 0, 0, null)
         //imageBuf = im.asInstanceOf[BufferedImage]
       } else {
-        val image: java.awt.Image = imageBuf.getScaledInstance((width.toDouble * 500.0 / height.toDouble).toInt, 500, Image.SCALE_SMOOTH)
-        imageBufferOut = new BufferedImage((width.toDouble * maxDimension.toDouble / height.toDouble).toInt, maxDimension, bufferedImageType)
+        val image: java.awt.Image = 
+        		imageBuf.getScaledInstance((width.toDouble * maxDimension / height.toDouble).toInt, 
+        		    maxDimension, Image.SCALE_SMOOTH)
+        imageBufferOut = new BufferedImage((width.toDouble * maxDimension.toDouble / height.toDouble).toInt, 
+            maxDimension, bufferedImageTYPE)
         imageBufferOut.getGraphics.drawImage(image, 0, 0, null)
       }
     } else {
-      imageBufferOut = new BufferedImage(width, height, bufferedImageType)
+      imageBufferOut = new BufferedImage(width, height, bufferedImageTYPE)
       imageBufferOut.getGraphics.drawImage(imageBuf, 0, 0, null)
     }
     imageBufferOut
   }
 
-  /* ładownie pliku na serwer -- dokończyć*/
+  /* load file non image method*/
   def uploadFile() = {
     var fileHold: Box[FileParamHolder] = Empty
-    var fileName = ""
-    var mimeType = ""
-    var mimeTypeFull = ""
     def isCorrect = fileHold match {
       case Full(FileParamHolder(_, mime, fileNameIn, data)) => {
-        fileName = fileNameIn
-        mimeType = mime.toString
+        fullFileName = fileNameIn
+        mimeType = mime.toString.toLowerCase()
+        println("load FILE not IMAGE fullName: %s, mimeType: %s")
         if (data.length < 10000000) true else {
           println("Za duży plik!")
           S.error("Za duży plik!")
@@ -192,9 +191,9 @@ class FilesSn {
           val fs = new GridFS(db)
           val inputFile = fs.createFile(fileHold.get.fileStream)
           inputFile.setContentType(mimeType)
-          inputFile.setFilename(fileName)
+          inputFile.setFilename(fullFileName)
           inputFile.save
-          linkpath ("/file/" + inputFile.getId().toString() + fileName.split(".").last)
+          linkpath ("/file/" + inputFile.getId().toString() + fullFileName.split('.').last)
         }
       }
     }
@@ -205,7 +204,7 @@ class FilesSn {
 
   def addSlide() = {
     def isCorrect = readImage()
-    val bufferedImageTYPE = if (mimeType == ".jpeg") BufferedImage.TYPE_INT_RGB else BufferedImage.TYPE_INT_ARGB
+    val bufferedImageTYPE = getImageType
     
     def save() {
       if (isCorrect) {
@@ -235,6 +234,9 @@ class FilesSn {
       case _ => "add host name"
     }
   }
+  
+  private def getImageType = if (mimeType == ".jpeg" || mimeType == ".jpg") BufferedImage.TYPE_INT_RGB 
+    								else BufferedImage.TYPE_INT_ARGB
 
 }
  

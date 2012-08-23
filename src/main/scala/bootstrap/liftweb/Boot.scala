@@ -18,17 +18,13 @@ import _root_.net.liftweb.mapper.{ DB, By, ConnectionManager, ConnectionIdentifi
 import java.sql.{ Connection, DriverManager }
 import _root_.net.brosbit4u.model._
 import _root_.net.brosbit4u.api._
-import javax.mail._
-import javax.mail.internet._
+import _root_.net.brosbit4u.lib.MailConfig
+
 import _root_.net.liftweb.mongodb._
 
 object DBVendor extends ConnectionManager {
   def newConnection(name: ConnectionIdentifier): Box[Connection] = {
     try {
-      /**
-       * A class that's instantiated early and run.  It allows the application
-       * to modify lift's environment
-       */
       //Class.forName(classOf[org.postgresql.Driver].getName)
       Class.forName("org.postgresql.Driver")
       val dm = DriverManager.getConnection("jdbc:postgresql:vregister", "vregister", "123test456")
@@ -59,16 +55,7 @@ class Boot {
       case Req("file" :: id :: Nil, _, GetRequest) => () => FileLoader.file(id)
     })
       
-      def configMailer(host: String, user: String, password: String) {
-      // Enable TLS support
-      System.setProperty("mail.smtp.starttls.enable", "true");
-      // Set the host name
-      System.setProperty("mail.smtp.host", host) // Enable authentication
-      System.setProperty("mail.smtp.auth", "true") // Provide a means for authentication. Pass it a Can, which can either be Full or Empty
-      Mailer.authenticator = Full(new Authenticator {
-        override def getPasswordAuthentication = new PasswordAuthentication(user, password)
-      })
-    }
+     
 
 
     if (DB.runQuery("select * from users where lastname = 'Administrator'")._2.isEmpty) {
@@ -120,9 +107,11 @@ class Boot {
         Menu("Działy forum") / "admin" / "forum" >> LocGroup("admin") >> isAdmin,
         Menu("Linki") / "admin" / "links" >> LocGroup("admin") >> isAdmin,
         Menu("Slajdy") / "admin" / "slides" >> LocGroup("admin") >> isAdmin,
+        Menu("Skrzynka pocztowa") / "admin" / "emailconfig" >> LocGroup("admin") >> isAdmin,
         Menu("Zmiana hasła") / "admin" / "password" >> LocGroup("admin") >> isAdmin,
         Menu("Sekretariat") / "admin" / "secretariat" >> LocGroup("admin") >> isAdmin,
         Menu("Indeksowanie Picasa") / "admin" / "picasaindex" >> LocGroup("admin") >> isAdmin,
+        Menu("Eksporty stron") / "admin" / "pagesexport" >> LocGroup("admin") >> isAdmin,
         Menu("Img") / "imgstorage" >> LocGroup("extra") >> loggedIn,
         Menu("Thumb") / "thumbstorage" >> LocGroup("extra") >> loggedIn,
         Menu("File") / "filestorage" >> LocGroup("extra") >>loggedIn,
@@ -130,7 +119,7 @@ class Boot {
         Menu("Klasy") / "secretariat" / "classes" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Uczniowie") / "secretariat" / "pupils" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Przedmioty") / "secretariat" / "subjects" >> LocGroup("secretariat") >> isSecretariat,
-        //Menu("Dzwonki") / "secretariat" / "bells" >> LocGroup("secretariat") >> isSecretariat,
+        Menu("Dzwonki") / "secretariat" / "bells" >> LocGroup("secretariat") >> isSecretariat,
         Menu("Wybór dziennika") / "teacher" / "index" / ** >> LocGroup("teacher") >> isTeacher,
         Menu("Uczniowie") / "teacher" / "pupil_data"  >> LocGroup("teacher") >> isTeacher,
         Menu("Rodzice") / "teacher" / "parent_data"  >> LocGroup("teacher") >> isTeacher,
@@ -138,7 +127,8 @@ class Boot {
         //Menu("Obecności") / "teacher" / "absents"  >> LocGroup("teacher") >> isTeacher,
         //Menu("Oceny") / "teacher" / "marks" >> LocGroup("teacher") >> isTeacher,
         //Menu("Uwagi") / "teacher" / "opinions" >> LocGroup("teacher") >> isTeacher,
-        //Menu("Plan") / "teacher" / "class_plan"  >> LocGroup("teacher") >> isTeacher,
+        Menu("Kółka") / "teacher" / "extralessons" >> LocGroup("teacher") >> isTeacher,
+        Menu("Plan") / "teacher" / "class_plan"  >> LocGroup("teacher") >> isTeacher,
         Menu("Oceny") / "viewer" / "index" >> LocGroup("view") >> loggedIn,
         Menu("Test") / "test" >> LocGroup("extra")) :::
         // Menu entries for the User management stuff
@@ -182,7 +172,7 @@ class Boot {
 
     LiftRules.passNotFoundToChain = true
     
-    configMailer("smtp.gmail.com", "20logdansk@gmail.com","noting")
+    { new MailConfig().autoConfigure() }
 
     LiftRules.liftRequest.append {
       case Req("extra" :: _, _, _) => false

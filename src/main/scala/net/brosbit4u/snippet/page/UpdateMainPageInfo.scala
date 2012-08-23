@@ -8,15 +8,21 @@ package net.brosbit4u.snippet.page
 
 import _root_.net.brosbit4u.model.page._
 import _root_.net.brosbit4u.model._
+import _root_.net.liftweb.json.JsonDSL._
 
 trait UpdateMainPageInfo {
 	def updateForumInfo(date:String, title:String, id:String){
-	  val mainPageNewInfo = MainPageNewInfo.findAll match {
-	    case Nil => MainPageNewInfo.create
-	    case list => list.head
-	  }
-	  val link = "/forumpost/" + id
-	 mainPageNewInfo.forum = NewInForum(link, title, date)::mainPageNewInfo.forum.filter(forum => forum.link != link )
-	 mainPageNewInfo.save
+	  val fullLink = "/forumpost/" + id
+	  MainPageData.delete(("key" -> Keys.forum.toString) ~ ("link" -> fullLink))
+	  val mainPageData = MainPageData.create
+	  mainPageData.key = Keys.forum.toString
+	  mainPageData.link = fullLink
+	  mainPageData.title = title
+	  mainPageData.save
+	}
+	
+	def deleteMainPageInfo(id:String){
+	   val fullLink = "/forumpost/" + id
+	   MainPageData.delete(("key" -> Keys.forum.toString) ~ ("link" -> fullLink))
 	}
 }

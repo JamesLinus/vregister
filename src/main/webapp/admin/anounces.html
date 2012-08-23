@@ -16,7 +16,7 @@
     			      { name: 'paragraph', items : 
     			    	  [ 'NumberedList','BulletedList','Blockquote','Underline','Strike','Subscript','Superscript' ] }
     			    ],
-        uiColor : '#F4F6F3', width: '300px', height: '200px'} );
+        uiColor : '#F4F6F3', width: '400px', height: '200px'} );
     	   colorTables();
        });
        function clearForm() {
@@ -33,7 +33,7 @@
 					document.getElementById('title').value = this.innerHTML;
 					break;
 				case 1:
-					CKEDITOR.instances.body.setData(this.innerHTML);
+					CKEDITOR.instances.content.setData(this.innerHTML);
 					break;
 			    default:
 			    	break;
@@ -41,8 +41,8 @@
 			});
        }
 	   function validate(){
-		   var title = jQuery.trimmed(document.getElementById('title').value);
-		   var content = JQuery.trimmed(document.getElementById('body').value);
+		   var title = jQuery.trimm(document.getElementById('title').value);
+		   var content = JQuery.trimm(document.getElementById('content').value);
 		   if (title.length < 1 && content.length < 5) {
 			   document.getElementById('notice').innerHTML = "Za mało znaków";
 			   return false;

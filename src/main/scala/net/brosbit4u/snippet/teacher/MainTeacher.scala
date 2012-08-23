@@ -25,7 +25,7 @@ class MainTeacher {
 	def classList() = {
 		val classParamStr = S.param("class").openOr("0")
 		val paramClass = tryo(classParamStr.toInt).getOrElse(0)
-		val classes = ClassModel.findAll(OrderBy(ClassModel.level, Ascending)).filter(_.scratched.is)
+		val classes = ClassModel.findAll(OrderBy(ClassModel.level, Ascending)).filter(!_.scratched.is)
 		if(paramClass != 0) {
 		   val choosenClass = classes.filter(theClass => theClass.id.is == paramClass)
 		   choosenClass match {

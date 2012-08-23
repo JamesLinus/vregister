@@ -5,18 +5,21 @@
         <script type="text/javascript">
             function copyLink() {
                 var link = document.getElementById("linkpath").innerHTML;
-                var topDoc = window.top.document;
-                var urlElem = topDoc.getElementById('thumbnail');
-                if (urlElem) urlElem.value = link;
-                var imgPreview = topDoc.getElementById('thumbPreview');
-                if(imgPreview) {
-                	if (link != "")
-                	imgPreview.setAttribute('src',link);
+                if (link.length > 20){
+                	var topDoc = window.top.document;
+                    var urlElem = topDoc.getElementById('thumbnail');
+                    if (urlElem) urlElem.value = link;
+                    var imgPreview = topDoc.getElementById('thumbPreview');
+                    if(imgPreview) {
+                        
+                        imgPreview.setAttribute('src',link);
+                    }
                 }
+                
             }
         </script>
     </head>
-<body onload="copyLink()">
+<body onload="copyLink();">
     <form class="lift:page.FilesSn.addThumbnail" method="POST" enctype="multipart/form-data" >
     <input id="file" /><br />
     <input id="submit" />

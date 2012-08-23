@@ -1,18 +1,8 @@
 /*
  * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *
- *   VRegister is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
- *   as published by the Free Software Foundation
- *
- *   VRegister is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
- *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
+ *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
+ *   See: <http://www.gnu.org/licenses/>.
  */
 
 package net.brosbit4u.snippet.page
@@ -24,6 +14,7 @@ import _root_.net.brosbit4u.model.page._
 import _root_.net.brosbit4u.model._
 import _root_.net.liftweb.http.{ S, SHtml}
 import Helpers._
+import _root_.net.liftweb.json.JsonDSL._
 
 class ArticleEditSn {
 
@@ -33,7 +24,6 @@ class ArticleEditSn {
     })
     
     var id = S.param("id").openOr("")
-    println("id::::::::::::::" + id)
     var title = ""
     var authorId = 0L
     var department = "Aktualności"
@@ -79,7 +69,8 @@ class ArticleEditSn {
       if(newsHead.authorId == 0L || isOwner(newsHead.authorId)){
         newsHead.title = title
         newsHead.introduction = introduction
-        newsHead.thumbnailLink = if(thumbnailLink == "") "/style/images/nothumb.png"
+        println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
+        newsHead.thumbnailLink = if(thumbnailLink == "" ) "/style/images/nothumb.png"
         						 else thumbnailLink
         val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
         articleContent.content = content
@@ -142,6 +133,7 @@ class ArticleEditSn {
       case Some(newsHead) => {
         val articleContentOpt = ArticleContent.find(newsHead.content)
         if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
+        deleteNewsInfoOnMainPage(newsHead._id.toString)
         newsHead.delete
       }
       case _ => {
@@ -157,13 +149,22 @@ class ArticleEditSn {
     }
   }
   
-  private def addNewsInfoOnMainPage(id:String, title:String){
-    val mainPageNewInfoList = MainPageNewInfo.findAll
-    val mainPageNewInfo = if(mainPageNewInfoList.isEmpty) MainPageNewInfo.create 
-    					  else mainPageNewInfoList.head
-    val newInNews = NewInNews("/pages?w=w&id=" + id, title)
-    mainPageNewInfo.news = newInNews::(mainPageNewInfo.news)
-    mainPageNewInfo.save
+ private def addNewsInfoOnMainPage(id:String, title:String){
+    println("begin add news info")
+    val fullLink = getFullLink(id)
+    //MainPageData.delete(("link" -> fullLink))
+    val mainPageData = MainPageData.create
+    println("Keys news to String: " + Keys.news.toString)
+    mainPageData.key = Keys.news.toString
+    println("MainPageData.key: " + mainPageData.key)
+    mainPageData.title = title
+    mainPageData.link = fullLink
+    mainPageData.save
+  }
+  
+  private def deleteNewsInfoOnMainPage(id:String){
+    val fullLink = getFullLink(id)
+    MainPageData.delete(("key" -> Keys.news.toString) ~ ("link" -> fullLink))
   }
   
   private def deleteBR(htmlText:String) = htmlText.replaceAll("<br>"," ").replaceAll("<br/>", " ")
@@ -174,6 +175,8 @@ class ArticleEditSn {
       case _ => false
     }
   }
+  
+    private def getFullLink(id:String) = "/pages?w=w&id=" + id
 
 }
 

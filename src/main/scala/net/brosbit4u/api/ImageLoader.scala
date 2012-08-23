@@ -14,7 +14,6 @@ import _root_.net.liftweb.mongodb.DefaultMongoIdentifier
 object ImageLoader {
   
   def image(id: String): Box[LiftResponse] = {
-    println("ImageLoader id= " + id)
     var outputStream = new ByteArrayOutputStream()
     var mime = ""
   MongoDB.use(DefaultMongoIdentifier) { db =>

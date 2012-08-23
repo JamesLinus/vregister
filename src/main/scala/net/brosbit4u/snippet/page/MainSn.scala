@@ -18,35 +18,35 @@ import Helpers._
 
 class MainSn extends UsersOperations {
   
-  val newInfo = MainPageNewInfo.findAll match {
-    case mainPageNewInfo::Nil => mainPageNewInfo
-    case _ => MainPageNewInfo.create
-  }
+  val mainPageNewInfo = MainPageData.getMainPageNewInfo
 
   def slides = {
-    val slideList = newInfo.slides
+    val slideList = mainPageNewInfo.slides
     "img" #> slideList.map( slide => {
-       <a href={slide.link}><img src={slide.src} title={slide.description} alt="" /></a>
+       <a href={slide.link}><img src={slide.src} title={slide.title} alt="" /></a>
       
     })
   }
   
   def links = {
-    val links = newInfo.links
-    ".grid_3" #> links.map(linkGroup => {
+    var mainPageLinks = MainPageLinks.findAll match {
+      case head::list => head
+      case _ => MainPageLinks.create
+    }
+    ".grid_3" #>  mainPageLinks.links.map(linkGroup => {
       <div class="grid_3">
-    	<h1>{ linkGroup.department }</h1>
+    	<h1>{ linkGroup.name }</h1>
     		<ul>
-                { linkGroup.links.map(link => <li><a href={ link.link } >{ link.description }</a></li>)}     
+                { linkGroup.links.map(link => <li><a href={ link.url } >{ link.title }</a></li>)}     
             </ul>
       </div>
-    })   
+    })  
   }
   
   def logInfo() = super.loginInfo
   
   def anounces() = {
-    val anouncesList = newInfo.anounces
+    val anouncesList = mainPageNewInfo.anounces
     ".pine-box" #>  anouncesList.map(anounce => {
       <div class="pine-box new-bullets">
       <h2>{anounce.title}</h2>
@@ -56,7 +56,7 @@ class MainSn extends UsersOperations {
   }
   
   def lastArticles() = {
-    val lastArticlesList = newInfo.news
+    val lastArticlesList = mainPageNewInfo.news
     
     "li" #> lastArticlesList.map(article => {
       <li> <a href={article.link} > {article.title}</a> </li>
@@ -64,7 +64,7 @@ class MainSn extends UsersOperations {
   }
   
   def lastForumPosts() = {
-    val lastForumList = newInfo.forum
+    val lastForumList = mainPageNewInfo.forum
     
     "li" #> lastForumList.map(post => {
       <li><a href={post.link}>{post.title}</a> </li>

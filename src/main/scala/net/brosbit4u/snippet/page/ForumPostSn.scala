@@ -16,6 +16,10 @@ import _root_.net.liftweb.http.{ S, SHtml, RequestVar }
 import Helpers._
 import java.util.Date
 import _root_.net.brosbit4u.lib.Formater
+import _root_.net.liftweb.mongodb._
+import org.bson.types.ObjectId
+import _root_.net.liftweb.json.JsonDSL._
+import page.ForumThreadHead
 
 class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
 
@@ -42,13 +46,12 @@ class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
         						<img src="/style/images/delico.png" style="float:right;" 
         						onclick="return confirm('Czy na pewno usunąć wątek?');"/></a>} else <a></a>} &
         ".firstcomment *" #> <td><div>{Unparsed(threadContent.content)}</div><hr/>
-        						<p>#0<span class="fullname">{threadHead.authorName}</span>
+        						<p><span class="fullname">{threadHead.authorName}</span>
         						<span class="date">{Formater.formatDate(new Date(threadHead._id.getTime()))}</span>
         						</p></td>  &
         ".comments" #> threadContent.comments.map(comment => {
         	"div *" #> Unparsed(comment.content) & 
-        	"p" #> <p><span>{"#" + comment.id.toString}</span>
-        			  <span class="fullname">{comment.authorName}</span>
+        	"p" #> <p><span class="fullname">{comment.authorName}</span>
         			 <span class="date">{comment.date}</span>
         			 </p> &
           "a" #> {if(isAdmin){<a href={"/forumpost/" + threadHead._id.toString + "?clr=" + comment.id.toString}>
@@ -67,19 +70,14 @@ class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
     def save() {
       if(isLoged){
         val user = User.currentUser.get
-        val newId = threadContent.comments match {
-          case Nil => 1
-          case list => list.last.id + 1
-        }
-        val comment = Comment(newId, user.getFullName, 
-        		user.id, Formater.formatTime(new Date()), content)
-        threadContent.comments = threadContent.comments :+ comment
-
-      threadHead.count = threadContent.comments.length
-      threadHead.lastInfo = threadContent.getLastInfo
-      updateForumInfo(comment.date, threadHead.title, threadHead._id.toString)
-      threadContent.save
-      threadHead.save
+        val comment = Comment(ObjectId.get, user.getFullName.trim, 
+        		user.id.toString, Formater.formatTime(new Date()), content)
+        ForumThreadContent.update(("_id"-> threadHead.content.toString),
+            ("$addToSet"-> ("comments" -> comment.mapString)))		
+      val updateHeadText = "<span class='fullname'>%s<span><br/><span class='date'>%s<span>".
+              format(comment.authorName ,comment.date)
+      val updateObj = (("$inc" -> ("count" -> 1)) ~ ("$set" -> ("lastInfo" -> updateHeadText)))
+      ForumThreadHead.update(("_id"-> threadHead._id.toString), updateObj) 
       S.redirectTo("/forumpost/"+ threadHead._id.toString)
       }
     }
@@ -91,33 +89,26 @@ class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
   
   
   def deleteCommentOrThread() = {
+    val deleteInfoString = "<strong>Treść niezgodna z regulaminem została usunięta przez administratora</strong>"
     if(isAdmin){
        val deleteThread = S.param("del").openOr("")
-       val clearComment = tryo(S.param("clr").openOr("").toInt).openOr(0)
+       val clearComment = S.param("clr").openOr("")
        if(deleteThread == "1"){
          println("delete thread!!!!!!!!!!")
          threadContent.delete
          threadHead.delete
+         deleteMainPageInfo(threadHead._id.toString)
          S.redirectTo("/forum")
        }
-       if(clearComment > 0){
-         threadContent.comments = threadContent.comments.map(comment => {
-           if(comment.id == clearComment){
-             Comment(comment.id, comment.authorName, comment.authorId, comment.date, 
-                 "<strong>Treść niezgodna z regulaminem została usunięta przez administratora</strong>")
-           } 
-           else comment
-         })
-         threadContent.save
+       if(clearComment != ""){
+          ForumThreadContent.update(
+              ("_id"-> threadHead.content.toString)~ ("comments.id" -> clearComment),
+            ("$set"-> ("comments.$.content" -> deleteInfoString)))	
          S.redirectTo("/forumpost/" + threadHead._id.toString)
        }
     }
     "#deletecommentorthread" #> <span></span>
   }
   
-  //experimental - for replace save in addComment
-  def updateComments(comment:Comment){
-    
-  }
 
 }

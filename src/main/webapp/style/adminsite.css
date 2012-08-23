@@ -12,6 +12,11 @@ input[type="submit"] {margin-left: 30px; width: 80px;}
 	background-color: #aea;  
 	padding: 5px;
 	}
+.tables > table > tbody > tr > td	{
+	text-align:center;
+	}
+	
+	
 .tables > table {border-spacing: 2px ; border-collapse: separate; padding: 10px 0 10px 0;}
 .even_row {
 	background-color: #ded;
