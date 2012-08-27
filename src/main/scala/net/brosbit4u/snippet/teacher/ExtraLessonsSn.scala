@@ -58,17 +58,16 @@ class ExtraLessonsSn extends BaseTeacher {
             extraLesson.delete
             JsFunc("$dTable.deleteRow", id).cmd
           }
-          case _ => Alert("Tylko administrator może usunąć wpis!")
+          case _ => Alert("Brak wpisu!")
         }
-      }
+      } else Alert("Tylko administrator może usunąć wpis!")
     }
     
     val form = "#id" #> SHtml.text(id, id = _, "style"->"display:none;") &
     		"#title" #> SHtml.text(title, title = _) &
     		"#description" #> SHtml.textarea(description, description = _ ) &
     		"#when" #> SHtml.text(when, when = _) & 
-    		"#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image",
-          "onclick" -> "return validateForm();") &
+    		"#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image") &
           "#delete" #> {if(isAdmin) SHtml.ajaxSubmit("USUŃ!", delete, "type"->"image") 
         	  					else <span></span>} andThen SHtml.makeFormsAjax
     		

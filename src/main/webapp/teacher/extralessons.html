@@ -88,7 +88,7 @@
                   <label for="title">Temat:</label>
                   <input id="title" type="text" maxlength="60"/>
                 </p>
-                <p><input type="text" id="teacher" val="" style="display:none;"/></p>
+                <p><input type="text" id="teacher" value="" style="display:none;"/></p>
                 <p id="descriptionRow">
                 	<label for="description">Opis:</label>
                    <textarea id="description" ></textarea>
@@ -98,7 +98,7 @@
                 </p>
                 
                 <p id="buttons">
-                    <input type="image"  src="/style/images/saveico.png"  id="save"/>
+                    <input type="image"  onmousedown="return validateForm();" src="/style/images/saveico.png"  id="save"/>
                     <input type="image" src="/style/images/delico.png"  id="delete"/>
                 </p>
                 <p id="addInfo"></p>

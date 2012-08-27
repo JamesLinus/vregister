@@ -4,6 +4,7 @@
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
                 <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
@@ -22,7 +23,7 @@
                     $dTable.insertData = function (data) {
                         $dTable.idInput.value = data[0];
                         var select = document.getElementById('number');
-                        setSelectedIndex(select,data[1]);
+                        setSelectedIndexWithInner(select,data[1]);
                         document.getElementById('reversefullname').value = data[2];
                         document.getElementById('secondname').value = data[3] ;
                         document.getElementById('email').value = data[4] ;

@@ -62,10 +62,9 @@ function init_dataTable(){
 	
 	$dTable.getTrNodeContainsId = function (id) {
 		var trNodes = $dTable.fnGetNodes();
-
 		for (i in trNodes) {
-			var idNode = $(trNodes[i]).children('td').first();
-			if (idNode.text() == id)
+			var data = $dTable.fnGetData(trNodes[i]);
+			if (data[0] == id)
 				return trNodes[i];
 		}
 	}	
@@ -80,7 +79,6 @@ function init_dataTable(){
              var position = $dTable.getPosition(id);
              var data = $dTable.getDataArray(id);
              if (position >= 0 && position < $dTable.tableSize) {
-            	 $dTable.showAll();
                  $dTable.fnUpdate(data, position, 0, false);
                 
              } else {
@@ -96,23 +94,6 @@ function init_dataTable(){
 	$dTable.setClickRow();
 	$dTable.idInput = document.getElementById('id');
 }
-
-function setSelectedIndex(select,toCompare){
-	for(i in select.options) {
-        if(select.options[i].value == toCompare){
-            select.options[i].setAttribute("selected","selected");
-        }
-	}
-}
-
-function setSelectedIndexWithInner(select,toCompare){
-	for(i in select.options) {
-        if(select.options[i].innerHTML == toCompare){
-            select.options[i].setAttribute("selected","selected");
-        }
-	}
-}
-
 
 function resetForm() {document.getElementsByTagName('form')[0].reset();}
 

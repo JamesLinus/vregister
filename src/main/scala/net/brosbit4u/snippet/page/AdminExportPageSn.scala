@@ -8,6 +8,7 @@
 package net.brosbit4u.snippet.page
 
 import java.util.Date
+import scala.collection.mutable.Map
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
 import _root_.net.brosbit4u.model.page._
@@ -17,6 +18,8 @@ import Helpers._
 import org.bson.types.ObjectId
 import _root_.net.liftweb.json.JsonDSL._
 import _root_.net.liftweb.json.JsonAST._
+
+case class SubjectAndClass(var subjects:List[String], var classes:List[String])
 
 class AdminExportPageSn {
  
@@ -43,7 +46,7 @@ class AdminExportPageSn {
 	  }   
          
 	  val departments = PageDepartment.findAll.map(department => (department.name, department.name))
-	  val actions = List(("p","Plan lekcji"),("e","Zajęcia pozalekcyjne"))
+	  val actions = List(("p","Plan lekcji"),("e","Zajęcia pozalekcyjne"),("l","Lista nauczycieli"))
 	  "#what" #> SHtml.select(actions, Full(actions.head._1) , what = _) &
 	  "#department" #> SHtml.select(departments, Full(""), department = _ ) &
 	  "#title" #> SHtml.text(title, title = _) &
@@ -56,6 +59,7 @@ class AdminExportPageSn {
 	  what match {
 	    case "p" => createPageContentForPlan
 	    case "e" => createPageContentForExtraLessons
+	    case "l" => createPageContentForTecherList
 	    case _ => "BŁĄD!!!"
 	  }
 	}
@@ -99,6 +103,35 @@ class AdminExportPageSn {
 	    }).mkString +
 	     """</tbody></table></div><br/>"""
 	    
+	}
+	
+	private def createPageContentForTecherList = {
+	  val row = """<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>"""
+	  val themesPlans = ThemesPlan.findAll
+	  var map:scala.collection.mutable.Map[String,SubjectAndClass] = scala.collection.mutable.Map.empty
+	  themesPlans.foreach(themePlan => {
+	    if(map.isDefinedAt(themePlan.teacherName)) { 
+	      val subAndClass = map(themePlan.teacherName)
+	      subAndClass.classes = themePlan.classes ::: subAndClass.classes
+	      subAndClass.subjects = themePlan.subjectStr :: subAndClass.subjects
+	      map(themePlan.teacherName) = subAndClass
+	    }
+	    else {
+	      map(themePlan.teacherName) = SubjectAndClass(themePlan.subjectStr::Nil, themePlan.classes)
+	    }
+	  })
+	  var i = 0;  
+	  val mapKeys = map.keys
+	   """<table><thead><tr><th>Lp.</th><th>Imię i Nazwisko</th><th>Nauczane przedmioty</th>
+			  <th>Uczy w klasach</th></tr></thead><tbody>""" + 
+	      mapKeys.map(key => {
+	        i += 1
+	        val subAndClass = map(key);
+	        val subjects = subAndClass.subjects.distinct.mkString(", ")
+	        val classes = subAndClass.classes.distinct.mkString(", ")
+	      row.format(i, key, subjects, classes)
+	    }).mkString +
+	     """</tbody></table></div><br/>"""  
 	}
 	
 	

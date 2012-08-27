@@ -4,6 +4,7 @@
         <div id="main" class="lift:surround?with=secret;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
                  <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                 <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
@@ -21,10 +22,10 @@
                     $dTable.insertData = function (data) {
                         $dTable.idInput.value = data[0];
                         var select = document.getElementById('level');
-                        setSelectedIndex(select,data[1]);
+                        setSelectedIndexWithInner(select,data[1]);
                         document.getElementById('division').value = data[2];
                         select = document.getElementById('teacher');
-                        setSelectedIndex(select,data[3]);
+                        setSelectedIndexWithInner(select,data[3]);
                         document.getElementById('description').value = data[4];
                     }
                     

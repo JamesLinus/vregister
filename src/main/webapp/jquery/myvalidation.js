@@ -91,8 +91,10 @@ function validatePesel(pesel) {
     return true;
 }     
 
-
-function mkPass(){
-    return Math.floor(Math.random() * 89999999) + 10000000;
+function clearFormsAddInfo() {
+	$('form').children('p').each(function(){
+		$(this).removeClass('.errorInfo');
+	});
 }
+
 

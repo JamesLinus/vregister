@@ -110,16 +110,21 @@ function init_dataTable(teacher){
 		var id = $dTable.idInput.value;
 		var actualTr = $dTable.getTrNodeContainsId(id);
 		var newTr = $dTable.fnGetAdjacentTr( actualTr);
-		var data = $dTable.fnGetData(newTr);
-		$dTable.insertData(data);
+		if(newTr) {
+			var data = $dTable.fnGetData(newTr);
+			$dTable.insertData(data);
+		}
+		
 	}
 	
 	$dTable.getPrevious = function() {
 		var id = $dTable.idInput.value;
 		var actualTr = $dTable.getTrNodeContainsId(id);
-		var newTr = $dTable.fnGetAdjacentTr( actualTr,false);
-		var data = $dTable.fnGetData(newTr);
-		$dTable.insertData(data);
+			var newTr = $dTable.fnGetAdjacentTr( actualTr,false);
+	    if(newTr) {
+			var data = $dTable.fnGetData(newTr);
+			$dTable.insertData(data);
+		}	
 	}
 	
 	$dTable.getPosition = function(id) {
@@ -169,21 +174,6 @@ function init_dataTable(teacher){
 	$dTable.idInput = document.getElementById('id');
 }
 
-function setSelectedIndex(select,toCompare){
-	for(i in select.options) {
-        if(select.options[i].value == toCompare){
-            select.options[i].setAttribute("selected","selected");
-        }
-	}
-}
-
-function setSelectedIndexWithInner(select,toCompare){
-	for(i in select.options) {
-        if(select.options[i].innerHTML == toCompare){
-            select.options[i].setAttribute("selected","selected");
-        }
-	}
-}
 
 
 function resetForm() {document.getElementsByTagName('form')[0].reset();}

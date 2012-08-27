@@ -193,7 +193,7 @@ class FilesSn {
           inputFile.setContentType(mimeType)
           inputFile.setFilename(fullFileName)
           inputFile.save
-          linkpath ("/file/" + inputFile.getId().toString() + fullFileName.split('.').last)
+          linkpath ("/file/" + inputFile.getId().toString() + "." + fullFileName.split('.').last)
         }
       }
     }
