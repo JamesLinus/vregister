@@ -35,8 +35,9 @@ package net.brosbit4u {
         locale, timezone, password, role)
       override def screenWrap = Full(<lift:surround with="default" at="content">
                                        <div id="main" class="main-section">
-    		  							<div class="container_12"><lift:bind/>
-    		  							</div></div>
+    		  							<div class="container_12">
+    		  							<div class="container_9"><lift:bind/>
+    		  							</div></div></div>
                                      </lift:surround>)
       // comment this line out to require email validations
       override def skipEmailValidation = false
@@ -44,13 +45,7 @@ package net.brosbit4u {
        override def createUserMenuLoc = Empty
        override def editUserMenuLoc = Empty
        
-       override def afterCreate = List(user => Mailer.sendMail(From("automat"), Subject("konto szkolne"), 
-           To(user.email.is),XHTMLMailBodyType(<div>
-        		   <h2>{"Witaj " + user.getFullName}</h2>
-        		   <p>Założono nowe konto w XX LO, aby dokończyć rejestrację wejdź na poniższy link</p>
-        		   <a href={"http//xxlo.pl/user_mgt/validate_user/" + user.userIdAsString }></a>
-        		   </div>)))
-      
+     
       override def afterValidation  = List( (user) => { S.redirectTo("/user_mgt/change_password")})
      
     }

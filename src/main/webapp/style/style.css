@@ -65,9 +65,9 @@ input[type="text"], input[type="password"] {height:22px;border:1px solid #CCCCCC
 
 /* bullets */
 ul { list-style: none outside none;margin-bottom: 20px;margin-top: 10px;}
-ul li {background: url("/style/images/797.png") no-repeat scroll left center transparent;padding: 3px 0 0 10px;}
+ul li {background: url("/style/images/797.png") no-repeat scroll left center transparent;padding:0 0 0 10px;}
 ol {padding: 0 0 0 20px;}
-ol li {padding: 3px 0 0 4px;}
+ol li {padding: 0 0 0 10px;}
 
 /* Icons on text homepge */
 h1.image-info {background:url(/style/images/info_button_32.png) no-repeat left center; padding:10px 0px 0px 40px; height:32px;}

@@ -85,7 +85,7 @@ class ArticleEditSn {
         newsHead.save
         if (isNew) addNewsInfoOnMainPage(newsHead._id.toString, newsHead.title)
       }
-      S.redirectTo("/pages?w=a&id=" + newsHead._id.toString)
+      S.redirectTo("/pages?w=w&id=" + newsHead._id.toString)
     }
     
     def savePage(){
@@ -104,7 +104,7 @@ class ArticleEditSn {
           }
          pageHead.save
       }
-      S.redirectTo("/pages?w=a&id=" + pageHead._id.toString)
+      S.redirectTo("/pages?w=p&id=" + pageHead._id.toString)
     }
 
     def discard() {

@@ -108,7 +108,7 @@ class Boot {
         Menu("Linki") / "admin" / "links" >> LocGroup("admin") >> isAdmin,
         Menu("Slajdy") / "admin" / "slides" >> LocGroup("admin") >> isAdmin,
         Menu("Skrzynka pocztowa") / "admin" / "emailconfig" >> LocGroup("admin") >> isAdmin,
-        Menu("Zmiana hasła") / "admin" / "password" >> LocGroup("admin") >> isAdmin,
+        Menu("Edycja administratorów") / "admin" / "admins" >> LocGroup("admin") >> isAdmin,
         Menu("Sekretariat") / "admin" / "secretariat" >> LocGroup("admin") >> isAdmin,
         Menu("Indeksowanie Picasa") / "admin" / "picasaindex" >> LocGroup("admin") >> isAdmin,
         Menu("Eksporty stron") / "admin" / "pagesexport" >> LocGroup("admin") >> isAdmin,

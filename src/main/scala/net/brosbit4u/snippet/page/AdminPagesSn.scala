@@ -66,7 +66,7 @@ class AdminPagesSn {
     val departments = PageDepartment.findAll
     var node: NodeSeq = <tbody>{
       for (department <- departments) yield {
-        <tr onclick={ "setData(this)" } id={department._id.toString()} >
+        <tr ondblclick={ "setData(this)" } id={department._id.toString()} >
           <td>{department.name}</td>
         </tr>
       }
@@ -103,7 +103,7 @@ class AdminPagesSn {
 
   def forumDepartments() = {
     "tr" #> ForumDepartment.findAll.map(forumDepartment => {
-      <tr onclick={"setData(this)"} id={forumDepartment._id.toString} >
+      <tr ondblclick={"setData(this)"} id={forumDepartment._id.toString} >
       <td>{forumDepartment.name}</td>
       </tr>
     })
@@ -151,24 +151,55 @@ class AdminPagesSn {
   def contactMails() = {
     val contactMails = ContactMail.findAll
     "tr" #>  contactMails.map(contactMail => {
-      <tr onclick="setData(this)" id={contactMail._id.toString} >
+      <tr ondblclick="setData(this)" id={contactMail._id.toString} >
       <td>{contactMail.mailAddress}</td><td>{contactMail.description}</td></tr>
     })
   }
 
-  /** change admin password*/
-  def changePassword() = {
+  
+  def adminsList() = {
+    "tbody" #> User.findAll(By(User.role,"a")).map(admin => {
+        <tr ondblclick="insertFromTableToForm(this);">
+    	<td>{admin.id.toString}</td><td>{admin.firstName}</td>
+    	<td>{admin.lastName}</td><td>{admin.email}</td>
+    	</tr> 
+    })
+  }
+
+  def editAdmin() = {
+    var id = ""
+    var firstName = ""
+    var lastName = ""
+    var email = ""
     var password1 = ""
     var password2 = ""
     var notice = ""
-    def changePass() {
-      if (password1 == "" || password1 != password2) return
-      User.currentUser.get.password(password1).save
+    def save() {
+      val user = User.find(id).openOr(User.create)
+      user.firstName(firstName).lastName(lastName).email(email)
+      if (password1 != "" && password1 == password2 ) user.password(password1)
+      user.role("a").validated(true).save
     }
-
-    "#password1" #> SHtml.text(password1, x => password1 = x.trim, "type" -> "password", "id" -> "pass1") &
-      "#password2" #> SHtml.text(password2, x => password2 = x.trim, "type" -> "password", "id" -> "pass2") &
-      "#submit" #> SHtml.submit("Zmień!", changePass, "onclick" -> "return checkPass();") &
+    def delete() {
+      val numberAdmins = User.findAll(By(User.role,"a")).length
+      if(numberAdmins > 1) {
+        User.find(id) match {
+          case Full(user) => user.delete_!
+          case _ =>
+        }
+      }
+      else {
+        notice = "Nie można usunąć jedynego admistratora"
+      }
+    }
+    "#id" #> SHtml.text(id, id = _) &
+    "#firstname" #> SHtml.text(firstName, firstName = _) &
+    "#lastname" #> SHtml.text(lastName, lastName = _) &
+    "#email" #> SHtml.text(email, email = _) &
+    "#password1" #> SHtml.text(password1, x => password1 = x.trim, "type" -> "password") &
+      "#password2" #> SHtml.text(password2, x => password2 = x.trim, "type" -> "password") &
+      "#save" #> SHtml.submit("Zmień!", save) &
+      "#delete" #> SHtml.submit("Usuń!", delete) &
       "#notice" #> Text(notice)
   }
 
@@ -241,7 +272,7 @@ class AdminPagesSn {
   def showSecretariat() = {
     val secretariatUsers = User.findAll(By(User.role, "s"))
     "tr" #> secretariatUsers.map(user => {
-      <tr class={ if (user.validated.is) "normal" else "scratched" } onclick="edit(this)" title={
+      <tr class={ if (user.validated.is) "normal" else "scratched" } ondblclick="edit(this)" title={
         UserChangeList.findAll(By(UserChangeList.user, user), OrderBy(UserChangeList.date, Ascending)).map(changeList => {
           changeList.date.toString + " " + changeList.lastName.is + " " + changeList.firstName.is + " " +
             changeList.email.is + " " + changeList.passStr
@@ -291,7 +322,7 @@ class AdminPagesSn {
   def anounceList() = {
     val anounces = getMainPageDataWithAnounces
     "tr" #> anounces.map(anounce => {
-    		<tr id={anounce._id.toString} onclick="setData(this);" ><td>{anounce.title}</td><td>{Unparsed(anounce.content)}</td></tr>
+    		<tr id={anounce._id.toString} ondblclick="setData(this);" ><td>{anounce.title}</td><td>{Unparsed(anounce.content)}</td></tr>
     	})
   }
 
@@ -335,7 +366,7 @@ class AdminPagesSn {
   def slideList() = {
     val slides = getMainPageDataWithSlides
     "tr" #> slides.map(slide => {
-    		<tr id={slide._id.toString} onclick="setData(this);" >
+    		<tr id={slide._id.toString} ondblclick="setData(this);" >
     		<td><img src={slide.src} style="width:300px;height:100px;" /></td>
     		<td>{slide.link}</td><td>{slide.title}</td></tr>
     	})
