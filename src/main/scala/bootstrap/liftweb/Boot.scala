@@ -126,11 +126,13 @@ class Boot {
         //Menu("Tematy") / "teacher" / "themes" >> LocGroup("teacher") >> isTeacher,
         //Menu("Obecności") / "teacher" / "absents"  >> LocGroup("teacher") >> isTeacher,
         //Menu("Oceny") / "teacher" / "marks" >> LocGroup("teacher") >> isTeacher,
-        //Menu("Uwagi") / "teacher" / "opinions" >> LocGroup("teacher") >> isTeacher,
+        Menu("Ogłoszenia") / "teacher" / "anounces"  >> LocGroup("teacher") >> isTeacher,
+        Menu("Uwagi") / "teacher" / "opinions"  >> LocGroup("teacher") >> isTeacher,
         Menu("Plan") / "teacher" / "class_plan"  >> LocGroup("teacher") >> isTeacher,
         Menu("Kółka") / "teacher" / "extralessons" >> LocGroup("teacher") >> isTeacher,
         Menu("Rozkłady") / "teacher" / "themesplan" >> LocGroup("teacher") >> isTeacher,
         Menu("Oceny") / "viewer" / "index" >> LocGroup("view") >> loggedIn,
+        //Menu("Nieobcności") / "viewer" / "absents" >> LocGroup("view") >> loggedIn,
         Menu("Test") / "test" >> LocGroup("extra")) :::
         // Menu entries for the User management stuff
         User.sitemap: _*)

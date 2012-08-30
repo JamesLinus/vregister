@@ -16,21 +16,21 @@ import Helpers._
 import net.brosbit4u.model._
 
 class BaseTeacher  {
-  
+   val user = User.currentUser.open_!
+   
 		def choosenClass() = {
 		  if (ClassChoose.is == 0) S.redirectTo("/teacher/index") 
 		  else "#choosenclass *" #> ClassString.is
 		}
 	  
 	
-	protected def isBriningUp = {
-	  val user = User.currentUser.open_!
+	protected def isBriningUp = {	 
 	  val theClass = ClassModel.find(ClassChoose.is.toLong).openOr(ClassModel.create)
 	  if(user.id.is == theClass.teacher.obj.get.id.is || user.role == "a" ) true
 	  else false
 	}
 	
-	protected def isAdmin = User.currentUser.get.role.is == "a"
+	protected def isAdmin = user.role.is == "a"
 	
 }
 

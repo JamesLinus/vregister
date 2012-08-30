@@ -34,7 +34,7 @@ function init_dataTable(){
 	
 	
 	$dTable.setClickRow = function(){
-		$dTable.children('tbody').children('tr').click(function() {
+		$dTable.children('tbody').children('tr').dblclick(function() {
 			var data =  $dTable.fnGetData(this);
 			$('#formAdd').dialog('open');
 			$dTable.insertData(data);
@@ -42,7 +42,7 @@ function init_dataTable(){
 	}
 	
 	$dTable.refreshClickRow = function(){
-		$dTable.children('tbody').children('tr').unbind('click').click(function() {
+		$dTable.children('tbody').children('tr').unbind('click').dblclick(function() {
 			var data =  $dTable.fnGetData(this);
 			$('#formAdd').dialog('open');
 			$dTable.insertData(data);
