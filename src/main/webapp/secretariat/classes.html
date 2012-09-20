@@ -3,50 +3,50 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=secret;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                 <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                 <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
+                 <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
                  <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
-                $(document).ready(function(){
-                    init_dataTable(false);
-               
-                    $('#formAdd').dialog({
-                        autoOpen : false,
-                        height : 350,
-                        width : 500,
-                        modal : true
-                    });
- 
-                    
-                    $dTable.insertData = function (data) {
-                        $dTable.idInput.value = data[0];
-                        var select = document.getElementById('level');
-                        setSelectedIndexWithInner(select,data[1]);
-                        document.getElementById('division').value = data[2];
-                        select = document.getElementById('teacher');
-                        setSelectedIndexWithInner(select,data[3]);
-                        document.getElementById('description').value = data[4];
-                    }
-                    
-                    $dTable.getDataArray = function(id){
-                        var array = new Array();
-                        array[0] = id.toString();
-                        var select = document.getElementById('level');
-                        array[1] =select.options[select.selectedIndex].value;
-                        array[2] = document.getElementById('division').value;
-                        select = document.getElementById('teacher');
-                        array[3] = select.options[select.selectedIndex].value;
-                        array[4] = document.getElementById('description').value;
-                        return array;
-                    }      
-                                
-                });
-                 
+  				var editFrom = new Object();
                 
-                function validateForm() {
-                    return true;
+                EditFormDiv.prototype.putDataToForm = function(array){
+            		document.getElementById('id').value = array[0];
+            		var select = document.getElementById('level');
+                    setSelectedIndexWithInner(select,array[1]);
+                    document.getElementById('division').value = array[2];
+                    select = document.getElementById('teacher');
+                    setSelectedIndexWithInner(select, array[3]);
+                    document.getElementById('description').value = array[4];
+            	}
+            	
+                EditFormDiv.prototype.getData = function(){
+            		var array = new Array();
+            		array[0] = document.getElementById('id').value;
+            		var select = document.getElementById('level');
+                    array[1] =select.options[select.selectedIndex].value;
+                    array[2] = document.getElementById('division').value;
+                    select = document.getElementById('teacher');
+                    array[3] = select.options[select.selectedIndex].value;
+                    array[4] = document.getElementById('description').value;
+            		return array;
+            	}
+                
+                EditFormDiv.prototype.addNewItemInfo = 'Dodawanie klasy';
+                EditFormDiv.prototype.editItemInfo = 'Edycja klasy';
+                
+                EditFormDiv.prototype.validate = function(){
+                	return true;
                 }
+                       
+                $(document).ready(function(){
+                	                     		
+                	editForm = new EditFormDiv();
+                	editForm.init(350,500);                	
+                              	
+                });
+                
                
                 </script>
                 <style >
@@ -81,11 +81,9 @@
                    <input id="description" /><br/>
                    <span id="descriptioninfo" class="errorInfo"></span>
                 </p>
-                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
+                <p>
                     <input type="image"  src="/style/images/saveico.png"  id="save"/>
-                    <input type="image" src="/style/images/delico.png" id="delete"/>
-                    <input type="image" src="/style/images/resetico.png" onclick="resetForm();" id="reset"/>
-                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
+                    <input type="image" src="/style/images/delico.png" id="delete"/>               
                 </p>
                 <p id="addInfo"></p>
                 </form>
@@ -93,7 +91,7 @@
 
                 <h3>Edycja oddziałów </h3><hr />
                 <label for="newadd">Nowa klasa:</label>
-                <input id="newadd" type="image" src="/style/images/addico.png" onclick="showAddRow()" />
+                <input id="newadd" type="image" src="/style/images/addico.png"/>
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
                     <thead>
                         <tr><th>ID</th><th>Poziom</th><th>Oddział</th><th>Wychowawca</th><th>Opis</th></tr>
@@ -107,6 +105,9 @@
                             <td class="description"></td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr><th>ID</th><th>Poziom</th><th>Oddział</th><th>Wychowawca</th><th>Opis</th></tr>
+                    </tfoot>
                 </table>
 
           

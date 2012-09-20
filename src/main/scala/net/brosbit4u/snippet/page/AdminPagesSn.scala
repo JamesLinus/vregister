@@ -139,8 +139,8 @@ class AdminPagesSn {
     }
 
     "#id" #> SHtml.text(id, x => id = x, "size" -> "12", "style" -> "display:none;", "id" -> "id") &
-      "#descript" #> SHtml.text(description, x => description = x.trim, "size" -> "40", "maxlength" -> "40", "id" -> "descript") &
-      "#mail" #> SHtml.text(email, x => email = x.trim, "size" -> "40", "maxlength" -> "40", "id" -> "mail") &
+      "#descript" #> SHtml.text(description, x => description = x.trim, "maxlength" -> "40", "id" -> "descript") &
+      "#mail" #> SHtml.text(email, x => email = x.trim, "maxlength" -> "60", "id" -> "mail") &
       "#save" #> SHtml.submit("Zapisz!", saveMail, "onclick" -> "return validateForm()") &
       "#delete" #> SHtml.submit("Usuń!", deleteMail, "onclick" -> "return confirm('Na pewno chcesz usunąć email?');") &
       "#notice" #> Text(notice)

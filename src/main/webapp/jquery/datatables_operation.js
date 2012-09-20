@@ -49,9 +49,9 @@ function init_dataTable(teacher){
 		        },
 		        "sInfoFiltered": " - odfiltrowano z _MAX_ wierszy",
 		        "sLengthMenu": 'Pokaż <select>'+
-		        '<option value="10">40</option>'+
-		        '<option value="20">80</option>'+
-		        '<option value="30">120</option>'+
+		        '<option value="40">40</option>'+
+		        '<option value="80">80</option>'+
+		        '<option value="120">120</option>'+
 		        '<option value="-1">całość</option>'+
 		        '</select> wierszy'
 		        
@@ -76,9 +76,9 @@ function init_dataTable(teacher){
 		        },
 		        "sInfoFiltered": " - odfiltrowano z _MAX_ wierszy",
 		        "sLengthMenu": 'Pokaż <select>'+
-		        '<option value="10">40</option>'+
-		        '<option value="20">80</option>'+
-		        '<option value="30">120</option>'+
+		        '<option value="40">40</option>'+
+		        '<option value="80">80</option>'+
+		        '<option value="120">120</option>'+
 		        '<option value="-1">całość</option>'+
 		        '</select> wierszy'
 		        
@@ -89,7 +89,7 @@ function init_dataTable(teacher){
 	
 	
 	$dTable.setClickRow = function(){
-		$dTable.children('tbody').children('tr').click(function() {
+		$dTable.children('tbody').children('tr').dblclick(function() {
 			var data =  $dTable.fnGetData(this);
 			$('#formAdd').dialog('open');
 			$dTable.insertData(data);
@@ -97,7 +97,7 @@ function init_dataTable(teacher){
 	}
 	
 	$dTable.refreshClickRow = function(){
-		$dTable.children('tbody').children('tr').unbind('click').click(function() {
+		$dTable.children('tbody').children('tr').unbind('dblclick').dblclick(function() {
 			var data =  $dTable.fnGetData(this);
 			$('#formAdd').dialog('open');
 			$dTable.insertData(data);
@@ -156,10 +156,11 @@ function init_dataTable(teacher){
              var position = $dTable.getPosition(id);
              var data = $dTable.getDataArray(id);
              if (position >= 0 && position < $dTable.tableSize) {
-            	 $dTable.showAll();
+            	 //$dTable.showAll();
                  $dTable.fnUpdate(data, position, 0, false);
-                 $dTable.setBeginShow();
+                //$dTable.setBeginShow();
                  var tr = $dTable.getTrNodeContainsId(id);
+                 alert(tr + " id  = " + id);
                  if (tr) {
                      $(tr).removeClass('scratched');
                  }

@@ -58,15 +58,22 @@ package net.brosbit4u {
       val user = User.find(userId).openOr(User.create)
       user.lastName(lastName).firstName(firstName).phone(telephone).email(email).
       role("n").scratched(false).save
-      userId = user.id.toString
-      JsFunc("$dTable.insertRow", userId).cmd
+      if (userId == ""){
+        userId = user.id.toString
+        JsFunc("editForm.insertRowAndClear", userId).cmd
+      } 
+      else {
+        userId = user.id.toString
+        JsFunc("editForm.insertRowAndClose", userId).cmd
+      }
+      
     }
     
     def delete() = {
       User.find(userId) match {
         case Full(user) => {
           user.scratched(true).validated(false).save
-          JsFunc("$dTable.deleteRow", userId).cmd
+          JsFunc("editForm.scratchRow", userId).cmd
         }
         case _ => Alert("Nie ma takiego użytkownika")
       }
