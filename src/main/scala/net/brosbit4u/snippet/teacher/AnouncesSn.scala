@@ -24,10 +24,10 @@ class AnouncesSn extends BaseTeacher {
     val anounces = Anounces.findAll("classId"->classId)
     "tr" #> anounces.map(anounce => {
       ".id *" #> anounce._id.toString &
-      ".dateIn *" #> anounce.content.head.date &
-       ".contentData *" #> Unparsed(anounce.content.head.content) &
+      ".dateIn *" #> Formater.formatDate(new Date(anounce._id.getTime())) &
+      ".contentData *" #> Unparsed(anounce.content.head) &
       ".teacher *" #> anounce.teacherName
-     
+     //howto show history?
     })
   }
   
@@ -39,15 +39,19 @@ class AnouncesSn extends BaseTeacher {
       val anounce = Anounces.find(id).getOrElse(Anounces.create)
       if(id == "" || user.id.is == anounce.teacherId) {
             if (anounce.classId == 0L) anounce.classId = classId
-            val entry = Entry(Formater.formatDate(new Date()), content.trim)
-            anounce.content = entry::anounce.content
+            anounce.content = content::anounce.content
            
             if(id == "") {
               anounce.teacherId = user.id.is
               anounce.teacherName = user.getFullName
+               anounce.save
+               JsFunc("editForm.insertRowAndClear", anounce._id.toString).cmd
             }
-            anounce.save
-            JsFunc("$dTable.insertRow", anounce._id.toString).cmd
+            else {
+              anounce.save
+              JsFunc("editForm.insertRowAndClose", anounce._id.toString).cmd
+            }          
+            
           }
       else Alert("Tylko właściciel może zmienić wpis!")
     }

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body class="lift:content_id=main">
+
+<div id="main" class="lift:surround?with=default;at=content">	
+   <head_merge>
+     <link rel="stylesheet" href="/style/pages.css" />
+     <script>
+	var searchBox = new Object();     
+     	function SearchBox(){
+     		var self = this;
+     		this.input = $();
+     		this.submit = $();
+     		this.init = function(){
+     			this.input = $('#search');
+     			this.submit = $('#searchSubmit');
+     			this.input.click(function(){
+     				$(this).val('');
+     			});
+     			this.submit.click(function(){
+     				var word = self.input.val();
+     				window.location = 'http://' + location.hostname + "/articles?w=s&word=" + jQuery.trim(word.split(' ')[0])
+     			})
+     		} 		
+     	}
+     	
+     	$(document).ready(function(){
+     		searchBox = new SearchBox();
+     		searchBox.init();
+     	});
+     	
+     </script>
+     <style>
+     	#searchBox input[type=text] { width: 150px; height: 32px; float: left;}
+     </style>
+</head_merge>
+	<div class="container_12">
+	<div   class="lift:page.ArticlesSn.switchContent grid_9">
+	<h1 id="pagedepartment">Aktualności</h1>
+	<div id="pagecontent">
+		<h1>Brak aktualności</h1><br/><br/>
+		</div>
+	</div>
+	
+	<div id="sidebar" class="lift:page.ArticlesSn.submenu grid_3" >
+	<div id="searchBox">
+	<input id="search" type="text" value="Szukaj w tytule"/>
+	<input id="searchSubmit" type="image" src="/style/images/search_32.png" />
+	</div>
+	<br/><br/>
+	<h1>Tagi</h1>
+	<br/>
+	<a href="/articles">Wszystkie artykuły</a>
+	<ul></ul>
+	<br/><br/>
+	<span id="adminmenu"></span>
+	</div>
+	<div class="clear"></div>
+	</div>
+	
+</div>
+</body></html>

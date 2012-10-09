@@ -93,16 +93,21 @@ class Boot {
     def sitemap() = SiteMap(
       List(
         Menu("Strona główna") / "index" >> LocGroup("public"), // Simple menu form
-        Menu("Artykuły") / "pages" >> LocGroup("public"),
+        Menu("Artykuły") / "articles" >> LocGroup("public"),
+        Menu("Biuletyn Informacji Publicznej") / "bip" / ** >> LocGroup("public"),
         Menu("Galeria") / "gallery" / ** >> LocGroup("public"),
         Menu("Kontakt") / "contact" >> LocGroup("public"),
         Menu("Forum") / "forum" >> LocGroup("public"),
+        Menu("GSF") / "gsf" / ** >> LocGroup("public"),
         Menu("Edycja wątku") / "editthread" / ** >> LocGroup("extra") >> loggedIn,
         Menu("Forum Post") / "forumpost" / ** >> LocGroup("extra"),
         Menu("Dziennik") / "vregister" >> LocGroup("public"),
-        Menu("Edytor artykułów") / "editpage" / ** >> LocGroup("extra") >> isTeacher,
+        Menu("Edytor bip") / "editpage" / ** >> LocGroup("extra") >> isTeacher,
+        Menu("Edytor artykułów") / "editarticle" / ** >> LocGroup("extra") >> isTeacher,
+        Menu("Edytor GSF") / "gsfedit" / ** >> LocGroup("extra") >> isTeacher,
         Menu("Maile kontaktowe") / "admin" / "index" >> LocGroup("admin") >> isAdmin,
-        Menu("Stałe strony") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
+        Menu("Działy BIP") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
+        Menu("Tagi aktualności") / "admin" / "tags" >> LocGroup("admin") >> isAdmin,
         Menu("Ogłoszenia") / "admin" / "anounces" >> LocGroup("admin") >> isAdmin,
         Menu("Działy forum") / "admin" / "forum" >> LocGroup("admin") >> isAdmin,
         Menu("Linki") / "admin" / "links" >> LocGroup("admin") >> isAdmin,
@@ -112,6 +117,7 @@ class Boot {
         Menu("Sekretariat") / "admin" / "secretariat" >> LocGroup("admin") >> isAdmin,
         Menu("Indeksowanie Picasa") / "admin" / "picasaindex" >> LocGroup("admin") >> isAdmin,
         Menu("Eksporty stron") / "admin" / "pagesexport" >> LocGroup("admin") >> isAdmin,
+        Menu("Strona startowa BIP") / "admin" / "startpage" >> LocGroup("admin") >> isAdmin,
         Menu("Img") / "imgstorage" >> LocGroup("extra") >> loggedIn,
         Menu("Thumb") / "thumbstorage" >> LocGroup("extra") >> loggedIn,
         Menu("File") / "filestorage" >> LocGroup("extra") >>loggedIn,
@@ -145,6 +151,10 @@ class Boot {
           RewriteResponse(
             "gallery" ::  Nil, Map("id" -> id)  )	
          case RewriteRequest(
+            ParsePath("bip" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "bip"  :: Nil, Map("id" -> id)  )
+         case RewriteRequest(
             ParsePath("forumpost" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(
             "forumpost" ::  Nil, Map("id" -> id)  )	
@@ -160,10 +170,22 @@ class Boot {
             ParsePath("editpage" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(
             "editpage" ::  Nil, Map("id" -> id)  )
+         case RewriteRequest(
+            ParsePath("editarticle" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "editarticle" ::  Nil, Map("id" -> id)  )
 		case RewriteRequest(
             ParsePath("teacher" :: "index" :: classSchool :: Nil, _, _,_), _, _) =>
           RewriteResponse(
-            "teacher" :: "index" :: Nil, Map("class" -> classSchool)  )			
+            "teacher" :: "index" :: Nil, Map("class" -> classSchool)  )		
+        case RewriteRequest(
+            ParsePath("gsf" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "gsf"  :: Nil, Map("id" -> id)  )	
+        case RewriteRequest(
+            ParsePath("gsfedit" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "gsfedit"  :: Nil, Map("id" -> id)  )
       })
 
     LiftRules.htmlProperties.default.set((r: Req) =>

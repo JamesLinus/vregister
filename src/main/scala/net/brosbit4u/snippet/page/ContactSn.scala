@@ -28,7 +28,6 @@ class ContactSn {
     (contactMail.description -> contactMail.description))
     var theme = ""
     var content = ""
-    var sign = ""
     var mail = ""
     var selectedMail = ""
 
@@ -38,9 +37,9 @@ class ContactSn {
       })
       if(!emailList.isEmpty) {
     	 val emailToSend = emailList.head.mailAddress
-         val body = content + "\n" + "----------\n" + sign
-         Mailer.sendMail(From("zestrony@xxlo.pl"), Subject(theme), 
-          To(selectedMail), PlainMailBodyType(body))
+         val body = content + "\n" + "----------\n Informacja wysłana ze strony przez: " + mail
+         Mailer.sendMail(From("zestrony@zkpig26.gda.pl"), Subject(theme), 
+          To(emailToSend), PlainMailBodyType(body))
           S.redirectTo("/contact")
       } 
       else S.notice("Błędny email")
@@ -48,8 +47,7 @@ class ContactSn {
     }
 
     "#theme" #> SHtml.text(theme, x => theme = x) &
-      "#content" #> SHtml.textarea(content, x => content = x, "id" -> "") &
-      "#sign" #> SHtml.text(sign, x => sign = x) &
+      "#mailcontent" #> SHtml.textarea(content, x => content = x) &
       "#mail" #> SHtml.text(mail, x => mail = x) &
       "#select" #> SHtml.select(contactMailsToForm, Empty, x => selectedMail = x) &
       "#submit" #> SHtml.submit("Wyślij!", sendMail, "onclick" -> "return isValid();")

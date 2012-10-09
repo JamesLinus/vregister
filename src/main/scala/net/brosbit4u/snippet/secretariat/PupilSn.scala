@@ -56,27 +56,34 @@ package net.brosbit4u {
       }
       pupil.birthDate(Formater.fromStringToDate(birthDate)).firstName(firstName).
         	lastName(lastName).pesel(pesel).scratched(false).role("u").
-        	password(Helpers.randomString(10)).save   
-        id = pupil.id.toString
-        JsFunc("$dTable.insertRow", id).cmd
+        	password(Helpers.randomString(10)).save
+       if(id == "") {
+         id = pupil.id.toString
+         JsFunc("editForm.insertRowAndClear", id).cmd
+       }
+       else {
+         id = pupil.id.toString
+         JsFunc("editForm.insertRowAndClose", id).cmd
+       }
+        
     }
     
     def delete() = {
       User.find(id) match {
         case Full(user) => {
           user.scratched(true).email("").save
-          JsFunc("$dTable.deleteRow", id).cmd
+          JsFunc("editForm.scratchRow", id).cmd
         }
         case _ => Alert("Nie ma takiego ucznia")
       }
     }
     val classList = ClassModel.findAll.map(classModel => (classModel.id.toString,classModel.classString()))
 
-    val form = "#id" #> SHtml.text(id, id = _, "readonly"-> "readonly") &
-       "#lastname" #> SHtml.text(lastName, lastName = _) &
-        "#firstname" #> SHtml.text(firstName, firstName = _) &
-       "#birthdate" #>   SHtml.text(birthDate, birthDate = _) &
-       "#pesel" #> SHtml.text(pesel, pesel = _) &
+    val form = "#id" #> SHtml.text(id, x => id = x.trim, "readonly"-> "readonly") &
+       "#lastname" #> SHtml.text(lastName, x => lastName = x.trim) &
+        "#firstname" #> SHtml.text(firstName, x => firstName = x.trim) &
+       "#birthdate" #>   SHtml.text(birthDate, x => birthDate = x.trim) &
+       "#pesel" #> SHtml.text(pesel, x => pesel = x.trim) &
        "#classInfo" #> SHtml.select(classList, Full(""), classId = _ ) &
        "#addInfo *" #> errorInfo &
        "#delete" #> SHtml.ajaxSubmit("Usuń", delete, "type"->"image", 

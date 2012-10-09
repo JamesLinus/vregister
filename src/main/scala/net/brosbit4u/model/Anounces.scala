@@ -4,7 +4,6 @@ import _root_.net.liftweb.mongodb._
 import org.bson.types.ObjectId
 import _root_.net.liftweb.json.JsonDSL._
 
-case class Entry(var date:String, var content:String)
 
 object Anounces extends MongoDocumentMeta[Anounces] {
   override def collectionName = "anounces"
@@ -13,7 +12,7 @@ object Anounces extends MongoDocumentMeta[Anounces] {
 }
 
 case class Anounces(var _id: ObjectId, var classId:Long, var teacherId:Long,
-							var teacherName:String,	var content:List[Entry]) 
+							var teacherName:String,	var content:List[String]) 
 							extends MongoDocument[Anounces] {
   def meta = Anounces
 }

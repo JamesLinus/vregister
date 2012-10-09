@@ -3,67 +3,88 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/jquery/datatable_operation_one.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
-                $(document).ready(function(){
-                    init_dataTable();
-               
-                    $('#formAdd').dialog({
-                        autoOpen : false,
-                        height : 350,
-                        width : 470,
-                        modal : true
-                    });
-                    
-                    
-                    $dTable.insertData = function (data) {
-                        $dTable.idInput.value = data[0];
-                        document.getElementById('title').value = data[1];
-                        document.getElementById('description').value = data[3] ;
-                        document.getElementById('when').value = data[4] ;
-                       
-                    }
-                    
-                    $dTable.getDataArray = function(id){
-                        var array = new Array();
-                        array[0] = id;
-                        array[1] = document.getElementById('title').value;
-                        array[2] = document.getElementById('loggedTeacher').value;
-                        array[3] = document.getElementById('description').value;
-                        array[4] = document.getElementById('when').value;
-                        return array;
-                    }   
-                    
+
+                var editFrom = new Object();
                                 
-                });
+                                EditFormDiv.prototype.putDataToForm = function(array){
+                                	document.getElementById('id').value = array[0];
+                                	 document.getElementById('title').value = array[1];
+                                     document.getElementById('description').value = array[3] ;
+                                     document.getElementById('when').value = array[4] ;
+                            	}
+                            	
+                                EditFormDiv.prototype.getData = function(){
+                                	   var array = new Array();
+                                       array[0] = document.getElementById('id').value;
+                                       array[1] = document.getElementById('title').value;
+                                       array[2] = document.getElementById('loggedTeacher').value;
+                                       array[3] = document.getElementById('description').value;
+                                       array[4] = document.getElementById('when').value;
+                            		return array;
+                            	}
+                               
+                                
+                                EditFormDiv.prototype.addNewItemInfo = 'Dodawanie uwagę';
+                                EditFormDiv.prototype.editItemInfo = 'Edycja uwagi';
+                                
+                                EditFormDiv.prototype.validate = function () {
+                                	 var isError = false;
+                                	 var errorText = "";
+                                     var name = jQuery.trim($('#title').val());
+                                     if (!validateText(name)) {
+                                         $('#titleRow').addClass('errorInfo');
+                                         isError = true;
+                                         errorText += "Brak tytułu. ";
+                                     }
+                                     name = jQuery.trim($('#description').val());
+                                     if (!validateText(name)) {
+                                         $('#descriptionRow').addClass('errorInfo');
+                                         isError = true;
+                                         errorText += "Brak opisu. "
+                                     }
+                                    name = jQuery.trim($('#when').val());
+                                     if (!validateText(name)) {
+                                         $('#whenRow').addClass('errorInfo');
+                                         isError = true;
+                                         errorText += "Kiedy?. "
+                                     }
+                                     $('#addInfo').text(errorText);
+                                     return !isError;
+                               }
+                                       
+                                $(document).ready(function(){         	                     		
+                                	editForm = new EditFormDiv();
+                                	editForm.init(350,470);
+                                	
+                                	 CKEDITOR.replace( 'contentData',{
+                                         width : 700, 
+                                         height: 150,
+                                         toolbar : [ 
+                                                     [ 'Link','Unlink','Anchor' ] ,
+                                         [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
+                                         [ 'SelectAll' ],
+                                         [ 'Bold','Italic','Underline','Strike','Subscript','Superscript' ],
+                                         [ 'NumberedList','BulletedList','-','Outdent','Indent','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'], 
+                                         [ 'TextColor'] ]
+                                     });
+                                	 
+                                	 //problem with validate by ajaxSubmit!!!
+                                     var addToSave = " if(!editForm.validate()) return false; "
+                                         var oldSave = $('#save').attr('onclick');
+                                         $('#save').attr('onclick', addToSave + oldSave);
+                                });
+                            
+                
+               
                 
                 
                 function validateForm() {
-                	 var isError = false;
-                	 var errorText = "";
-                     clearFormsAddInfo();
-                     var name = jQuery.trim($('#title').val());
-                     if (!validateText(name)) {
-                         $('#titleRow').addClass('errorInfo');
-                         isError = true;
-                         errorText += "Brak tytułu. ";
-                     }
-                     name = jQuery.trim($('#description').val());
-                     if (!validateText(name)) {
-                         $('#descriptionRow').addClass('errorInfo');
-                         isError = true;
-                         errorText += "Brak opisu. "
-                     }
-                    name = jQuery.trim($('#when').val());
-                     if (!validateText(name)) {
-                         $('#whenRow').addClass('errorInfo');
-                         isError = true;
-                         errorText += "Kiedy?. "
-                     }
-                     $('#addInfo').text(errorText);
-                     return !isError;
+                	
                 }
                
                 </script>
@@ -109,7 +130,7 @@
 
                 <h3>Zajęcia dodatkowe </h3><hr />
                 <p><label for="newadd">Dodaj:</label>
-                <input onclick="showAddRow();" src="/style/images/addico.png" type="image" id="newadd"></p>
+                <input src="/style/images/addico.png" type="image" id="newadd"></p>
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
                    
                    <thead>
@@ -128,6 +149,12 @@
                             <td class="when"></td>
                         </tr>
                     </tbody>
+                     <tfoot>
+                       <tr>
+                       <th>ID</th><th>Temat</th>
+                        <th>Nauczyciel</th><th>Opis</th><th>Dzień i godziny zajęć</th>
+                       </tr>
+                   </tfoot>
                 </table>
 
             </div>

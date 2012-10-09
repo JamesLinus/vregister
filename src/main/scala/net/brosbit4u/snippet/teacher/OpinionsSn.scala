@@ -25,9 +25,9 @@ class OpinionsSn extends BaseTeacher {
     val opinions = Opinions.findAll(("classId"->classId))
     "tr" #> opinions.map(opinion => {
       ".id *" #> opinion._id.toString &
-      ".dateIn *" #> opinion.content.head.date &
+      ".dateIn *" #> Formater.formatDate(new Date(opinion._id.getTime()))&
       ".pupil *" #> opinion.pupilName &
-       ".contentData *" #> Unparsed(opinion.content.head.content) &
+       ".contentData *" #> Unparsed(opinion.content.head) &
       ".teacher *" #> opinion.teacherName
      
     })
@@ -44,8 +44,7 @@ class OpinionsSn extends BaseTeacher {
 
       if(id == "" || user.id.is == opinion.teacherId) {
             if (opinion.classId == 0L) opinion.classId = classId
-            val entry = Entry(Formater.formatDate(new Date()), content.trim)
-            opinion.content = entry::opinion.content
+            opinion.content = content::opinion.content
            
             if(id == "") {
               opinion.teacherId = user.id.is
@@ -53,9 +52,13 @@ class OpinionsSn extends BaseTeacher {
               val pupil = User.find(pupilId).getOrElse(User.create)
               opinion.pupilName = pupil.shortInfo
               opinion.pupilId = pupil.id.is
+              opinion.save
+              JsFunc("editForm.insertRowAndClear", opinion._id.toString).cmd
             }
-            opinion.save
-            JsFunc("$dTable.insertRow", opinion._id.toString).cmd
+            else {
+              opinion.save
+              JsFunc("editForm.insertRowAndClose", opinion._id.toString).cmd
+            }
           }
       else Alert("Tylko właściciel może zmienić wpis!")
     }

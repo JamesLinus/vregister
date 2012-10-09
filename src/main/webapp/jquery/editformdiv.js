@@ -28,16 +28,19 @@ function EditFormDiv(){
 			});
 		}
 	}
+	this.clearCKEditor = function() { }
 
 	this.reset = function(){
 		this.editDiv.children('form').each(function(){
 			this.reset();
 		});
+	 self.clearCKEditor();
 	}
    //button add 
 	this.openNew = function(){
 		self.editDiv.dialog({title: self.addNewItemInfo}); 
 		self.editDiv.dialog('open');
+		self.reset();
 		$('#delete').hide();
 	}
 	//click on table

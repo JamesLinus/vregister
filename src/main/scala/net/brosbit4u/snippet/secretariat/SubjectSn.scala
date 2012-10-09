@@ -45,30 +45,35 @@ package net.brosbit4u {
       val subject = SubjectName.find(id).openOr(SubjectName.create) 
       val number = tryo(ordernumber.toInt).openOr(36)
      subject.name(longName.trim).short(shortName.trim).nr(number).scratched(false).save
-     id = subject.id.toString
-        JsFunc("$dTable.insertRow", id).cmd
+     if(id == ""){
+       id = subject.id.toString
+       JsFunc("editForm.insertRowAndClear", id).cmd
+     }
+     else {
+        id = subject.id.toString
+       JsFunc("editForm.insertRowAndClose", id).cmd
+     }
     }
     
     def delete() = {
       SubjectName.find(id) match {
         case Full(subject) => {
           subject.scratched(true).save
-          JsFunc("$dTable.deleteRow", id).cmd
+          JsFunc("editForm.scratchRow", id).cmd
         }
         case _ => Alert("Nie ma takiego przedmiotu")
       }
     }
     val numbers= (1 to 32).toList.map(i => (i.toString, i.toString))
 
-    val form = "#id" #> SHtml.text(id, id = _, "readonly"-> "readonly") &
-       "#longname" #> SHtml.text(longName, longName = _) &
-        "#shortname" #> SHtml.text(shortName, shortName = _) &
+    val form = "#id" #> SHtml.text(id, x => id = x.trim, "readonly"-> "readonly") &
+       "#longname" #> SHtml.text(longName, x => longName = x.trim) &
+        "#shortname" #> SHtml.text(shortName, x => shortName = x.trim) &
        "#ordernumber" #> SHtml.select(numbers, Full("32"), ordernumber = _ ) &
        "#addInfo *" #> errorInfo &
        "#delete" #> SHtml.ajaxSubmit("Usuń", delete, "type"->"image", 
            "onclick" -> "return confirm('Na pewno usunąć klasę?')") &
-      "#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image",
-          "onclick" -> "return validateForm();") andThen SHtml.makeFormsAjax
+      "#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image") andThen SHtml.makeFormsAjax
 
       "form" #> (in => form(in))
    }

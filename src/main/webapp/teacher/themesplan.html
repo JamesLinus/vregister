@@ -3,64 +3,64 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-             <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>
-                <script type="text/javascript" charset="utf-8" src="/jquery/datatable_operation_one.js"></script>        
+             <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
+                 <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>   
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
+                var editFrom = new Object();
                 
-                $(document).ready(function(){
-                    init_dataTable();
-                    
-                    $('#formAdd').dialog({
-                        autoOpen : false,
-                        height : 500,
-                        width : 480,
-                        modal : true
-                    });
-                    
-                    var addToSave = " if(!validateForm()) return false; "
-                    var oldSave = $('#save').attr('onclick');
-                    $('#save').attr('onclick', addToSave + oldSave);
-                    
-                    $dTable.insertData = function (data) {
-                        $dTable.idInput.value = data[0];
-                        var select = document.getElementById('classes');
-                        setMultiSelect(select, data[1]);
-                        select = document.getElementById('subject');
-                        setSelectedIndexWithInner(select,data[2]);
-                		document.getElementById('urlLink').value = data[3].split('"')[1];
-                    }
-                    
-                    $dTable.getDataArray = function(id){
-                        var array = new Array();
-                        array[0] = id;
-                        var select = document.getElementById('classes'); 
-                        array[1] = getArraySelectedInMulti(select);
-                        select = document.getElementById('subject'); 
-                        array[2] = select.options[select.selectedIndex].value;
-                        var urlLinkStr = document.getElementById('urlLink').value;
-                        array[3] =  '<a href="' + urlLinkStr + '">plik</a>';
-                        array[4] = document.getElementById('loggedTeacher').value;
-                        return array;
-                    }   
-                    
-                                
+                EditFormDiv.prototype.putDataToForm = function(array){
+                	//CKEDITOR.instances['contentData'].updateElement();
+                	document.getElementById('id').value = array[0];
+                	 var select = document.getElementById('classes');
+                     setMultiSelect(select, array[1]);
+                     select = document.getElementById('subject');
+                     setSelectedIndexWithInner(select,array[2]);
+             		document.getElementById('urlLink').value = array[3].split('"')[1];
+            	}
+            	
+                EditFormDiv.prototype.getData = function(){
+                	   var array = new Array();
+                       array[0] = document.getElementById('id').value;
+                       var select = document.getElementById('classes'); 
+                       array[1] = getArraySelectedInMulti(select);
+                       select = document.getElementById('subject'); 
+                       array[2] = select.options[select.selectedIndex].value;
+                       var urlLinkStr = document.getElementById('urlLink').value;
+                       array[3] =  '<a href="' + urlLinkStr + '">plik</a>';
+                       array[4] = document.getElementById('loggedTeacher').value;
+            		return array;
+            	}
+               
+                
+                EditFormDiv.prototype.addNewItemInfo = 'Dodawanie rozkładów materiału';
+                EditFormDiv.prototype.editItemInfo = 'Edycja rozkładów materiału';
+                
+                EditFormDiv.prototype.validate = function () { 
+                	clearFormsAddInfo(); 
+           	 		var errorText = "";
+        	 		var isError = false;
+             		var name = jQuery.trim($('#urlLink').val());
+             		if (name.length < 20) {
+                 		$('#urlLinkRow').addClass('errorInfo');
+                 		isError = true;
+                 		errorText += "Brak pliku. ";
+             		}
+             		$('#addInfo').text(errorText);
+             		return !isError;
+               }
+                       
+                $(document).ready(function(){         	                     		
+                	editForm = new EditFormDiv();
+                	editForm.init(500,480);
+                	
+                	 //problem with validate by ajaxSubmit!!!
+                     var addToSave = " if(!editForm.validate()) return false; "
+                         var oldSave = $('#save').attr('onclick');
+                         $('#save').attr('onclick', addToSave + oldSave);
                 });
-                
-                
-                function validateForm() {
-                	 clearFormsAddInfo(); 
-                	 var errorText = "";
-                	 var isError = false;
-                     var name = jQuery.trim($('#urlLink').val());
-                     if (name.length < 20) {
-                         $('#urlLinkRow').addClass('errorInfo');
-                         isError = true;
-                         errorText += "Brak pliku. ";
-                     }
-                     $('#addInfo').text(errorText);
-                     return !isError;
-                }
+            
                
                 </script>
                 <style >
@@ -82,7 +82,7 @@
                 
                 <div class="lift:teacher.ThemesPlanSn.saveAjaxDate" id="formAdd" style="display: none;" title="Dane uczniów">
                 <input id="loggedTeacher"  type="text" style="display:none;"/> 
-                <form  onsubmit="return validateForm();" method="POST">
+                <form   method="POST">
                <p>
                   <input id="id" type="text" />
                 </p> 
@@ -113,7 +113,7 @@
 
                 <h3>Rozkłady materiału</h3><hr />
                 <p><label for="newadd">Dodaj:</label>
-                <input onclick="showAddRow();" src="/style/images/addico.png" type="image" id="newadd"></p>
+                <input src="/style/images/addico.png" type="image" id="newadd"></p>
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
                    
                    <thead>

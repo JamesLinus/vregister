@@ -1,0 +1,122 @@
+<html>
+
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=default;at=content">
+<head_merge>
+<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="/jquery/jquery.multitobuttons.js"></script>
+<script>
+
+$(document).ready(function(){
+
+    CKEDITOR.replace( 'editor',{
+        width : 700, 
+        height: 400,
+        extraPlugins : 'youTube,addImage,addFile,formula',
+        toolbar : [ [ 'Source' ],
+                    [ 'Link','Unlink','Anchor' ],[ 'Maximize', 'ShowBlocks','-','About' ] ,
+        [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ],
+        [ 'Find','Replace','-','SelectAll' ],
+        [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
+        [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl' ],
+        [ 'AddImage',  'YouTube', 'AddFile', 'Formula', 'Table','HorizontalRule','SpecialChar','Iframe' ] ,
+        [ 'Styles','Format','FontSize','Font' ],
+        [ 'TextColor','BGColor' ] ]
+    });
+    
+    CKEDITOR.replace( 'introduction',{
+        width : 700, 
+        height: 100,
+        enterMode : CKEDITOR.ENTER_BR,
+        shiftEnterMode: CKEDITOR.ENTER_BR,
+        toolbar : [ [ 'Link','Unlink','Anchor' ],
+        [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
+        [ 'Find','Replace','-','SelectAll' ],
+        [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ],
+        ['Font'] ]
+    });
+    
+    $('#tagContainer').multiToButtons();
+    
+});
+
+function isValid() {
+  var title = document.getElementById('title').value;
+  var valid = true;
+  var info = 'Uzupełnij najpierw:';
+  title = jQuery.trim(title);
+  if (title == '') {
+    valid = false;
+    info = info + ' tytuł.';
+  }
+  if (!valid) {
+    alert(info);
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function isWhite(str) {
+	for (i = 0; i < str.length; i++) {
+		if (str.charAt(i) != ' ') return false;
+	}
+	return true;
+}
+
+function insertThumbnailPreviewSource(){
+	var src = document.getElementById("thumbnail").value;
+	if(src.length > 20) document.getElementById("thumbPreview").setAttribute("src",src);
+}
+
+
+</script>
+<style> 
+	form label {font-weight: bold; float:left; width:100px;}
+	#tagContainer span {border: 2px solid #777; color: white; 
+					border-radius: 5px 5px 5px 5px; padding: 5px 5px 5px 5px;
+					margin: 5px 5px 5px 5px;
+					background-color: rgb(45, 168, 248); font-weight: bold;}
+	.selectedTag {background-color: #35e !important;}
+	.unselectedTag {background-color: #aaa !important;}
+</style>
+</head_merge>
+<div id="alerts">
+		<noscript>
+			<p>
+				<strong>Aby korzystać ze strony musisz włączyć JavaScript</strong>
+			</p>
+		</noscript>
+	</div>
+<div class="container_12">	
+<div class="grid_9">
+<form  class="lift:page.ArticleEditSn.editPage" method="POST">
+<h1>Edycja artykułów</h1>
+    <fieldset>
+        <input id="id" type="text" />
+        <p><label for="title">Tytuł:</label> <input id="title" type="text"  style="width:500px;"/></p>
+        <h2>Obrazek:</h2> 
+        <img id="thumbPreview" src="/style/images/nothumb.png" style="float:left;padding-right: 20px;"  />
+        <input id="thumbnail" style="display:none;"/>
+        <iframe frame="no" scrolling="no" height="100px"  width="450px" src="/thumbstorage"></iframe></p>
+        <div><h2>Tagi:</h2><p id="tagContainer"> <select id="tags"></select></p></div>
+        <p><h2>Wstęp:</h2> 
+         <textarea id="introduction" ></textarea></p>
+
+		<p><h2>Treść:</h2><textarea id="editor"></textarea></p>
+		<p>
+			<input type="submit" id="save"/>
+			<input type="submit" id="delete" />
+			<input type="submit" id="discard" />
+		</p>
+                </fieldset>
+</form>
+</div>
+
+<div class="clear"></div>
+</div>
+	
+
+</div>
+</body>
+</html>

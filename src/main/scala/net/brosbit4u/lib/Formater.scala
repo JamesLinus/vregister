@@ -30,6 +30,12 @@ package net.brosbit4u {
         sfd.format(t)
       }
       
+      def pretyDate(t:Date): String = {
+        val l = new Locale("pl")
+        val sfd = new SimpleDateFormat("EEE, dd MMM yyyy", l)
+        sfd.format(t)
+      }
+      
       def formatDate(t:Date):String = {
         val l = new Locale("pl")
         val sfd = new SimpleDateFormat("yyyy-MM-dd",l)

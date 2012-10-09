@@ -3,81 +3,82 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/jquery/datatable_operation_one.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
+                 <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                  <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
-                $(document).ready(function(){
-                    init_dataTable();
-               
-                    $('#formAdd').dialog({
-                        autoOpen : false,
-                        height : 500,
-                        width : 750,
-                        modal : true
-                    });
-                    
-                    CKEDITOR.replace( 'contentData',{
-                        width : 700, 
-                        height: 150,
-                        toolbar : [ 
-                                    [ 'Link','Unlink','Anchor' ] ,
-                        [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
-                        [ 'SelectAll' ],
-                        [ 'Bold','Italic','Underline','Strike','Subscript','Superscript' ],
-                        [ 'NumberedList','BulletedList','-','Outdent','Indent','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'], 
-                        [ 'TextColor'] ]
-                    });
-                    
-                    
-                    $dTable.insertData = function (data) {
-                    	CKEDITOR.instances['contentData'].updateElement();
-                        $dTable.idInput.value = data[0];
-                        document.getElementById('dateIn').value = data[1];
-                        var select = document.getElementById('pupil');
-                        setSelectedIndexWithInner(select, data[2]);
-                        CKEDITOR.instances['contentData'].setData(data[3]);
-                        document.getElementById('teacher').value = data[4] ;
-                       
-                    }
-                    
-                    $dTable.getDataArray = function(id){
-                        var array = new Array();
-                        array[0] = id;
-                        var date = document.getElementById('dateIn').value;
-                        if(date.length < 6) date = "Przed chwilą";
-                        array[1] = date;
-                        var select = document.getElementById('pupil');
-                        array[2] = select.options[select.selectedIndex].innerHTML;
-                        array[3] = document.getElementById('contentData').value;
-                        array[4] = document.getElementById('loggedTeacher').value;
-                        return array;
-                    }  
-                    
-                    //problem with validate by ajaxSubmit!!!
-                    var addToSave = " if(!validateForm()) return false; "
-                        var oldSave = $('#save').attr('onclick');
-                        $('#save').attr('onclick', addToSave + oldSave);
-                    
+                
+                var editFrom = new Object();
                                 
-                });
-                
-                
-                function validateForm() {
-                	CKEDITOR.instances['contentData'].updateElement();
-                	 var isError = false;
-                	 var errorText = "";
-                     clearFormsAddInfo();
-                     var name = jQuery.trim($('#contentData').val());
-                     if (!validateText(name)) {
-                         $('#contentDataRow').addClass('errorInfo');
-                         isError = true;
-                         errorText += "Brak treści. ";
-                     }
-                     $('#addInfo').text(errorText);
-                     return !isError;
-                }
+                                EditFormDiv.prototype.putDataToForm = function(array){
+                                	//CKEDITOR.instances['contentData'].updateElement();
+                                	document.getElementById('id').value = array[0];
+                                	document.getElementById('dateIn').value = array[1];
+                                    var select = document.getElementById('pupil');
+                                    setSelectedIndexWithInner(select, array[2]);
+                                    CKEDITOR.instances['contentData'].setData(array[3]);
+                                    document.getElementById('teacher').value = array[4] ;
+                            	}
+                            	
+                                EditFormDiv.prototype.getData = function(){
+                                	   var array = new Array();
+                                       array[0] = document.getElementById('id').value;
+                                       var date = document.getElementById('dateIn').value;
+                                       if(date.length < 6) date = "Przed chwilą";
+                                       array[1] = date;
+                                       var select = document.getElementById('pupil');
+                                       array[2] = select.options[select.selectedIndex].innerHTML;
+                                       array[3] = document.getElementById('contentData').value;
+                                       array[4] = document.getElementById('teacher').value;
+                            		return array;
+                            	}
+                               
+                                
+                                EditFormDiv.prototype.addNewItemInfo = 'Dodawanie uwagę';
+                                EditFormDiv.prototype.editItemInfo = 'Edycja uwagi';
+                                
+                                EditFormDiv.prototype.validate = function () {
+                                	CKEDITOR.instances['contentData'].updateElement();
+                               	 var isError = false;
+                               	 var errorText = "";
+                                    clearFormsAddInfo();
+                                    var name = jQuery.trim($('#contentData').val());
+                                    if (!validateText(name)) {
+                                        $('#contentDataRow').addClass('errorInfo');
+                                        isError = true;
+                                        errorText += "Brak treści. ";
+                                    }
+                                    $('#addInfo').text(errorText);
+                                    return !isError;
+                               }
+                                       
+                                $(document).ready(function(){         	                     		
+                                	editForm = new EditFormDiv();
+                                	editForm.init(450,750);
+                                	editForm.clearCKEditor = function(){
+                                		CKEDITOR.instances['contentData'].setData("");
+                                	}
+                                	 CKEDITOR.replace( 'contentData',{
+                                         width : 700, 
+                                         height: 150,
+                                         toolbar : [ 
+                                                     [ 'Link','Unlink','Anchor' ] ,
+                                         [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
+                                         [ 'SelectAll' ],
+                                         [ 'Bold','Italic','Underline','Strike','Subscript','Superscript' ],
+                                         [ 'NumberedList','BulletedList','-','Outdent','Indent','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'], 
+                                         [ 'TextColor'] ]
+                                     });
+                                	 
+                                	 //problem with validate by ajaxSubmit!!!
+                                     var addToSave = " if(!editForm.validate()) return false; "
+                                         var oldSave = $('#save').attr('onclick');
+                                         $('#save').attr('onclick', addToSave + oldSave);
+                                });
+                            
                
                 </script>
                 <style >
@@ -129,12 +130,12 @@
 
                 <h3>Uwagi </h3><hr />
                 <p><label for="newadd">Dodaj:</label>
-                <input onclick="showAddRow();" src="/style/images/addico.png" type="image" id="newadd"></p>
+                <input src="/style/images/addico.png" type="image" id="newadd"></p>
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
                    
                    <thead>
                        <tr>
-                       <th>ID</th><th>Data</th>
+                       <th>ID</th><th>Data dodania</th>
                         <th>Uczeń</th><th>Treść</th><th>Nauczyciel</th>
                        </tr>
                    </thead>
@@ -148,6 +149,12 @@
                             <td class="teacher"></td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                       <tr>
+                       <th>ID</th><th>Data dodania</th>
+                        <th>Uczeń</th><th>Treść</th><th>Nauczyciel</th>
+                       </tr>
+                   </tfoot>
                 </table>
 
             </div>

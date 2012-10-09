@@ -26,7 +26,7 @@ class ArticleEditSn {
     var id = S.param("id").openOr("")
     var title = ""
     var authorId = 0L
-    var department = "Aktualności"
+    var tags:List[String] = Nil
     var thumbnailLink = ""
     var introduction = ""
     var content = ""
@@ -35,41 +35,27 @@ class ArticleEditSn {
       case Some(newsHead) => {
         val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
         title = newsHead.title
+        tags = newsHead.tags
         authorId = newsHead.authorId
         thumbnailLink = newsHead.thumbnailLink
         introduction = newsHead.introduction
         content = articleContent.content
       }
-      case _ => {
-        PageHead.find(id) match {
-          case Some(pageHead) => {
-            val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
-            title = pageHead.title
-            department = pageHead.department
-            authorId = pageHead.authorId
-            content = articleContent.content
-          }
-          case _ => 
-        }
-      } 
-    }
-
-    def save() {
-        if(department == "Aktualności"){
-          saveNews()
-        } 
-        else {
-          savePage()
-        }
+      case _ => 
     }
     
-    def saveNews() {
+    def save() {
       var isNew = false
       val newsHead = NewsHead.find(id).getOrElse(NewsHead.create)
       if(newsHead.authorId == 0L || isOwner(newsHead.authorId)){
         newsHead.title = title
+        val newTags = tags.take(3)
+        val toAddTags = getToAddTagsByCompare(newTags, newsHead.tags)
+        val toDeleteTags = getToDeleteTagsByCompare(newTags, newsHead.tags)
+        newsHead.tags = newTags
+        updateNewsTags(toAddTags, toDeleteTags)
         newsHead.introduction = introduction
-        println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
+        //println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
         newsHead.thumbnailLink = if(thumbnailLink == "" ) "/style/images/nothumb.png"
         						 else thumbnailLink
         val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
@@ -85,40 +71,24 @@ class ArticleEditSn {
         newsHead.save
         if (isNew) addNewsInfoOnMainPage(newsHead._id.toString, newsHead.title)
       }
-      S.redirectTo("/pages?w=w&id=" + newsHead._id.toString)
+      S.redirectTo("/articles?w=w&id=" + newsHead._id.toString)
     }
     
-    def savePage(){
-     val pageHead = PageHead.find(id).getOrElse(PageHead.create)
-      if(pageHead.authorId == 0L || isOwner(pageHead.authorId)){
-          pageHead.title = title
-          pageHead.department = department
-          val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
-          articleContent.content = content
-          articleContent.save
-          pageHead.content = articleContent._id
-          if(pageHead.authorId == 0L){
-              val user = User.currentUser.get
-              pageHead.authorId = user.id
-              pageHead.authorName = user.getFullName
-          }
-         pageHead.save
-      }
-      S.redirectTo("/pages?w=p&id=" + pageHead._id.toString)
-    }
 
     def discard() {
-      S.redirectTo("/pages" )
+      S.redirectTo("/articles" )
     }
     
     def delete(){
      {if(id.length > 11) if(isOwner(authorId))  deleteObjectById(id)}
-     S.redirectTo("/pages" )
+     S.redirectTo("/articles" )
     }
+    
+     val tagsList =  NewsTag.findAll.map(newsTag => (newsTag.tag, newsTag.tag))
     
     "#id" #> SHtml.text(id, id = _, "style"->"display:none;") &
     "#title" #> SHtml.text(title, in => title = in.trim) &
-    "#department" #> SHtml.select(departmentTuples,Full(department), department = _) &
+    "#tags" #> SHtml.multiSelect(tagsList, tags , tags = _) &
     "#thumbnail" #> SHtml.text(thumbnailLink , in => thumbnailLink = in.trim, "style" -> "display:none;") &
     "#introduction" #> SHtml.textarea(introduction, in => introduction  = deleteBR(in.trim)) &
     "#editor" #> SHtml.textarea(content, in => content = in.trim) &
@@ -128,6 +98,8 @@ class ArticleEditSn {
      
   }
   
+  
+  
   private def deleteObjectById(id:String) {
      NewsHead.find(id)  match {
       case Some(newsHead) => {
@@ -136,16 +108,7 @@ class ArticleEditSn {
         deleteNewsInfoOnMainPage(newsHead._id.toString)
         newsHead.delete
       }
-      case _ => {
-        PageHead.find(id) match {
-          case Some(pageHead) => {
-            val articleContentOpt = ArticleContent.find(pageHead.content)
-            if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
-            pageHead.delete
-          }
-          case _ => 
-        }
-      }
+      case _ => 
     }
   }
   
@@ -177,6 +140,25 @@ class ArticleEditSn {
   }
   
     private def getFullLink(id:String) = "/pages?w=w&id=" + id
+    
+    private def getToAddTagsByCompare(newTags:List[String], oldTags:List[String]):List[String] = {
+      var toAddTags:List[String] = newTags
+      for(tag <- oldTags) toAddTags = toAddTags.filter(_ != tag)
+      toAddTags
+    }
+    
+    private def getToDeleteTagsByCompare(newTags:List[String], oldTags:List[String]):List[String] = {
+      var toDeleteTags:List[String] = oldTags
+      for(tag <- newTags) toDeleteTags = toDeleteTags.filter(_ != tag)
+      toDeleteTags
+    }
+    
+    private def updateNewsTags(toAddTags:List[String], toDeleteTags:List[String]){
+      val increase = ("$inc" -> ("count" -> 1))
+      val decrease = ("$inc" -> ("count" -> -1))
+      toAddTags.foreach(tag => NewsTag.update(("tag" -> tag), increase))
+      toDeleteTags.foreach(tag => NewsTag.update(("tag" -> tag), increase))
+    }
 
 }
 

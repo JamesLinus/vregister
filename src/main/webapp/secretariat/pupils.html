@@ -3,46 +3,49 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=secret;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-               <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+              <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
+                 <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
                <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
-                $(document).ready(function(){
-                    init_dataTable(false);
-               
-                    $('#formAdd').dialog({
-                        autoOpen : false,
-                        height : 350,
-                        width : 500,
-                        modal : true
-                    });
- 
-                    
-                    $dTable.insertData = function (data) {
-                        $dTable.idInput.value = data[0];
-                        document.getElementById('lastname').value = data[1];
-                        document.getElementById('firstname').value = data[2];
-                        document.getElementById('birthdate').value = data[3];
-                        document.getElementById('pesel').value = data[4];
-                        var select = document.getElementById('classInfo');
-                        setSelectedIndexWithInner(select,data[5]);
+				var editFrom = new Object();
+                
+                EditFormDiv.prototype.putDataToForm = function(array){
+                	document.getElementById('id').value = array[0];
+                     document.getElementById('lastname').value = array[1];
+                     document.getElementById('firstname').value = array[2];
+                     document.getElementById('birthdate').value = array[3];
+                     document.getElementById('pesel').value =array[4];
+                     var select = document.getElementById('classInfo');
+                     setSelectedIndexWithInner(select,array[5]);
+            	}
+            	
+                EditFormDiv.prototype.getData = function(){
+                	   var array = new Array();
+                       array[0] = document.getElementById('id').value;
+                       array[1] = document.getElementById('lastname').value;
+                       array[2] = document.getElementById('firstname').value;                  
+                       array[3] = document.getElementById('birthdate').value;
+                       array[4] = document.getElementById('pesel').value;
+                       var select = document.getElementById('classInfo');
+                       array[5] = select.options[select.selectedIndex].innerHTML;
+            		return array;
+            	}
+                
+                EditFormDiv.prototype.addNewItemInfo = 'Dodawanie ucznia';
+                EditFormDiv.prototype.editItemInfo = 'Edycja ucznia';
+                
+                EditFormDiv.prototype.validate = function(){
+                	return true;
+                }
                        
-                    }
-                    
-                    $dTable.getDataArray = function(id){
-                        var array = new Array();
-                        array[0] = id.toString();
-                        array[1] = document.getElementById('lastname').value;
-                        array[2] = document.getElementById('firstname').value;                  
-                        array[3] = document.getElementById('birthdate').value;
-                        array[4] = document.getElementById('pesel').value;
-                        var select = document.getElementById('classInfo');
-                        array[5] = select.options[select.selectedIndex].innerHTML;
-                        return array;
-                    }    
-                    
-                    $( "#birthdate" ).datepicker({
+                $(document).ready(function(){
+                	                     		
+                	editForm = new EditFormDiv();
+                	editForm.init(350,500);                	
+                     
+                	$( "#birthdate" ).datepicker({
                         changeMonth: true,
                         changeYear: true,
                         yearRange: '1980:2010' ,
@@ -53,21 +56,8 @@
                         dayNamesMin: ['Ni','Po','Wt','Śr','Cz','Pi','So'],
                         monthNamesShort: ['Sty','Lut','Mar','Kwi','Maj','Cze','Lip','Sie', 'Wrz','Paź','Lis','Gru'] 
                     });
-                                
                 });
                 
-               
-                
-                
-                function validateForm() {
-                    return true;
-                }
-                
-                function getNext(){
-                	var n1 = $('#fullList tbody tr')[0];
-                	var tr = $dTable.fnGetAdjacentTr( n1 );
-                	alert(tr);
-                }
                
                 </script>
                 <style >
@@ -81,7 +71,7 @@
 </div>
             <div class="container_12">              
                 
-                <div class="lift:PupilSn.editAjax" id="formAdd" style="display: none;" title="Dodawanie nowych użytkowników">
+                <div class="lift:PupilSn.editAjax" id="formAdd" style="display: none;" >
                 <form  method="POST">
                <p><label for="id">Id:</label>
                   <input id="id" type="text" />
@@ -107,18 +97,16 @@
                    <input id="classInfo" maxlength="11"/><br/>
                    <span id="classInfoinfo" class="errorInfo"></span>
                 </p>
-                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
+                <p>
                     <input type="image"  src="/style/images/saveico.png"  id="save"/>
-                    <input type="image" src="/style/images/delico.png" id="delete"/>
-                    <input type="image" src="/style/images/resetico.png" onclick="resetForm();" id="reset"/>
-                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
+                    <input type="image" src="/style/images/delico.png" id="delete"/>              
                 </p>
                 <p id="addInfo"></p>
                 </form>
                 </div>
 
                 <h3>Przegląd i edycja nauczycieli </h3><hr />
-                <input type="image" src="/style/images/addico.png" onclick="showAddRow()" />
+                <input type="image" id="newadd" src="/style/images/addico.png"/>
                 
                 
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
@@ -138,10 +126,14 @@
                             <td class="classInfo"></td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr><th>ID</th><th>Nazwisko</th><th>Imię</th>
+                            <th>Data urodzenia</th><th>PESEL</th><th>Klasa</th>
+                        </tr>
+                    </tfoot>
                 </table>
               
                 </div>
-                  <input type="button" value="test" onclick="getNext()"/>
 </div>
 </body>
 </html>

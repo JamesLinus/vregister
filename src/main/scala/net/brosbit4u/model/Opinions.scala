@@ -12,7 +12,7 @@ object Opinions extends MongoDocumentMeta[Opinions] {
 }
 
 case class Opinions(var _id: ObjectId, var classId:Long, var pupilId:Long, var pupilName:String, 
-						var teacherId:Long, var teacherName:String,	var content:List[Entry]) 
+						var teacherId:Long, var teacherName:String,	var content:List[String]) 
 							extends MongoDocument[Opinions] {
   def meta = Opinions
 }

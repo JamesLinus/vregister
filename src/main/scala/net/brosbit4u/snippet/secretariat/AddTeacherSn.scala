@@ -82,11 +82,11 @@ package net.brosbit4u {
    
    
 
-    val form = "#id" #> SHtml.text(userId, userId = _, "readonly"-> "readonly") &
-      "#lastname" #> SHtml.text(lastName, lastName = _) &
-       "#firstname" #> SHtml.text(firstName, firstName = _) &
-       "#email" #> SHtml.text(email, email = _) &
-       "#telephone" #> SHtml.text(telephone, telephone = _) &
+    val form = "#id" #> SHtml.text(userId, x => userId = x.trim, "readonly"-> "readonly") &
+      "#lastname" #> SHtml.text(lastName, x => lastName = x.trim) &
+       "#firstname" #> SHtml.text(firstName, x => firstName = x.trim) &
+       "#email" #> SHtml.text(email, x => email = x.trim) &
+       "#telephone" #> SHtml.text(telephone, x => telephone = x.trim) &
        "#delete" #> SHtml.ajaxSubmit("Usuń", delete, "type"->"image", 
            "onclick" -> "return confirm('Na pewno usunąć użytkownika?')") &
       "#save" #> SHtml.ajaxSubmit("Zapisz", save, "type"->"image",

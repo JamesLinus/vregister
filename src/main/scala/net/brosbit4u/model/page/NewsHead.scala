@@ -15,11 +15,11 @@ import org.bson.types.ObjectId
 object NewsHead extends MongoDocumentMeta[NewsHead] {
   override def collectionName = "newshead"
   override def formats = super.formats + new ObjectIdSerializer + new DateSerializer
-  def create = new NewsHead(ObjectId.get, "", "", 0L, "", "", new ObjectId("000000000000000000000000"))
+  def create = new NewsHead(ObjectId.get, "", "", 0L, Nil, "", "", new ObjectId("000000000000000000000000"))
 }
 
 case class NewsHead(var _id: ObjectId, var title:String,
-					 var authorName:String, var authorId:Long, 
+					 var authorName:String, var authorId:Long, var tags:List[String],
 					 var thumbnailLink:String, var introduction:String,
 					 var content:ObjectId )
 					extends MongoDocument[NewsHead] {

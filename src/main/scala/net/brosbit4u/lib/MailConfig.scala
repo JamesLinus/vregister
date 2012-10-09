@@ -50,15 +50,17 @@ class MailConfig {
      MapExtraData.setMapData("sendmailconfig",data)
    } 
    
-  private def mkConfig(){    
+  private def mkConfig(){ 
+    println("mkConfig in Mailer user %s password %s host %s".format(user, password, host))
          // Enable TLS support
       System.setProperty("mail.smtp.starttls.enable", "true");
       // Set the host name
-      System.setProperty("mail.smtp.host", host) // Enable authentication
+      System.setProperty("mail.smtp.host", this.host) // Enable authentication
       System.setProperty("mail.smtp.auth", "true") // Provide a means for authentication. Pass it a Can, which can either be Full or Empty
       Mailer.authenticator = Full(new Authenticator {
-       override def getPasswordAuthentication = new PasswordAuthentication(user, password)
+       override def getPasswordAuthentication = new PasswordAuthentication( user, password)
       })
+     
     }
    
 }

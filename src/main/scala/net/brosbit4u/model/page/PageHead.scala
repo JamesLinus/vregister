@@ -17,7 +17,7 @@ object PageHead extends MongoDocumentMeta[PageHead] {
   def create = PageHead(ObjectId.get, "", "", "", 0L, new ObjectId("000000000000000000000000"))
 }
 
-case class PageHead(var _id: ObjectId, var title:String,
+case class PageHead(var _id: ObjectId, var title:String, 
 					 var department:String, var authorName:String,  
 					 var authorId:Long, var content:ObjectId )
 					extends MongoDocument[PageHead] {

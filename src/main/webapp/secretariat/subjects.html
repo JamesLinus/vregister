@@ -3,46 +3,43 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=secret;at=content">
             <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
-                $(document).ready(function(){
-                    init_dataTable(false);
-               
-                    $('#formAdd').dialog({
-                        autoOpen : false,
-                        height : 350,
-                        width : 500,
-                        modal : true
-                    });
- 
-                    
-                    $dTable.insertData = function (data) {
-                        $dTable.idInput.value = data[0];
-                        document.getElementById('longname').value = data[1] ;
-                        document.getElementById('shortname').value = data[2];
-                        var select = document.getElementById('ordernumber');
-                        setSelectedIndexWithInner(select,data[3]);
-                    }
-                    
-                    $dTable.getDataArray = function(id){
-                        var array = new Array();
-                        array[0] = id.toString();
-                        array[1] = document.getElementById('longname').value;
-                        array[2] = document.getElementById('shortname').value;
-                        var select = document.getElementById('ordernumber');
-                        array[3] = select.options[select.selectedIndex].value;
-                        return array;
-                    }      
-                                
-                });
-                 
+var editFrom = new Object();
                 
-                function validateForm() {
-                    return true;
+                EditFormDiv.prototype.putDataToForm = function(array){
+                	document.getElementById('id').value = array[0];
+                	document.getElementById('longname').value = array[1] ;
+                    document.getElementById('shortname').value = array[2];
+                    var select = document.getElementById('ordernumber');
+                    setSelectedIndexWithInner(select,array[3]);
+            	}
+            	
+                EditFormDiv.prototype.getData = function(){
+                	   var array = new Array();
+                       array[0] = document.getElementById('id').value;
+                       array[1] = document.getElementById('longname').value;
+                       array[2] = document.getElementById('shortname').value;
+                       var select = document.getElementById('ordernumber');
+                       array[3] = select.options[select.selectedIndex].value;
+            		return array;
+            	}
+                
+                EditFormDiv.prototype.addNewItemInfo = 'Dodawanie przedmiotu';
+                EditFormDiv.prototype.editItemInfo = 'Edycja przedmiotu';
+                
+                EditFormDiv.prototype.validate = function(){
+                	return true;
                 }
+                       
+                $(document).ready(function(){         	                     		
+                	editForm = new EditFormDiv();
+                	editForm.init(350,500);                	                 
+                });
                
                 </script>
                 <style >
@@ -72,11 +69,9 @@
                    <span id="ordernumberinfo" class="errorInfo"></span>
                 </p>
                 
-                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
+                <p>
                     <input type="image"  src="/style/images/saveico.png"  id="save"/>
-                    <input type="image" src="/style/images/delico.png" id="delete"/>
-                    <input type="image" src="/style/images/resetico.png" onclick="resetForm();" id="reset"/>
-                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
+                    <input type="image" src="/style/images/delico.png" id="delete"/>              
                 </p>
                 <p id="addInfo"></p>
                 </form>
@@ -85,7 +80,7 @@
 
 
                 <h3>Przegląd i edycja przedmiotów </h3><hr />
-                <input type="image" src="/style/images/addico.png" onclick="showAddRow()" />
+                <input id="newadd" type="image" src="/style/images/addico.png" />
                 
                 <table id="fullList" class="display" border="0" cellpadding="2" cellspacing="2" >
                     <thead>

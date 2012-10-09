@@ -46,7 +46,7 @@ class ExtraLessonsSn extends BaseTeacher {
               extraLesson.teacherName = user.getFullName
             }
             extraLesson.save
-            JsFunc("$dTable.insertRow", extraLesson._id.toString).cmd
+            JsFunc("editForm.insertRowAndClose", extraLesson._id.toString).cmd
           }
       else Alert("Tylko właściciel może zmienić wpis!")
     }
@@ -56,7 +56,7 @@ class ExtraLessonsSn extends BaseTeacher {
         ExtraLessons.find(id) match {
           case Some(extraLesson) => {
             extraLesson.delete
-            JsFunc("$dTable.deleteRow", id).cmd
+            JsFunc("editForm.scratchRow", id).cmd
           }
           case _ => Alert("Brak wpisu!")
         }

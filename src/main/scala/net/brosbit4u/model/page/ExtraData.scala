@@ -11,6 +11,9 @@ import java.util.Date
 import org.bson.types.ObjectId
 import _root_.net.liftweb.json.JsonDSL._
 
+object ExtraDataKeys extends Enumeration {
+  val startPageKey = Value("startpagebip")
+}
 
 object ExtraData extends MongoDocumentMeta[ExtraData] {
   override def collectionName = "extradata"

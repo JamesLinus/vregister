@@ -50,7 +50,7 @@ class ThemesPlanSn extends BaseTeacher {
             }
     	  if(themesPlan.isValid){
             themesPlan.save
-            JsFunc("$dTable.insertRow", themesPlan._id.toString).cmd
+            JsFunc("editForm.insertRowAndClose", themesPlan._id.toString).cmd
     	  } else Alert("Nie zapisono! Brakuje linku.")
       }
       else Alert("Tylko właściciel może zmienić wpis!")
@@ -61,7 +61,7 @@ class ThemesPlanSn extends BaseTeacher {
         ThemesPlan.find(id) match {
           case Some(themesPlan) => {
             themesPlan.delete
-            JsFunc("$dTable.deleteRow", id).cmd
+            JsFunc("formEdit.scratchRow", id).cmd
           }
           case _ => Alert("Brak wpisu!")
         }
