@@ -14,10 +14,8 @@ import _root_.net.liftweb.common._
 import _root_.net.brosbit4u.model.page._
 import _root_.net.brosbit4u.model._
 import _root_.net.brosbit4u.lib._
-import _root_.net.liftweb.mapper.{ OrderBy, By, Descending, Ascending }
 import _root_.net.liftweb.http.{ S }
 import Helpers._
-import _root_.net.liftweb.json.JsonDSL._
 
 class BipSn extends UsersOperations {
 
@@ -44,7 +42,9 @@ class BipSn extends UsersOperations {
     val pageHead = PageHead.find(id) match {
       case Some(pageHead) => pageHead
       case _ => {
-        val startPageId = ExtraData.getData(ExtraDataKeys.startPageKey.toString).drop(1)
+        var startPageId = ExtraData.getData(ExtraDataKeys.startPageKey.toString)
+        
+        if(!startPageId.isEmpty() && startPageId(0) == '#') startPageId = startPageId.drop(1)
         PageHead.find(startPageId) match {
           case Some(startPage) => startPage
           case _ => {

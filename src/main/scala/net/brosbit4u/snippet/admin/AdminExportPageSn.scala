@@ -42,7 +42,7 @@ class AdminExportPageSn {
 	    pageHead.department = department
 	    pageHead.content = pageContent._id
 	    pageHead.save
-	    S.redirectTo("/pages?w=p&id=" + pageHead._id)
+	    S.redirectTo("/bip/" + pageHead._id)
 	  }   
          
 	  val departments = PageDepartment.findAll.map(department => (department.name, department.name))

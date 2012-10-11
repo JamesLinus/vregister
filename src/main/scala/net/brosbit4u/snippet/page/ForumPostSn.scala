@@ -40,6 +40,9 @@ class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
 
   def showThread() = {
     
+    val editNode = if(isPostOwner(threadHead.authorId)) <a href={"/editthread?id=" + threadHead._id}>Edytuj</a>
+        			else <a></a>
+        			  
         "h1 *" #> threadHead.department &
         "#threadtitle" #> threadHead.title &
         "#threaddelete" #> {if(isAdmin){<a href={"/forumpost/"+threadHead._id.toString + "?del=1"}>
@@ -48,6 +51,7 @@ class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
         ".firstcomment *" #> <td><div>{Unparsed(threadContent.content)}</div><hr/>
         						<p><span class="fullname">{threadHead.authorName}</span>
         						<span class="date">{Formater.formatDate(new Date(threadHead._id.getTime()))}</span>
+        						<span>{editNode}</span>
         						</p></td>  &
         ".comments" #> threadContent.comments.map(comment => {
         	"div *" #> Unparsed(comment.content) & 

@@ -2,11 +2,14 @@
 <html>
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
-            <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
+            <head_merge>
+            <link rel="stylesheet" type="text/css" href="/style/register.css" />
+            <link rel="stylesheet" type="text/css" href="/style/jquery.multiselect.css" />
              <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
                  <script type="text/javascript" charset="utf-8" src="/jquery/select_operations.js"></script>   
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
+                <script type="text/javascript" src="/jquery/jquery.multiselect.min.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 var editFrom = new Object();
                 
@@ -55,6 +58,10 @@
                 	editForm = new EditFormDiv();
                 	editForm.init(500,480);
                 	
+                	$("#classes").multiselect({
+                		   selectedText: "Wybrano # z # klas"
+                		});
+                	
                 	 //problem with validate by ajaxSubmit!!!
                      var addToSave = " if(!editForm.validate()) return false; "
                          var oldSave = $('#save').attr('onclick');
@@ -74,6 +81,7 @@
     display: -moz-inline-box;
     width: 20%;
     text-align: center;}
+ 
                    
                 </style>
             </head_merge>
@@ -88,7 +96,7 @@
                 </p> 
                 <p id="classStrRow">
                 	<label for="classes">Klasy:</label>
-                   <select id="classes" ></select>
+                  <p id="tagContainer"> <select id="classes" ></select></p>
                 </p>
                 <p id="subjectRow">
                 	<label for="subject">Przedmiot:</label>

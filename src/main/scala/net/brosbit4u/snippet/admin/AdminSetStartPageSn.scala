@@ -19,7 +19,7 @@ class AdminSetStartPageSn {
 	  var ID = ""
 	  var title = ""
 	  ID = ExtraData.getData(ExtraDataKeys.startPageKey.toString)
-	  if (ID(0) == '#') ID = ID.drop(1)
+	  if (!ID.isEmpty && ID(0) == '#') ID = ID.drop(1)
 	  val startPage = PageHead.find(ID).getOrElse(PageHead.create)
 	  title = startPage.title
 	    

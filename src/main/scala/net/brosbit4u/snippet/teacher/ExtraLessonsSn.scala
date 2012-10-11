@@ -1,6 +1,7 @@
 package net.brosbit4u.snippet.teacher
 
 import java.util.Date
+import scala.xml.Unparsed
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
 import _root_.net.brosbit4u.model.page._
@@ -22,7 +23,7 @@ class ExtraLessonsSn extends BaseTeacher {
       ".id *" #> extraLesson._id.toString &
       ".title *" #> extraLesson.title &
        ".teacher *" #> extraLesson.teacherName &
-      ".description *" #> extraLesson.description &
+      ".description *" #> Unparsed(extraLesson.description) &
       ".when *" #> extraLesson.when 
      
     })

@@ -18,11 +18,13 @@ trait UsersOperations {
   var isLoged = false
   var isTeacher = false
   var isAdmin = false
+  var userID = 0L
   val currentUserName = User.currentUser match {
     case Full(user) => {
       isLoged = true
       isTeacher = if (user.role.is == "n" || user.role.is == "a") true else false
       isAdmin = if (user.role.is == "a") true else false
+      userID = user.id
       user.firstName + " " + user.lastName
     }
     case _ => "Niezalogowany"
@@ -34,6 +36,8 @@ trait UsersOperations {
     else <a href="/user_mgt/login"><span>Niezalogowany</span></a>
     "a" #> node
   }
+  
+  def isPostOwner(id:Long) = id == userID
 
 }
  
