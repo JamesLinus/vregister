@@ -88,7 +88,7 @@ class ForumEditSn extends UsersOperations with UpdateMainPageInfo {
       "#title" #> SHtml.text(title, x => title = x.trim, "id" -> "title") &
       "#department" #> SHtml.select(departments, Full(departmentName), departmentName = _ ) &
       "#content" #> SHtml.textarea(content, x => content = x, "id" -> "content") &
-      "#save" #> SHtml.submit("Utwórz", save, "onclick" -> "isValid();") &
+      "#save" #> SHtml.submit("Utwórz", save) &
       "#delete" #> SHtml.submit("Usuń", delete, "onclick" -> "return confirm('Czy na pewno chcesz usunąć wątek')")
 
   }

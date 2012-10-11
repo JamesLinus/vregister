@@ -77,7 +77,7 @@ function discardChange(){
         <p><label for="department">Dział:</label> <select id="department"></select></p>
         <p><h2>Treść</h2><textarea id="content"></textarea></p>
         <p>
-            <input type="submit" id="save"/>
+            <input type="submit" id="save" onclick="return isValid();"/>
             <input type="submit" id="delete" />
             <input value="Anuluj"  type="submit" id="discard" onclick="return discardChange()"/>
         </p>

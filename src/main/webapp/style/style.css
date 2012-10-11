@@ -12,7 +12,7 @@ body { font:13px/1.4em "Helvetica", Arial, sans-serif;}
 #footer {width:100%;color:#FFF; padding:20px 0;}
 #footer h1 {text-shadow: 0px 1px 1px #000000;}
 #footer ul {margin-top:10px;list-style:none;}
-#footer ul  li{ border-top:solid 1px #414141; padding: 3px 0;}
+#footer ul  li{ list-style:none; border-top:solid 1px #414141; padding: 3px 0;}
 #footer ul.social-icons  li{display:inline;margin-right:5px;border:none;}
 #footer ul.social-icons {margin-bottom:20px;}
 #tail {width:100%; min-height:20px; color:#000;background-color:#FFF;padding:15px 0;text-align:center;}
@@ -44,9 +44,6 @@ span.testimonial-message {font:30px/36px Georgia, "Times New Roman", Times, seri
 ul li.dir:hover{background-color: #FFF; -moz-border-radius-topleft: 5px;-moz-border-radius-topright: 5px;}
 #menu ul li.last {margin-right:0px;}
 
-/* Side menu */
-#sidebar ul { list-style: none outside none;margin-top: 10px;margin-bottom:20px;}
-#sidebar ul li {padding: 3px 0px 0px 10px;background: url(/style/images/797.png) no-repeat center left;}
 
 /* frame for images */
 .frame{float:left; padding:3px;border:1px solid #AAAAAA;margin:0px 10px 10px 0px;-moz-border-radius: 3px;}
@@ -63,9 +60,8 @@ input[type="text"], input[type="password"] {height:22px;border:1px solid #CCCCCC
 #contact_form input[type="submit"] {float:right;}
 .map {margin:10px 0px;}
 
-/* bullets */
-ul { list-style: none outside none;margin-bottom: 20px;margin-top: 10px;}
-ul li {background: url("/style/images/797.png") no-repeat scroll left center transparent;padding:0 0 0 10px;}
+ul {list-style-image:url("/style/images/797.png"); list-style-position:inside;
+	margin-bottom: 20px;margin-top: 10px;}
 ol {padding: 0 0 0 20px;}
 ol li {padding: 0 0 0 10px;}
 

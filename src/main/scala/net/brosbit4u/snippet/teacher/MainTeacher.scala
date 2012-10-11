@@ -41,7 +41,7 @@ class MainTeacher {
 		"a" #> classes.map(classItem => {
 				"a" #> <a href={"/teacher/index/"+ classItem.id.toString}>{classItem.classString}</a>
 			}) &
-		"#choosenclass *" #> {if(ClassChoose.is == 0) "niewybrano!"
+		"#choosenclass *" #> {if(ClassChoose.is == 0) "wybierz!"
 								else ClassString.is }
 		}
 }

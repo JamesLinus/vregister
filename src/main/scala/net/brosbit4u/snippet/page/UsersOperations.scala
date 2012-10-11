@@ -31,7 +31,7 @@ trait UsersOperations {
   }
 
   def loginInfo() = {
-    val node = if (isLoged) <span id="login">><a href="/user_mgt/logout"> <span>{ currentUserName }</span></a>
+    val node = if (isLoged) <span id="login"><a href="/user_mgt/logout"> <span>{ currentUserName }</span></a>
     <a href="/user_mgt/change_password"> &nbsp;&nbsp;&nbsp;&nbsp; <img src="/style/images/dice.png" title="Zmień hasło"/></a></span>
     else <a href="/user_mgt/login"><span>Niezalogowany</span></a>
     "a" #> node

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<body class="lift:content_id=main">
+<div id="main" class="lift:surround?with=teacher;at=content">	
+<head_merge>
+<link rel="stylesheet" type="text/css" href="/style/register.css" />
+<script type="text/javascript" src="/jquery/jquery.js" ></script>
+<script>
+#(document).ready(function(){
+	CKEDITOR.replace( 'comment',{
+	    width : 700, 
+	    height: 150,
+	    toolbar : [ 
+	    [ 'Link','Unlink','Anchor' ] ,
+	    [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
+	    [ 'Bold','Italic','Underline','Strike','Subscript','Superscript' ],
+	    [ 'NumberedList','BulletedList'], 
+	    [ 'TextColor'] ]
+	});
+	CKEDITOR.replace( 'template',{
+	    width : 700, 
+	    height: 350,
+	    toolbar : [ 
+	    [ 'Link','Unlink','Anchor' ] ,
+	    [ 'Cut','Copy','Paste','PasteText','-','Undo','Redo' ],
+	    [ 'Bold','Italic','Underline','Strike','Subscript','Superscript' ],
+	    [ 'NumberedList','BulletedList'], 
+	    [ 'TextColor'] ]
+	});
+});
+
+</script>
+</head_merge>
+	<div class="container_12">
+	<h1>Edycja szablonu</h1>
+	<form class="lift:teacher.CreateTemplateSn.edit" method="POST">
+	 <input id="id" type="text" style="display:none;"/>	
+	 <p><label>Tytuł:</label><br/><input type="text" id="title"/></p>
+	 <p><label>Współna tabela:</label><br/><input type="checkbox" id="table"/></p>
+     <p> <label>Opis:</label><br/><textarea id="comment"></textarea></p>
+     <p> <label>Szablon:</label><br/><textarea id="template"></textarea></p>
+     
+     <p><input id="save"/><input id="delete"/><input id="discard"/></p>
+     </form>
+     
+     
+    <div class="clear"></div>
+    
+    </div>
+	 		
+
+</div>
+    </body></html>

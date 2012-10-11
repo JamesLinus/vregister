@@ -137,6 +137,8 @@ class Boot {
         Menu("Plan") / "teacher" / "class_plan"  >> LocGroup("teacher") >> isTeacher,
         Menu("Kółka") / "teacher" / "extralessons" >> LocGroup("teacher") >> isTeacher,
         Menu("Rozkłady") / "teacher" / "themesplan" >> LocGroup("teacher") >> isTeacher,
+        Menu("Dokumenty") / "teacher" / "doctemplate" >> LocGroup("teacher") >> isTeacher,
+        Menu("Szablon") / "teacher" / "createtemplate" >> LocGroup("extra") >> isAdmin,
         Menu("Oceny") / "viewer" / "index" >> LocGroup("view") >> loggedIn,
         //Menu("Nieobcności") / "viewer" / "absents" >> LocGroup("view") >> loggedIn,
         Menu("Test") / "test" >> LocGroup("extra")) :::
@@ -186,6 +188,10 @@ class Boot {
             ParsePath("gsfedit" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(
             "gsfedit"  :: Nil, Map("id" -> id)  )
+         case RewriteRequest(
+            ParsePath("doctemplate" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "doctemplate"  :: Nil, Map("id" -> id)  )
       })
 
     LiftRules.htmlProperties.default.set((r: Req) =>
