@@ -18,25 +18,82 @@ import  _root_.net.liftweb.http.js.JsCmds._
 
 class DocTemplateSn extends BaseTeacher {
 	
+  var id = S.param("id").getOrElse("0")
+  var docHead = DocTemplateHead.find(id) match {
+    case Some(templateHead) => templateHead
+    case _ => {
+      val docList = DocTemplateHead.findAll
+      if(!docList.isEmpty) docList.head
+      else DocTemplateHead.create
+    }
+  }
+  var docContent = DocTemplateContent.find(docHead.content) match {
+    case Some(templateContent) => templateContent
+    case _ => DocTemplateContent.create
+  }
   
-  def showHeads() = {
-    
+  def showHead() = {
+    "span *" #> docHead.title &
+    "#comment *" #> Unparsed(docHead.comment)
   }
   
   def addEntry() = {
+    var userTemplate = findCurrentUserTemplate
+    def save(){
+      val newTemplatePiece = TemplatePiece(user.id.toString, user.getFullName, userTemplate)
+      DocTemplateContent.update(("_id"->docContent._id.toString),
+          ("$pullAll"->("content.userId"->user.id.toString)))
+      DocTemplateContent.update(("_id"->docContent._id.toString),
+          ("$addToSet"->("content"->newTemplatePiece.mapString)))
+    }
+    
+    def delete(){
+      DocTemplateContent.update(("_id"->docContent._id.toString),
+          ("$pullAll"->("content.userId"->user.id.toString)))
+    }
+    
+    "#addentry" #> SHtml.textarea(userTemplate, userTemplate = _) &
+    "#save" #> SHtml.submit("Zapisz", save) &
+    "#delete" #> SHtml.submit("Usuń", delete)
     
   }
   
   def fullDocument() = {
-    
+    ".fulldocument *" #> {if(docHead.docTyp == 't') createFullDocumentTable else createFullDocumentPlain}
   }
   
   def docTemplates() = {
-    
+    "li" #> DocTemplateHead.findAll.map(templateHead => {
+      <li><a href={"/teacher/doctemplate/" + templateHead._id.toString}>{templateHead.title}</a></li>
+    })
   }
   
   def adminMenu() = {
-    
+    "ul" #> {if(isAdmin) {<ul>
+    		<li id="createTemplate"><a href="/teacher/createtemplate/0">Utwórz nowy</a></li>
+       		<li id="editTemplate"><a href={"/teacher/createtemplate/" + docHead._id.toString}>Edytuj aktualny</a></li>
+       	    <li id="importTemplate"><a href="">Pobierz</a></li>
+    		</ul> }
+            else {<ul></ul>}}
+  }
+  
+  private def findCurrentUserTemplate:String = {
+    val userTemplateList = docContent.content.filter(_.userId == user.id.toString)
+    if(userTemplateList.isEmpty){
+      docHead.template
+    }
+    else userTemplateList.head.template  
+  }
+    //poprawić!!!!!!! ma wyciągać dane z tabeli!!!!
+  private def createFullDocumentTable = {
+    docContent.content.map(template => {println(template.template)
+      <div><h2> Dodane przez: {template.userName} </h2>{Unparsed(template.template)}</div>
+    } )  
+  }
+  private def createFullDocumentPlain = {
+    docContent.content.map(template => {println(template.template)
+      <div><h2> Dodane przez: {template.userName} </h2>{Unparsed(template.template)}</div>
+    } )  
   }
   
 }
