@@ -42,7 +42,6 @@ class GsfPageSn {
      }
    }
    "#pagecontent" #> <div id="pagecontent">
-        					<h1>{gsfArticle.title}</h1>
         					<div id="pagebody">{Unparsed(gsfArticle.content)}</div>
         					<hr/>
         					<p>{if(isGsfEditor) <span class="edit"><a href={"/gsfedit/"+gsfArticle._id.toString}>Edytuj</a></span> 

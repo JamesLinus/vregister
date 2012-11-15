@@ -53,6 +53,7 @@ class Boot {
      LiftRules.statelessDispatchTable.append({
       case Req("img" :: id :: Nil, _, GetRequest) => () => ImageLoader.image(id)
       case Req("file" :: id :: Nil, _, GetRequest) => () => FileLoader.file(id)
+      case Req("getdocument" :: id :: Nil, _, GetRequest) => () => TemplateDocumentCreater.create(id)
     })
       
      
@@ -104,7 +105,7 @@ class Boot {
         Menu("Dziennik") / "vregister" >> LocGroup("public"),
         Menu("Edytor bip") / "editpage" / ** >> LocGroup("extra") >> isTeacher,
         Menu("Edytor artykułów") / "editarticle" / ** >> LocGroup("extra") >> isTeacher,
-        Menu("Edytor GSF") / "gsfedit" / ** >> LocGroup("extra") >> isTeacher,
+        Menu("Edytor GSF") / "gsfedit" / ** >> LocGroup("extra") >> loggedIn,
         Menu("Maile kontaktowe") / "admin" / "index" >> LocGroup("admin") >> isAdmin,
         Menu("Działy BIP") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
         Menu("Tagi aktualności") / "admin" / "tags" >> LocGroup("admin") >> isAdmin,
@@ -131,7 +132,7 @@ class Boot {
         Menu("Rodzice") / "teacher" / "parent_data"  >> LocGroup("teacher") >> isTeacher,
         //Menu("Tematy") / "teacher" / "themes" >> LocGroup("teacher") >> isTeacher,
         //Menu("Obecności") / "teacher" / "absents"  >> LocGroup("teacher") >> isTeacher,
-        //Menu("Oceny") / "teacher" / "marks" >> LocGroup("teacher") >> isTeacher,
+        Menu("Oceny") / "teacher" / "marks" >> LocGroup("teacher") >> isTeacher,
         Menu("Ogłoszenia") / "teacher" / "anounces"  >> LocGroup("teacher") >> isTeacher,
         Menu("Uwagi") / "teacher" / "opinions"  >> LocGroup("teacher") >> isTeacher,
         Menu("Plan") / "teacher" / "class_plan"  >> LocGroup("teacher") >> isTeacher,
@@ -206,6 +207,8 @@ class Boot {
     LiftRules.loggedInTest = Full(() => User.loggedIn_?)
 
     LiftRules.passNotFoundToChain = true
+    LiftRules.maxMimeSize = 16 * 1024 * 1024
+    LiftRules.maxMimeFileSize = 16 * 1024 * 1024
     
     { new MailConfig().autoConfigure() }
 

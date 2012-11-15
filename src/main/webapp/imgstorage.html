@@ -2,21 +2,13 @@
 <html>
       <head>
       <script type="text/javascript" src="/jquery/jquery.js"></script>    
-        <script type="text/javascript">
-            function copyLink() {
-                var link = document.getElementById("linking").innerHTML;
-                var topDoc = window.top.document;
-                var urlElem = topDoc.getElementById('urlLink');
-                if (urlElem) urlElem.value = link;
-            }
-        </script>
     </head>
-<body onload="copyLink()">
+<body>
 <h4>Wczytywanie grafiki:</h4>
 	<form class="lift:page.FilesSn.addSlide" method="POST" enctype="multipart/form-data" >
 	<input id="file" /><br />
 	<input id="submit" /><br /><hr />
-        <p><em>link do skopiowania: </em> <br /> <span id="linkimg"></span> </p>
+        <p><em>link do skopiowania: </em> <br /> <span id="linkpath"></span> </p>
 	<lift:msgs/>
 	</form><br />
 </body>

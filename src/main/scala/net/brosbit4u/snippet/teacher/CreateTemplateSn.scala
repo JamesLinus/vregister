@@ -27,7 +27,6 @@ class CreateTemplateSn extends BaseTeacher {
     case Some(templateHead) => {
       title = templateHead.title
       comment = templateHead.comment
-      table = if(templateHead.docTyp == "t") true else false
       template = templateHead.template
     }
     case _ => {
@@ -48,7 +47,6 @@ class CreateTemplateSn extends BaseTeacher {
     	}
       docHead.title = title.trim
       docHead.comment = comment.trim
-      docHead.docTyp = if(table) "t" else "d"
       docHead.content = docContent._id
       docHead.template = template.trim
       docHead.save
@@ -79,7 +77,6 @@ class CreateTemplateSn extends BaseTeacher {
     "#id" #> SHtml.text(id, id = _) &
     "#title" #> SHtml.text(title, title = _) &
     "#comment" #> SHtml.textarea(comment, comment = _) &
-    "#table" #> SHtml.checkbox(table, table = _) &
     "#template" #> SHtml.textarea(template, template = _) &
     "#save" #> SHtml.submit("Zapisz", save) &
     "#delete" #> SHtml.submit("Usuń", delete) &

@@ -106,6 +106,7 @@ class ArticleEditSn {
         val articleContentOpt = ArticleContent.find(newsHead.content)
         if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
         deleteNewsInfoOnMainPage(newsHead._id.toString)
+        this.updateNewsTags(Nil, newsHead.tags)
         newsHead.delete
       }
       case _ => 
@@ -139,7 +140,7 @@ class ArticleEditSn {
     }
   }
   
-    private def getFullLink(id:String) = "/pages?w=w&id=" + id
+    private def getFullLink(id:String) = "/articles?w=w&id=" + id
     
     private def getToAddTagsByCompare(newTags:List[String], oldTags:List[String]):List[String] = {
       var toAddTags:List[String] = newTags
@@ -157,7 +158,7 @@ class ArticleEditSn {
       val increase = ("$inc" -> ("count" -> 1))
       val decrease = ("$inc" -> ("count" -> -1))
       toAddTags.foreach(tag => NewsTag.update(("tag" -> tag), increase))
-      toDeleteTags.foreach(tag => NewsTag.update(("tag" -> tag), increase))
+      toDeleteTags.foreach(tag => NewsTag.update(("tag" -> tag), decrease))
     }
 
 }

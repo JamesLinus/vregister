@@ -6,6 +6,12 @@
          <link rel="stylesheet" href="/style/adminsite.css" />
          <script type="text/javascript" src="/jquery/mytables.js"></script>
         <script>
+        function getImageURLfromIFrame(elem){
+        	var innerDoc = elem.contentDocument || elem.contentWindow.document;
+        	var url  = innerDoc.getElementById('linkpath').innerHTML;
+        	$('.cke_dialog_ui_input_text').val(url);
+        }
+        
         $(document).ready(function(){
         	colorTables();
         });

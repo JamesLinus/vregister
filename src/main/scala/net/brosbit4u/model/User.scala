@@ -40,13 +40,13 @@ package net.brosbit4u {
     		  							</div></div></div>
                                      </lift:surround>)
       // comment this line out to require email validations
-      override def skipEmailValidation = false
+     // override def skipEmailValidation = false
       
        override def createUserMenuLoc = Empty
        override def editUserMenuLoc = Empty
        
      
-      override def afterValidation  = List( (user) => { S.redirectTo("/user_mgt/change_password")})
+     // override def afterValidation  = List( (user) => { S.redirectTo("/user_mgt/change_password")})
      
     }
 

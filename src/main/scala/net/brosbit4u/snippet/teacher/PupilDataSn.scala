@@ -68,7 +68,7 @@ class PupilDataSn extends BaseTeacher {
           secondName(secondName.trim).birthDisctrict(birthDistrict.trim).
           email(email.trim).classNumber(tryo(number.toInt).openOr(0)).phone(phone.trim).save
           id = pupil.id.toString
-          JsFunc("$dTable.insertRow", id).cmd
+          JsFunc("editForm.editRow", id).cmd
         }
         case _ => Alert("Nie ma takiego ucznia")
       }

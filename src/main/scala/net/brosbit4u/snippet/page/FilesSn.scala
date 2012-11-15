@@ -199,7 +199,7 @@ class FilesSn {
     }
     "#file" #> SHtml.fileUpload(x => fileHold = Full(x)) &
       "#submit" #> SHtml.submit("Dodaj!", save) &
-      "#linking" #> <span id="linking">{ linkpath.is }</span>
+      "#linkpath" #> <span id="linkpath">{ linkpath.is }</span>
   }
 
   def addSlide() = {
@@ -223,7 +223,7 @@ class FilesSn {
 
       "#file" #> SHtml.fileUpload(fileUploaded => fileHold = Full(fileUploaded)) &
       "#submit" #> SHtml.submit("Dodaj!", save) &
-      "#linkimg" #> <span id="linking">{ linkpath.is }</span>
+      "#linkpath" #> <span id="linkpath">{ linkpath.is }</span>
     
   }
   

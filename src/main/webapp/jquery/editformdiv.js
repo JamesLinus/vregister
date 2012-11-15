@@ -76,9 +76,9 @@ function EditFormDiv(){
 	this.insertNewRow = function(id){
 		var array = self.getData();
 		array[0] = id;
-		var tr = self.dataTable.insertNewRow(array);
+		var tr = self.dataTable.insertNewRow(array);		
 		$(tr).bind('dblclick',function(){
-			self.openDblClick();
+			self.openDblClick(this);
 		});
 	}
 	
@@ -91,7 +91,26 @@ function EditFormDiv(){
 		self.dataTable.editRow(array);
 	}
 
+	this.getNext = function() {
+		var id = self.idInput.value;
+		var actualTr = self.dataTable.getTrNodeContainsId(id);
+		var newTr = self.dataTable.dTable.fnGetAdjacentTr( actualTr);
+		if(newTr) {
+			var data = self.dataTable.dTable.fnGetData(newTr);
+			self.putDataToForm(data);
+		}
+		
+	}
 	
+	this.getPrevious = function() {
+		var id = self.idInput.value;
+		var actualTr = self.dataTable.getTrNodeContainsId(id);
+			var newTr = self.dataTable.dTable.fnGetAdjacentTr( actualTr,false);
+	    if(newTr) {
+			var data = self.dataTable.dTable.fnGetData(newTr);
+			self.putDataToForm(data);
+		}	
+	}
 
 	//this.mkAlert = function() {alert("alert");}
 

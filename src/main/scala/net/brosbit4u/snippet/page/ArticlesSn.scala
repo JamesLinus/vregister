@@ -45,7 +45,7 @@ class ArticlesSn extends UsersOperations {
 
   
  private def showLastNews() = {
-   val lastNews = NewsHead.findAll
+   val lastNews = NewsHead.findAll.sortBy(n => - n._id.getTime()) //zastąpić natywnym mongo
    commonNewsShow(lastNews, "Aktualności")
  }
 
@@ -76,7 +76,7 @@ class ArticlesSn extends UsersOperations {
     var tag = S.param("tag").openOr("")
     if(tag == "") S.redirectTo("/articles?w=a")
     else {
-      val newsHeads = NewsHead.findAll("tags", tag) //poprawić
+      val newsHeads = NewsHead.findAll("tags", tag).sortBy(n => - n._id.getTime()) //sort???
       commonNewsShow(newsHeads, "Aktualności. Oznaczone jako: " + tag)
     }
   }
@@ -85,7 +85,9 @@ class ArticlesSn extends UsersOperations {
     val word = S.param("word").openOr("")
      if(word == "") S.redirectTo("/articles?w=a")
     else {
-      val newsHeads = NewsHead.findAll.filter(newsHead => newsHead.title.toLowerCase.contains(word.toLowerCase()))     
+      //low performers????
+      val newsHeads = NewsHead.findAll.filter(newsHead => newsHead.title.toLowerCase.contains(word.toLowerCase())).
+    		  sortBy(n => - n._id.getTime())
       commonNewsShow(newsHeads, "Aktualności. Szukane słowo: " + word)
     }
   }
@@ -103,7 +105,9 @@ class ArticlesSn extends UsersOperations {
     	<span class="date">{Formater.formatDate(new Date(newsHead._id.getTime()))}</span>
     	</p>
     	<p class="pageintroduction">
-    	{Unparsed(newsHead.introduction)} <a href={link}> Czytaj dalej >></a></p>
+    	{Unparsed(newsHead.introduction)} </p>
+    		<p><a  class="readmore" href={link}> Czytaj dalej >></a></p>
+    		<div class="clear"></div>
     	</div> 
     }) &
     "#allnewses" #> oldNewses.map(newsHead => {

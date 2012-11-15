@@ -6,6 +6,11 @@
 <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="/jquery/jquery.multitobuttons.js"></script>
 <script>
+function getImageURLfromIFrame(elem){
+	var innerDoc = elem.contentDocument || elem.contentWindow.document;
+	var url  = innerDoc.getElementById('linkpath').innerHTML;
+	$('.cke_dialog_ui_input_text').val(url);
+}
 
 $(document).ready(function(){
 
@@ -38,6 +43,7 @@ $(document).ready(function(){
     
     $('#tagContainer').multiToButtons();
     
+    insertThumbnailPreviewSource();
 });
 
 function isValid() {

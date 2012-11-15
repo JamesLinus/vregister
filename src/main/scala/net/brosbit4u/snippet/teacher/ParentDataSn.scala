@@ -92,7 +92,7 @@ class ParentDataSn extends BaseTeacher {
          	firstName(firstNameMather.trim).role("r").
          	scratched(false).save
         pupil.father(father.id).mather(mather.id).save
-          JsFunc("$dTable.insertRow", id).cmd
+          JsFunc("editForm.editRow", id).cmd
         }
         case _ => Alert("Nie ma takiego ucznia")
       }

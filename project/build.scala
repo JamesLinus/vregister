@@ -10,7 +10,7 @@ object LiftProjectBuild extends Build {
   
   lazy val buildSettings = Seq(
     organization := "net.brosbit4u",
-    version      := "0.1-SNAPSHOT",
+    version      := "0.3",
     scalaVersion := "2.9.1")
   
   def yourWebSettings = webSettings ++ Seq(

@@ -42,14 +42,14 @@ class DocTemplateSn extends BaseTeacher {
     def save(){
       val newTemplatePiece = TemplatePiece(user.id.toString, user.getFullName, userTemplate)
       DocTemplateContent.update(("_id"->docContent._id.toString),
-          ("$pullAll"->("content.userId"->user.id.toString)))
+          ("$pull"->("content" -> ("userId"->user.id.toString))))
       DocTemplateContent.update(("_id"->docContent._id.toString),
           ("$addToSet"->("content"->newTemplatePiece.mapString)))
     }
     
     def delete(){
       DocTemplateContent.update(("_id"->docContent._id.toString),
-          ("$pullAll"->("content.userId"->user.id.toString)))
+          ("$pull"->("content" -> ("userId"->user.id.toString))))
     }
     
     "#addentry" #> SHtml.textarea(userTemplate, userTemplate = _) &
@@ -59,7 +59,9 @@ class DocTemplateSn extends BaseTeacher {
   }
   
   def fullDocument() = {
-    ".fulldocument *" #> {if(docHead.docTyp == 't') createFullDocumentTable else createFullDocumentPlain}
+    ".fulldocument *" #>  docContent.content.map(template => {
+      <div><h2> Dodane przez: {template.userName} </h2><hr/>{Unparsed(template.template)}</div>
+    } )  
   }
   
   def docTemplates() = {
@@ -72,7 +74,7 @@ class DocTemplateSn extends BaseTeacher {
     "ul" #> {if(isAdmin) {<ul>
     		<li id="createTemplate"><a href="/teacher/createtemplate/0">Utwórz nowy</a></li>
        		<li id="editTemplate"><a href={"/teacher/createtemplate/" + docHead._id.toString}>Edytuj aktualny</a></li>
-       	    <li id="importTemplate"><a href="">Pobierz</a></li>
+       	    <li id="importTemplate"><a href={"/getdocument/" +  docHead._id.toString}>Pobierz</a></li>
     		</ul> }
             else {<ul></ul>}}
   }
@@ -83,17 +85,6 @@ class DocTemplateSn extends BaseTeacher {
       docHead.template
     }
     else userTemplateList.head.template  
-  }
-    //poprawić!!!!!!! ma wyciągać dane z tabeli!!!!
-  private def createFullDocumentTable = {
-    docContent.content.map(template => {println(template.template)
-      <div><h2> Dodane przez: {template.userName} </h2>{Unparsed(template.template)}</div>
-    } )  
-  }
-  private def createFullDocumentPlain = {
-    docContent.content.map(template => {println(template.template)
-      <div><h2> Dodane przez: {template.userName} </h2>{Unparsed(template.template)}</div>
-    } )  
-  }
+  } 
   
 }

@@ -2,114 +2,98 @@
 <html>
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
-            <head_merge><link rel="stylesheet" type="text/css" href="/style/register.css" />
-                <script type="text/javascript" charset="utf-8" src="/jquery/datatables_operation.js"></script>
+            <head_merge>
+                <script type="text/javascript" charset="utf-8" src="/jquery/datatableone.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/editformdiv.js"></script>
                 <script type="text/javascript" charset="utf-8" src="/jquery/myvalidation.js"></script>
                 <script type="text/javascript" charset="utf-8">
                 
-                $(document).ready(function(){
-                    init_dataTable(true);
-               
-                    $('#formAdd').dialog({
-                        autoOpen : false,
-                        height : 600,
-                        width : 600,
-                        modal : true
-                    });
-                    
-                    $( "#radio" ).buttonset();
- 
-                    
-                    $dTable.insertData = function (data) {
-                        $dTable.idInput.value = data[0];
-                        document.getElementById('number').value = data[1];
-                        document.getElementById('reversefullname').value = data[2];
-                        document.getElementById('lastnamefather').value = data[3];
-                        document.getElementById('firstnamefather').value = data[4];
-                        document.getElementById('emailfather').value = data[5] ;
-                        document.getElementById('phonefather').value = data[6];
-                        document.getElementById('addressfather').value = data[7] ;
-                        document.getElementById('lastnamemather').value = data[8];
-                        document.getElementById('firstnamemather').value = data[9];
-                        document.getElementById('emailmather').value = data[10] ;
-                        document.getElementById('phonemather').value = data[11];
-                        document.getElementById('addressmather').value = data[12] ;
-                    }
-                    
-                    $dTable.getDataArray = function(id){
-                        var array = new Array();
-                        array[0] = id.toString();
-                        array[1] = document.getElementById('number').value;
-                        array[2] = document.getElementById('reversefullname').value;
-                        array[3] = document.getElementById('lastnamefather').value;
-                        array[4] = document.getElementById('firstnamefather').value;
-                        array[5] = document.getElementById('emailfather').value;
-                        array[6] = document.getElementById('phonefather').value;
-                        array[7] = document.getElementById('addressfather').value;
-                        array[8] = document.getElementById('lastnamemather').value;
-                        array[9] = document.getElementById('firstnamemather').value;
-                        array[10] = document.getElementById('emailmather').value;
-                        array[11] = document.getElementById('phonemather').value;
-                        array[12] = document.getElementById('addressmather').value;
-                        alert(array);
-                        return array;
-                    }   
-                    
-                 
-                   $dTable.showFather = function(){
-                     
-                       $dTable.fnSetColumnVis( 3, true );
-                       $dTable.fnSetColumnVis( 4, true );
-                       $dTable.fnSetColumnVis( 5, true );
-                       $dTable.fnSetColumnVis( 6, true );
-                       $dTable.fnSetColumnVis( 7, true );
-                       $dTable.fnSetColumnVis( 8, false );
-                       $dTable.fnSetColumnVis( 9, false );
-                       $dTable.fnSetColumnVis( 10, false );
-                       $dTable.fnSetColumnVis( 11, false );
-                       $dTable.fnSetColumnVis( 12, false );
-                   }
-                   
-                   $dTable.showMather = function(){
-                     
-                           $dTable.fnSetColumnVis( 3, false );
-                           $dTable.fnSetColumnVis( 4, false );
-                           $dTable.fnSetColumnVis( 5, false );
-                           $dTable.fnSetColumnVis( 6, false );
-                           $dTable.fnSetColumnVis( 7, false );
-                           $dTable.fnSetColumnVis( 8, true );
-                           $dTable.fnSetColumnVis( 9, true );
-                           $dTable.fnSetColumnVis( 10, true );
-                           $dTable.fnSetColumnVis( 11, true );
-                           $dTable.fnSetColumnVis( 12, true );
-                    } 
-                   $dTable.showAll = function(){
-                       
-                       $dTable.fnSetColumnVis( 3, true );
-                       $dTable.fnSetColumnVis( 4, true );
-                       $dTable.fnSetColumnVis( 5, true );
-                       $dTable.fnSetColumnVis( 6, true );
-                       $dTable.fnSetColumnVis( 7, true );
-                       $dTable.fnSetColumnVis( 8, true );
-                       $dTable.fnSetColumnVis( 9, true );
-                       $dTable.fnSetColumnVis( 10, true );
-                       $dTable.fnSetColumnVis( 11, true );
-                       $dTable.fnSetColumnVis( 12, true );
-                } 
-                   $dTable.setBeginShow = function(){
-                	   $dTable.showFather();  
-                   }
-                    
-                   $dTable.setBeginShow();
-                   
-                    
-                                
-                });
-                 
                 
-                function validateForm() {
-                    return true;
-                }
+ var editFrom = new Object();
+                
+                EditFormDiv.prototype.putDataToForm = function(array){
+                	document.getElementById('id').value = array[0];
+                	 document.getElementById('number').value = array[1];
+                     document.getElementById('reversefullname').value = array[2];
+                     document.getElementById('lastnamefather').value = array[3];
+                     document.getElementById('firstnamefather').value = array[4];
+                     document.getElementById('emailfather').value = array[5] ;
+                     document.getElementById('phonefather').value = array[6];
+                     document.getElementById('addressfather').value = array[7] ;
+                     document.getElementById('lastnamemather').value = array[8];
+                     document.getElementById('firstnamemather').value = array[9];
+                     document.getElementById('emailmather').value = array[10] ;
+                     document.getElementById('phonemather').value = array[11];
+                     document.getElementById('addressmather').value = array[12] ;
+                	
+            	}
+            	
+                EditFormDiv.prototype.getData = function(){
+                	var array = new Array();
+                	array[0] = document.getElementById('id').value;
+                	array[1] = document.getElementById('number').value;
+                    array[2] = document.getElementById('reversefullname').value;
+                    array[3] = document.getElementById('lastnamefather').value;
+                    array[4] = document.getElementById('firstnamefather').value;
+                    array[5] = document.getElementById('emailfather').value;
+                    array[6] = document.getElementById('phonefather').value;
+                    array[7] = document.getElementById('addressfather').value;
+                    array[8] = document.getElementById('lastnamemather').value;
+                    array[9] = document.getElementById('firstnamemather').value;
+                    array[10] = document.getElementById('emailmather').value;
+                    array[11] = document.getElementById('phonemather').value;
+                    array[12] = document.getElementById('addressmather').value;
+                    return array;
+            	}
+                
+                EditFormDiv.prototype.editItemInfo = 'Edycja rodziców';
+                
+                EditFormDiv.prototype.validate = function() {
+            		var isError = false;
+            		return !isError;
+            	}
+                
+                
+                $(document).ready(function(){
+                	
+               	 $( "#radio" ).buttonset();
+               	                     		
+               	editForm = new EditFormDiv();
+               	editForm.init(600,600);  
+               	
+               	editForm.idInput = document.getElementById('id');
+               	
+               	editForm.showFather = function(){
+         
+                      editForm.dataTable.dTable.fnSetColumnVis( 3, true );
+                       editForm.dataTable.dTable.fnSetColumnVis( 4, true );
+                       editForm.dataTable.dTable.fnSetColumnVis( 5, true );
+                       editForm.dataTable.dTable.fnSetColumnVis( 6, true );
+                       editForm.dataTable.dTable.fnSetColumnVis( 7, true );
+                       editForm.dataTable.dTable.fnSetColumnVis( 8, false );
+                       editForm.dataTable.dTable.fnSetColumnVis( 9, false );
+                       editForm.dataTable.dTable.fnSetColumnVis( 10, false );
+                       editForm.dataTable.dTable.fnSetColumnVis( 11, false );
+                       editForm.dataTable.dTable.fnSetColumnVis( 12, false );
+                   }
+                   
+                   editForm.showMather = function(){
+                	 
+                		  editForm.dataTable.dTable.fnSetColumnVis( 3, false );
+                          editForm.dataTable.dTable.fnSetColumnVis( 4, false );
+                           editForm.dataTable.dTable.fnSetColumnVis( 5, false );
+                           editForm.dataTable.dTable.fnSetColumnVis( 6, false );
+                           editForm.dataTable.dTable.fnSetColumnVis( 7, false );
+                           editForm.dataTable.dTable.fnSetColumnVis( 8, true );
+                           editForm.dataTable.dTable.fnSetColumnVis( 9, true );
+                           editForm.dataTable.dTable.fnSetColumnVis( 10, true );
+                           editForm.dataTable.dTable.fnSetColumnVis( 11, true );
+                           editForm.dataTable.dTable.fnSetColumnVis( 12, true );
+                		  
+                   }
+                    
+                   editForm.showFather();
+               });
                
                 </script>
                 <style >
@@ -176,9 +160,9 @@
                    <input id="addressmather" maxlength="120"/><br/>
                    <span id="addressmatherinfo" class="errorInfo"></span>
                 </p>
-                <p><input type="image" src="/style/images/previco.png" onclick="$dTable.getPrevious();" id="preview"/>
+                <p><input type="image" src="/style/images/previco.png" onclick="editForm.getPrevious();" id="preview"/>
                     <input type="image"  src="/style/images/saveico.png"  id="save"/>
-                    <input type="image" src="/style/images/nextico.png" onclick="$dTable.getNext();" id="next"/>                
+                    <input type="image" src="/style/images/nextico.png" onclick="editForm.getNext();" id="next"/>                
                 </p>
                 <p id="addInfo"></p>
                 </form>
@@ -188,8 +172,8 @@
 
                 <h3>Dane rodziców </h3><hr />
      <div id="radio">
-        <input type="radio" id="radio1" name="radio" checked="checked" onclick="$dTable.showFather();" /><label for="radio1">Dane Ojca</label>
-        <input type="radio" id="radio2" name="radio"  onclick="$dTable.showMather();"/><label for="radio2">Dane Matki</label>
+        <input type="radio" id="radio1" name="radio" checked="checked" onclick="editForm.showFather();" /><label for="radio1">Dane Ojca</label>
+        <input type="radio" id="radio2" name="radio"  onclick="editForm.showMather();"/><label for="radio2">Dane Matki</label>
     </div>
               
                 
@@ -224,6 +208,9 @@
                     </tbody>
                 </table>
 
+            </div>
+             <br/>
+            <div class="clear"></div>
             </div>
     </body>
 </html>

@@ -37,7 +37,6 @@ package net.brosbit4u {
 
         "tr" #> teachers.map(teacher => {
           "tr [class]" #> { if (teacher.scratched.is) "scratched" else "" } &
-          "tr [id]" #> teacher.id.is.toString &
             ".id" #> <td>{ teacher.id.is.toString }</td> &
             ".firstname" #> <td>{ teacher.firstName.is }</td> &
             ".lastname" #> <td>{ teacher.lastName.is }</td> &

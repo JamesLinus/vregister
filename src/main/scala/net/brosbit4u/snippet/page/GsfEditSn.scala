@@ -37,7 +37,7 @@ class GsfEditSn {
     
     def save(){
      val article = GsfArticle.find(id).getOrElse(GsfArticle.create)
-      if(isEditor){
+      if(isGsfEditor){
           article.title = title
           article.order = order.toInt
           article.content = content
@@ -52,7 +52,7 @@ class GsfEditSn {
     }
     
     def delete(){
-     {if(id.length > 11) if(isEditor)  deleteObjectById(id)}
+     {if(id.length > 11) if(isGsfEditor)  deleteObjectById(id)}
      S.redirectTo("/gsf" )
     }
     
@@ -74,15 +74,15 @@ class GsfEditSn {
           case _ => 
         }
   }
-
-  private def isEditor(): Boolean = {
+  
+    private def getFullLink(id:String) = "/gsf/id=" + id
+    
+    private def isGsfEditor(): Boolean = {
     User.currentUser match {
       case Full(user) => (user.role.is == "g" || user.role.is == "a")
       case _ => false
-    }
+    }   
   }
-  
-    private def getFullLink(id:String) = "/gsf/id=" + id
 
 }
 

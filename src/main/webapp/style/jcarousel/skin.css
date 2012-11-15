@@ -1,4 +1,6 @@
 .jcarousel-skin-tango .jcarousel-container {
+     -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
     margin: auto;
 }
 
@@ -9,11 +11,13 @@
 .jcarousel-skin-tango .jcarousel-container-horizontal {
     width: 780px; 
     padding: 10px 40px;
+  
 }
 
 .jcarousel-skin-tango .jcarousel-clip-horizontal {
     width:  780px;
-    height: 112px; /**/
+    height: 112px;
+    overflow: hidden;
 }
 
 
@@ -72,6 +76,7 @@
 .jcarousel-skin-tango .jcarousel-next-disabled-horizontal:hover,
 .jcarousel-skin-tango .jcarousel-next-disabled-horizontal:active {
     cursor: default;
+    display:none; /* sprawdzam do usunięcia!!!*/
     background-position: -96px 0;
 }
 

@@ -1,3 +1,31 @@
+$.fn.dataTableExt.oApi.fnGetAdjacentTr  = function ( oSettings, nTr, bNext )
+{
+    /* Find the node's position in the aoData store */
+    var iCurrent = oSettings.oApi._fnNodeToDataIndex( oSettings, nTr );
+      
+    /* Convert that to a position in the display array */
+    var iDisplayIndex = $.inArray( iCurrent, oSettings.aiDisplay );
+    if ( iDisplayIndex == -1 )
+    {
+        /* Not in the current display */
+        return null;
+    }
+      
+    /* Move along the display array as needed */
+    iDisplayIndex += (typeof bNext=='undefined' || bNext) ? 1 : -1;
+      
+    /* Check that it within bounds */
+    if ( iDisplayIndex < 0 || iDisplayIndex >= oSettings.aiDisplay.length )
+    {
+        /* There is no next/previous element */
+        return null;
+    }
+      
+    /* Return the target node from the aoData store */
+    return oSettings.aoData[ oSettings.aiDisplay[ iDisplayIndex ] ].nTr;
+};
+
+
 
 function DataTableOne(){
 	 var self = this;
@@ -17,8 +45,8 @@ function DataTableOne(){
 			        "sEmptyTable": "Brak danych do wyświetlenia",
 			        "sInfo": "Widzisz wiersze od _START_ do _END_  z wszystkich _TOTAL_",
 			        "oPaginate": {
-			        	"sPrevious": "<< Poprzednie",
-				        "sNext": "Następne >>",
+			        	"sPrevious": "Poprzednie",
+				        "sNext": "Następne",
 				        "sFirst": "Początek",
 				        "sLast": "Koniec",
 			        },
@@ -33,16 +61,7 @@ function DataTableOne(){
 			      }
 			    });	
 	 }
-	/*
-	 this.getPosition = function(id) {
-		 alert("getPosition");
-			var tr = this.dTable.getTrNodeContainsId(id);
-			if (tr) {
-				return this.dTable.fnGetPosition(tr);
-			} else
-				return -1;
-		}
-	 */
+	
 	 this.getTrNodeContainsId = function (id) {
 			var trNodes = self.dTable.fnGetNodes();
 			for (i in trNodes) {
@@ -72,9 +91,10 @@ function DataTableOne(){
 		 var id = array[0];
          var tr = self.getTrNodeContainsId(id);
          $(tr).removeClass('scratched');
-         if (tr) this.dTable.fnUpdate(array, tr, 0, false);  
+         if (tr) self.dTable.fnUpdate(array, tr);  
          
 	 }
+	 
  
 }
 
