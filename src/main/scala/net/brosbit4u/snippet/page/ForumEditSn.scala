@@ -25,7 +25,9 @@ class ForumEditSn extends UsersOperations with UpdateMainPageInfo {
   
   def editThread() = {
     var id = ""
-    var departmentName = ""
+    var tags = ""
+    var subjectName = ""
+    var className = ""
     var title = ""
     var content = ""
 
@@ -33,7 +35,9 @@ class ForumEditSn extends UsersOperations with UpdateMainPageInfo {
     
     ForumThreadHead.find(id) match {
       case Some(threadHead) => {
-        departmentName = threadHead.department
+        subjectName = threadHead.subjectName
+        className = threadHead.className
+        tags =  threadHead.tags.mkString(",")
         title = threadHead.title
         val threadContent = ForumThreadContent.find(threadHead.content).getOrElse(ForumThreadContent.create)
         content = threadContent.content
@@ -41,9 +45,6 @@ class ForumEditSn extends UsersOperations with UpdateMainPageInfo {
       case _ => {
         
       }
-    }
-    if(departmentName == ""){
-      departmentName = S.param("dep").openOr("")
     }
     
     def save() {
@@ -54,7 +55,10 @@ class ForumEditSn extends UsersOperations with UpdateMainPageInfo {
     	if( id == "" || threadHead.authorId == user.id.is || isAdmin ){
     	  threadHead.title = title
     	  threadContent.content = content
-    	  threadHead.department = departmentName
+    	  
+    	  threadHead.subjectName = subjectName
+    	  threadHead.className = className
+    	  threadHead.tags = tags.split(",").toList
     	  if( id == ""){
     	     threadHead.authorId = user.id.is
     	     threadHead.authorName = user.getFullName
@@ -82,11 +86,14 @@ class ForumEditSn extends UsersOperations with UpdateMainPageInfo {
       }
       S.redirectTo("/forum/")
     }
-    val departments = ForumDepartment.findAll.map(department => (department.name, department.name))
+    val subjects = ("","------") :: SubjectName.findAll.map(sub => (sub.name.is, sub.name.is))
+    val classes = ("","------") :: ClassModel.findAll.map(clas => {val c = clas.classString; (c,c)})
     
     "#id" #> SHtml.text(id, id = _, "type" -> "hidden") &
       "#title" #> SHtml.text(title, x => title = x.trim, "id" -> "title") &
-      "#department" #> SHtml.select(departments, Full(departmentName), departmentName = _ ) &
+      "#subjects" #> SHtml.select(subjects, Full(subjectName), subjectName = _ ) &
+      "#classes" #> SHtml.select(classes, Full(subjectName), subjectName = _ ) &
+      "#tags" #> SHtml.text(tags, x => tags = x.trim) &
       "#content" #> SHtml.textarea(content, x => content = x, "id" -> "content") &
       "#save" #> SHtml.submit("Utwórz", save) &
       "#delete" #> SHtml.submit("Usuń", delete, "onclick" -> "return confirm('Czy na pewno chcesz usunąć wątek')")

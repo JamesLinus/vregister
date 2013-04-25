@@ -21,7 +21,7 @@ import org.bson.types.ObjectId
 import _root_.net.liftweb.json.JsonDSL._
 import page.ForumThreadHead
 
-class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
+class ForumPostSn extends UsersOperations with UpdateMainPageInfo with ForumBaseMenu {
 
 	val id = S.param("id").getOrElse("")
 	val threadHead:ForumThreadHead = 
@@ -32,18 +32,13 @@ class ForumPostSn extends UsersOperations with UpdateMainPageInfo {
 	val threadContent = ForumThreadContent.find(threadHead.content).getOrElse(ForumThreadContent.create)
 	if(threadContent._id != threadHead.content) threadHead.content = threadContent._id
 
-  def departments() = {
-    "li" #> ForumDepartment.findAll.map(forumDepart => {
-      <li><a href={ "/forum/" + forumDepart._id.toString }>{ forumDepart.name }</a></li>
-    })
-  }
+  
 
   def showThread() = {
     
     val editNode = if(isPostOwner(threadHead.authorId)) <a href={"/editthread?id=" + threadHead._id}>Edytuj</a>
         			else <a></a>
         			  
-        "h1 *" #> threadHead.department &
         "#threadtitle" #> threadHead.title &
         "#threaddelete" #> {if(isAdmin){<a href={"/forumpost/"+threadHead._id.toString + "?del=1"}>
         						<img src="/style/images/delico.png" style="float:right;" 

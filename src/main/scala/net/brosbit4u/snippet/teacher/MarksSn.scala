@@ -6,6 +6,7 @@ import _root_.net.liftweb.common._
 import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
 import Helpers._
 import net.brosbit4u.model._
+import net.liftweb.mongodb.record._
 
 class MarksSn extends BaseTeacher {
   val classId = ClassChoose.is	
@@ -45,7 +46,12 @@ class MarksSn extends BaseTeacher {
     var subjectId = ""
       
     def save(){
-      
+      val mark1 = Mark(234545454L,"Nauczyciel nasz", "4+")
+      val mark2 = Mark(2345423454L,"Nauczyciel onasz", "4+")
+      val list = List(mark1, mark2)
+      val listList = List(list)
+      MarkLine.createRecord.pupilFullName("Uczeń").pupilId(3454545L).sem("1")
+      	.subjectId(565L).marks(listList).save
     }
     val marks = (1 to 6).map(i => (i.toString, i.toString))
     
@@ -66,7 +72,12 @@ class MarksSn extends BaseTeacher {
     var weight = "1"
     
     def save() {
-      
+      val mark1 = Mark(234545454L,"Nauczyciel nasz", "4+")
+      val mark2 = Mark(2345423454L,"Nauczyciel onasz", "4+")
+      val list = List(mark1, mark2)
+      val listList = List(list)
+      MarkLine.createRecord.pupilFullName("Uczeń").pupilId(3454545L).sem("1")
+      	.subjectId(565L).marks(listList).save
     }
     var weights = (1 to 9).map(i => (i.toString, i.toString))
     

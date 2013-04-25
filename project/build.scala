@@ -40,6 +40,7 @@ object LiftProjectBuild extends Build {
 	    "org.eclipse.jetty" % "jetty-webapp" % "7.5.4.v20111024" % "container",
 	    "ch.qos.logback" % "logback-classic" % "1.0.0" % "compile",
 	    "net.liftweb" %% "lift-mongodb" % liftVersion % "compile",
+	    "net.liftweb" %% "lift-mongodb-record" % liftVersion,	    
 	    "postgresql" % "postgresql" % "9.1-901.jdbc4" % "compile", 
 	    "org.scalatest" %% "scalatest" % "1.6.1" % "test",
 	    "junit" % "junit" % "4.10" % "test",

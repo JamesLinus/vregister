@@ -6,7 +6,7 @@
 	}
 
 .forum  table  thead  th {
-	background-color: #414141;
+	background-color: #333;
 	vertical-align: middle;
 	border: 3px solid #fff;
 	font-weight:bold;
@@ -31,7 +31,19 @@
 	padding: 10px 40px 10px 45px;  
 	}
 
+div.forumTags > span {margin: 4px;}
+#sidebar h1 {margin: 10px 0 5px 0;}
 
+div.forumTags > span > a {
+	display: inline-block;
+	line-height: 25px;
+	border: 1px solid #888;
+	border-radius: 10px;
+	background-color: #333;
+	color: white;
+	padding: 3px;
+	
+}
 
 .col1 { 
 	width: 400px; }

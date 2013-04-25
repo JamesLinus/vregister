@@ -65,38 +65,4 @@ class AdminDepartmentsSn {
     node
   }
 
-  def addForumDepartment() = {
-    var id = ""
-    var name = ""
-
-    def save() = {
-      val forumDepartment = ForumDepartment.find(id).getOrElse(ForumDepartment.create)
-      forumDepartment.name = name
-      forumDepartment.save
-    }
-
-    def delete(): Unit = {
-        if (id.length > 20) {
-          ForumDepartment.find(id) match {
-            case Some(forumDepartment) => forumDepartment.delete
-            case _ => 
-          }
-        }
-      } 
-
-    "#id" #> SHtml.text(id, x => id = x, "style" -> "display:none;", "id" -> "id") &
-      "#name" #> SHtml.text(name, x => name = x.trim, "size" -> "40", "maxlength" -> "40", "id" -> "name") &
-      "#save" #> SHtml.submit("Zapisz!", save, "onclick" -> "return validateForm()") &
-      "#delete" #> SHtml.submit("Usuń!", delete, 
-          "onclick" -> "return confirm('Na pewno chcesz usunąć dział i wszystkie wątki w dziale?');")
-
-  }
-
-  def forumDepartments() = {
-    "tr" #> ForumDepartment.findAll.map(forumDepartment => {
-      <tr ondblclick={"setData(this)"} id={forumDepartment._id.toString} >
-      <td>{forumDepartment.name}</td>
-      </tr>
-    })
-  }
 }

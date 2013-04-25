@@ -26,7 +26,6 @@ jQuery(function() {
 	<div class="container_12">
     <div   class="grid_9">
     <div class="lift:page.ForumPostSn.showThread forum" >
-     <h1>Dział</h1>
                   <table >
                   <thead>
                     <tr>
@@ -59,10 +58,19 @@ jQuery(function() {
     
     
     <div id="sidebar" class="grid_3" >
-    <h1>Działy forum:</h1>
-     <div class="lift:page.ForumPostSn.departments">
-       <ul><li></li></ul></div>
-    </div>
+    <div class="forumTags"><span><a href="/forum">Wszystkie wątki</a></span></div>
+    <h1>Przedmiot:</h1>
+     <div class="lift:page.ForumSn.subjects forumTags">
+       <span></span></div>
+   
+    <h1>Klasa:</h1>
+     <div class="lift:page.ForumSn.classes forumTags">
+       <span></span></div>
+  
+    <h1>Tagi:</h1>
+     <div class="lift:page.ForumSn.tags forumTags" >
+       <span></span></div>
+     </div>
     <div class="clear"></div>
     <div class="lift:page.ForumPostSn.deleteCommentOrThread"><span id="deletecommentorthread"></span></div>
     </div>

@@ -110,7 +110,6 @@ class Boot {
         Menu("Działy BIP") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
         Menu("Tagi aktualności") / "admin" / "tags" >> LocGroup("admin") >> isAdmin,
         Menu("Ogłoszenia") / "admin" / "anounces" >> LocGroup("admin") >> isAdmin,
-        Menu("Działy forum") / "admin" / "forum" >> LocGroup("admin") >> isAdmin,
         Menu("Linki") / "admin" / "links" >> LocGroup("admin") >> isAdmin,
         Menu("Slajdy") / "admin" / "slides" >> LocGroup("admin") >> isAdmin,
         Menu("Skrzynka pocztowa") / "admin" / "emailconfig" >> LocGroup("admin") >> isAdmin,
