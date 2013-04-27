@@ -12,11 +12,12 @@
     	   CKEDITOR.replace( 'content',{
     		   toolbar :
     			    [
+    			      { name: 'links', items : [ 'Link','Unlink','Anchor' ]},
     			      { name: 'basicstyles', items : [ 'Bold','Italic' ] },
     			      { name: 'paragraph', items : 
-    			    	  [ 'NumberedList','BulletedList','Blockquote','Underline','Strike','Subscript','Superscript' ] }
+    			    	  [ 'NumberedList','BulletedList','Blockquote','Underline','Strike','Subscript','Superscript','RemoveFormat'] }
     			    ],
-        uiColor : '#F4F6F3', width: '400px', height: '200px'} );
+        uiColor : '#F4F6F3', width: '260px', height: '200px'} );
     	   colorTables();
        });
        function clearForm() {
@@ -66,13 +67,13 @@
 	
 	<div class="grid_9">
 		
-		<form class="lift:admin.AdminAddAnouncesSn.addAnounce?form=POST" method="POST" id="frm2"><br />
+		<form  class="lift:admin.AdminAddAnouncesSn.addAnounce?form=POST" method="POST" id="frm2"><br />
 			<fieldset><legend>Dodawanie ogłoszenia</legend>
 			  <p><input id="id"></p>
-				<p><label for="title">Tytuł:</label><input id="title" /></p>
-				<p><label for="content">Treść:</label><br/><textarea id="content"></textarea></p>
-				 <p><input id="submit" /><input id="delete">
-				 <input type="submit" onclick="return clearForm()" value="Czyść!" /></p>
+				<p><label for="title">Tytuł:</label><br/><input  style="width:260px;" id="title" /></p>
+				<p><label for="content">Treść:</label><br/><textarea id="content" ></textarea></p>
+				 <p><input id="submit"  style="margin-left:10px;" /><input id="delete"  style="margin-left:10px;">
+				 <input type="submit"  style="margin-left:10px;" onclick="return clearForm()" value="Czyść!" /></p>
 				<p id="notice"> </p>
 			</fieldset>
 		</form>

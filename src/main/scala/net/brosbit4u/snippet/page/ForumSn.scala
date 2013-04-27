@@ -27,7 +27,8 @@ class ForumSn extends UsersOperations with ForumBaseMenu {
   def showThreadsTable() = {
     val threads = getThreads
 
-    "h1" #> <h1>{S.param("h").openOr("Wszystkie wątki")}</h1> &
+    "#tagsInfo *" #> S.param("tags").openOr(" brak ") &
+    ".tagsItem" #> allTags &
       "#tbodytr" #> threads.map(thread => {
         <tr>
           <td><a href={ "/forumpost/" + thread._id.toString }>{ thread.title }</a>
@@ -47,12 +48,13 @@ class ForumSn extends UsersOperations with ForumBaseMenu {
 
   
   private def getThreads() = {
-      val queryList = List(("subject" -> S.param("s").openOr("")), 
-              				("classGroup" ->  S.param("c").openOr("")),
-              				("tag" -> S.param("t").openOr(""))).filter(_._2 != "")
-              				
-      if(queryList.isEmpty) ForumThreadHead.findAll
-      else  ForumThreadHead.findAll(queryList.head)
+      val tagsString = S.param("tags").openOr("")
+      if(tagsString == "") ForumThreadHead.findAll
+      else {
+          val queryList = tagsString.split(",").toList
+          ForumThreadHead.findAll("tags"-> ("$in" -> queryList))
+      }
+     
   }
 
 }

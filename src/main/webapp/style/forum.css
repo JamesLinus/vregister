@@ -2,7 +2,6 @@
 .forum table {
 	width:100%; 
 	margin-top: 10px; 
-	
 	}
 
 .forum  table  thead  th {
@@ -26,21 +25,11 @@
 	border-bottom: 1px dotted #ccc;
 	padding: 4px;	}
 
-.forum h1 {
-  	background:url(/style/images/folder.png)  no-repeat left;
-	padding: 10px 40px 10px 45px;  
-	}
+.forum span {margin: 4px;}
 
-div.forumTags > span {margin: 4px;}
-#sidebar h1 {margin: 10px 0 5px 0;}
-
-div.forumTags > span > a {
+.forum span > a {
 	display: inline-block;
 	line-height: 25px;
-	border: 1px solid #888;
-	border-radius: 10px;
-	background-color: #333;
-	color: white;
 	padding: 3px;
 	
 }

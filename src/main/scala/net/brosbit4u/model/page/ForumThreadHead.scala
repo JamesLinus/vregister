@@ -14,13 +14,12 @@ object ForumThreadHead extends MongoDocumentMeta[ForumThreadHead] {
   override def collectionName = "forumthreadhead"
   override def formats = super.formats + new ObjectIdSerializer + new DateSerializer
   def create = new ForumThreadHead(ObjectId.get,  new ObjectId("000000000000000000000000"),
-		  								0, "", "", Nil, "", "", "", 0L)
+		  								0, "", "", Nil, "", 0L)
 }
 
 case class ForumThreadHead(var _id: ObjectId, 	var content:ObjectId, 
 							var count:Int, var lastInfo:String,
 							var title:String, var tags:List[String],
-							var subjectName:String, var className:String, 
 							var authorName:String, var authorId:Long) 
 							extends MongoDocument[ForumThreadHead] {
   def meta = ForumThreadHead

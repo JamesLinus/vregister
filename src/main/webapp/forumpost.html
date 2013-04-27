@@ -7,7 +7,7 @@
 <script type="text/javascript" >
 jQuery(function() {
      CKEDITOR.replace( 'content',{
-            width : 700, 
+            width : 950, 
             height: 200,
             enterMode : CKEDITOR.ENTER_BR,
             shiftEnterMode: CKEDITOR.ENTER_BR,
@@ -24,8 +24,9 @@ jQuery(function() {
 	<!-- oczątek wnętrza strony -->	
 	
 	<div class="container_12">
-    <div   class="grid_9">
-    <div class="lift:page.ForumPostSn.showThread forum" >
+	<div style="font-size:20px;"><a href="/forum/"><img src="/style/images/randomico.png" /> Powrót</a></div>
+    <div class="lift:page.ForumPostSn.showThread forum">
+ 
                   <table >
                   <thead>
                     <tr>
@@ -42,7 +43,7 @@ jQuery(function() {
                        </tr>
                        </tbody>
                   </table>
-                </div>
+      </div>        
     
     <h1>Dodaj komentarz</h1>
     <form class="lift:page.ForumPostSn.addComment" method="POST">
@@ -53,24 +54,11 @@ jQuery(function() {
        </fieldset>
     </form>
     
-    </div>
-    
-    
-    
-    <div id="sidebar" class="grid_3" >
-    <div class="forumTags"><span><a href="/forum">Wszystkie wątki</a></span></div>
-    <h1>Przedmiot:</h1>
-     <div class="lift:page.ForumSn.subjects forumTags">
-       <span></span></div>
-   
-    <h1>Klasa:</h1>
-     <div class="lift:page.ForumSn.classes forumTags">
-       <span></span></div>
   
-    <h1>Tagi:</h1>
-     <div class="lift:page.ForumSn.tags forumTags" >
-       <span></span></div>
-     </div>
+    
+    
+    
+   
     <div class="clear"></div>
     <div class="lift:page.ForumPostSn.deleteCommentOrThread"><span id="deletecommentorthread"></span></div>
     </div>

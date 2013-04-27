@@ -5,12 +5,42 @@
 <head_merge>
 <link rel="stylesheet" type="text/css" href="/style/forum.css" />
 <script type="text/javascript" src="/jquery/jquery.js" ></script>
+<script src="/jquery/jquery-ui-custom.min.js"></script>
+<link href="/style/jqueryui/jquery-ui.css" type="text/css" rel="stylesheet" />
+
+<script>
+$(document).ready(function(){
+	$("#tagsShow").hide();
+});
+function openTags(){
+	$("#tagsShow").toggle(300);
+}
+</script>
+<style>
+.tagsCont {
+	border: 1px solid #ccc;
+}
+.tagsHead {
+	background: #eee url('/style/images/fold.png') no-repeat right center;
+} 
+</style>
 </head_merge>
 	<!-- oczątek wnętrza strony -->	
-	<div class="container_12">
-    <div   class="grid_9">
-    <div class="lift:page.ForumSn.showThreadsTable forum" >
-     <h1>Selekcja:</h1><br/>
+	
+	<div class="lift:page.ForumSn.showThreadsTable forum container_12">
+	
+	<div class="tagsCont" onclick="openTags()">
+	
+    <div class="tagsHead" >
+	<h1><img src="/style/images/search_32.png" /> 
+	Szukany tag: <span id="tagsInfo"></span></h1>
+	</div>
+	
+    <div id="tagsShow" class="forum">
+		<span class="tagsItem"></span>
+	</div>
+	
+	</div>
                   <table>
                   <thead>
                     <tr class="header1">
@@ -21,34 +51,19 @@
                        <tbody><tr id="tbodytr"><td></td></tr></tbody>
                   </table>
                   
-                  
-    </div>
-    
     <div class="lift:page.ForumSn.linkAddNewThread">
     <br/><br/>
                   <a href="" id="linkaddnewthread"></a>
     </div>
-    <br/><br/>
-    </div>
+    <br/>
     
     
-    <div id="sidebar" class="grid_3" >
-    <div class="forumTags"><span><a href="/forum">Wszystkie wątki</a></span></div>
-    <h1>Przedmiot:</h1>
-     <div class="lift:page.ForumSn.subjects forumTags">
-       <span></span></div>
-   
-    <h1>Klasa:</h1>
-     <div class="lift:page.ForumSn.classes forumTags">
-       <span></span></div>
-  
-    <h1>Tagi:</h1>
-     <div class="lift:page.ForumSn.tags forumTags" >
-       <span></span></div>
-     </div>
+    
     <div class="clear"></div>
   
 	</div>	
+	
+	
 
 </div>
     </body></html>

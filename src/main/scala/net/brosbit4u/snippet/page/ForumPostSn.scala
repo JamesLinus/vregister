@@ -95,6 +95,7 @@ class ForumPostSn extends UsersOperations with UpdateMainPageInfo with ForumBase
        if(deleteThread == "1"){
          println("delete thread!!!!!!!!!!")
          threadContent.delete
+         performDownTagsData(threadHead.tags)
          threadHead.delete
          deleteMainPageInfo(threadHead._id.toString)
          S.redirectTo("/forum")

@@ -4,6 +4,9 @@
 <div id="main" class="lift:surround?with=default;at=content">
 <head_merge>
 <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+<script src="/jquery/choosen.min.js"></script>
+<link href="/style/jqueryui/jquery-ui.css" type="text/css" rel="stylesheet" />
+<link href="/style/choosen.css" type="text/css" rel="stylesheet" />
 <script>
 function getImageURLfromIFrame(elem){
 	var innerDoc = elem.contentDocument || elem.contentWindow.document;
@@ -27,7 +30,8 @@ $(document).ready(function(){
 	        [ 'Styles','Format','FontSize','Font' ],
 	        [ 'TextColor','BGColor' ] ]
 	    });
-    
+	 
+    $("#tags").chosen({width:'325px'});
     
 });
 
@@ -65,7 +69,9 @@ function discardChange(){
 }
 
 </script>
-<style> form label {font-weight: bold; float:left; width:100px;}</style>
+<style> form label {font-weight: bold; float:left; width:100px;}
+
+</style>
 </head_merge>
 <div id="alerts">
         <noscript>
@@ -80,9 +86,7 @@ function discardChange(){
     <fieldset>
         <input id="id" type="text" />
         <p><label for="title">Tytuł:</label> <input id="title" type="text"/></p>
-        <p><label for="subject">Przedmiot:</label> <select id="subject"></select></p>
-        <p><label for="classgroup">Klasa:</label> <select id="classgroup"></select></p>
-        <p><label for="tags">Przedmiot:</label> <input id="tags" /></p>
+        <p><label for="tags">Tagi:</label> <multiselect id="tags" ></multiselect></p>
         <p><h2>Treść</h2><textarea id="content"></textarea></p>
         <p>
             <input type="submit" id="save" onclick="return isValid();"/>
