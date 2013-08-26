@@ -1,48 +1,31 @@
 
 <div class="lift:surround?with=mainpage;at=content">
  <head_merge> 
+ <style>
+  #forumWraper {background-color: #efefef; padding: 10px 0 10px 0; border-top: solid 2px #cecece;}
+ .forumPosts ul li { display: inline-block; padding: 0 15px 0 15px;}
+ </style>
+ 
  </head_merge>
- 
- 
- 
-            
-            <div class="clear"></div>
+          
+           
  
  <div class="container_12">
-
-<div class="lift:page.MainSn.anounces grid_4">
-<h1 id="mainanounces">Ogłoszenia</h1>
-		<div class="pine-box new-bullets">
-                    <h2>Introducing Soho</h2>
-                    <div>
-                        Soho is a free business HTML template developed by code play studios. Offering a simple yet elegant look and well structured code, Soho is the perfect template to get a good looking site up and running in no time.
-                    </div>
-        </div>
-               
-</div>
-<div class="lift:page.MainSn.anounces grid_4">
-<div class="newItem new-bullets"><h1 id="mainarticles">Ostatnie aktualności</h1>
-            <ul class="lift:page.MainSn.lastArticles">
-			<li><a href="#">Brak wpisów</a></li>
-		   </ul>
-                </div>
-</div>
-<div class="grid_4">
-		
-                <div class="newItem new-bullets"><h1 id="mainforum">Aktywne wątki na forum</h1>
-                     <ul class="lift:page.MainSn.lastForumPosts">
-			<li><a href="#">Brak wpisów</a></li>
-		   </ul>
-                </div>
-
-</div>
-            </div>
-            
-            <div class="clear"></div>
-           
-        
-         <!-- End of Main Section -->
-
+ 	<div class="lift:page.MainSn.lastInfo">
+		<h1 id="mainanounces">Aktualności i ogłoszenia</h1>
+		<div class="newsInfo"></div>
+	</div>
+	
+ </div>       
+    
+ 	<div class="clear"></div>
+ 	<div id="forumWraper">
+ 	<div class="container_12 forumPosts"> 
+		<h1 id="mainforum">Ostatnio na forum</h1> 
+        <ul class="lift:page.MainSn.lastForumPosts"><li></li></ul>
+    </div>
+    
+    </div>
   
 </div>
 
