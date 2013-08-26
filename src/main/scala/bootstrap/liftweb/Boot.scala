@@ -109,7 +109,6 @@ class Boot {
         Menu("Maile kontaktowe") / "admin" / "index" >> LocGroup("admin") >> isAdmin,
         Menu("Działy BIP") / "admin" / "pages" >> LocGroup("admin") >> isAdmin,
         Menu("Tagi aktualności") / "admin" / "tags" >> LocGroup("admin") >> isAdmin,
-        Menu("Ogłoszenia") / "admin" / "anounces" >> LocGroup("admin") >> isAdmin,
         Menu("Linki") / "admin" / "links" >> LocGroup("admin") >> isAdmin,
         Menu("Slajdy") / "admin" / "slides" >> LocGroup("admin") >> isAdmin,
         Menu("Skrzynka pocztowa") / "admin" / "emailconfig" >> LocGroup("admin") >> isAdmin,
@@ -140,7 +139,7 @@ class Boot {
         Menu("Dokumenty") / "teacher" / "doctemplate" / ** >> LocGroup("teacher") >> isTeacher,
         Menu("Szablon") / "teacher" / "createtemplate" / ** >> LocGroup("extra") >> isAdmin,
         Menu("Oceny") / "viewer" / "index" >> LocGroup("view") >> loggedIn,
-        //Menu("Nieobcności") / "viewer" / "absents" >> LocGroup("view") >> loggedIn,
+        //Menu("Nieobecności") / "viewer" / "absents" >> LocGroup("view") >> loggedIn,
         Menu("Test") / "test" >> LocGroup("extra")) :::
         // Menu entries for the User management stuff
         User.sitemap: _*)

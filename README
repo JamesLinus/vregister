@@ -1,9 +1,32 @@
-Projekt dodatku do wirualnego dziennika.
-1.Aktualności - mogą dodawać wszyscy nauczyciele wpisani w dzienniku
-2.Strony stałe - edytowane przez administratora w jednym menu z aktualnościami
-3.Galeria - obecnie picasa
-4.Kontakt - wysyłanie maili
-5.Forum - możliwość tworzenia wątków i komentowania tylko dla osób zarejestrowanych
+# Projekt dziennika internetowego:
+
+## Część pierwsza, strona internetowa:
+
+* Aktualności - mogą dodawać wszyscy nauczyciele wpisani w dzienniku
+* Strony stałe - edytowane przez administratora w jednym menu z aktualnościami
+* Galeria - obecnie picasa
+* Kontakt - wysyłanie maili
+* Forum - możliwość tworzenia wątków i komentowania tylko dla osób zarejestrowanych
 w dzienniku.
-6.Strona administracyjna
-7.Przejście do dziennika - osobna aplikacja z tą samą bazą
+* Strona administracyjna 
+
+## Część druga, sekretariat
+
+ dodawanie i edycja klas, uczniów nauczycieli,, dzwonków lekcyjnych itp
+ 
+ ## Część trzecia, nauczyciele
+ 
+ * dane uczniów i rodziców
+ * oceny
+ * obecności
+ * tematy
+ * ogłoszenia 
+ * uwagi 
+ * plany lekcji
+ * tworzenie dokumentów szkolnych
+ * kółka 
+ * rozkłady
+ 
+ ## Część czwarta, uczniowie i rodzice
+ 
+ przeglądanie ocen, uwag, ogłoszeń i nieobecności

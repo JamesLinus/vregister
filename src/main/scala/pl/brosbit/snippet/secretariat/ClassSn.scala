@@ -33,7 +33,7 @@ package net.brosbit4u {
     class ClassSn extends {
 
 
-      def teachers()  = User.findAll(By(User.role, "n")).filter(teacher => !teacher.scratched).
+      def teachers()  = User.findAll(By(User.role, "n")).filter(teacher => !teacher.scratched.is).
     		  map(teacher => {
     		    val teacherString = teacher.shortInfo
     		    (teacherString,teacherString)
@@ -72,7 +72,7 @@ package net.brosbit4u {
       if (teacherModel.role == "n") {
         val levelInt = tryo(level.toInt).openOr(0)
         theClass.level(levelInt).descript(description).division(division).
-        	teacher(teacherModel.id).scratched(false).save
+        	teacher(teacherModel.id.is).scratched(false).save
         if(id == "") {
            id = theClass.id.toString
            JsFunc("editForm.insertRowAndClear", id).cmd         

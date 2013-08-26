@@ -6,10 +6,17 @@
             <head_merge>
                 <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
                 <style>
-                	#marktable td, th {width: 10px;}
+                	#marktable td, th {min-width: 20px;}
                 	#semmark {width: 20px;}
                 	#onemark {width: 20px;}
+                	td {width: 40px; }
                 </style>
+                 <script>
+$(function() {
+	 $( "#radio" ).buttonset();
+	 $( "#tabs" ).tabs();
+});
+</script>
             </head_merge>
 
 <div class="container_12">    
@@ -20,23 +27,67 @@
 
 <h1>Oceny</h1>
 		
-		<br  />
-		<select><option>Semestr 1</option><option>Semestr 2</option></select>
-		<hr  />
-       <div id="marktable">         
-		<table class="lift:teacher.MarksSn.showTable">
+		
+	<div id="radio">
+        <input type="radio" id="radio1" name="radio" checked="checked" onclick="marks.redirectTo();" /><label for="radio1">Język Polski sem 2</label>
+        <input type="radio" id="radio2" name="radio"  onclick="marks.redirectTo();"/><label for="radio2">Język Polski sem 1 </label>
+         <input type="radio" id="radio3" name="radio"  onclick="marks.redirectTo();"/><label for="radio3">Język Polski sem 1 </label>
+          <input type="radio" id="radio4" name="radio"  onclick="marks.redirectTo();"/><label for="radio4">Język Polski sem 1 </label>
+           <input type="radio" id="radio5" name="radio"  onclick="marks.redirectTo();"/><label for="radio5">Język Polski sem 1 </label>
+    </div>
+
+
+<div id="tabs">
+<ul>
+<li><a href="#tabs-1">Semestr 1</a></li>
+<li><a href="#tabs-2">Semestr 2</a></li>
+
+</ul>
+<div id="tabs-1">
+
+<table class="lift:teacher.MarksSn.showTable">
 		<thead>
 		<tr>
 			<th>Nr</th>
 			<th>Nazwisko i imię</th>
-			<th></th>
-			<th ></th>
-			<th>Średnia</th>
-			<th>Semestr</th>
+			<th>1</th>
+			<th >2</th>
+			<th>3</th>
+			<th >4</th>
+			<th>5</th>
+			<th >6</th>
+			<th>7</th>
+			<th >8</th>
+			<th>9</th>
+			<th >10</th>
+			<th>11</th>
+			<th >12</th>
+			<th>14</th>
+			<th >15</th>
+			<th>16</th>
+			<th >17</th>
+			<th>18</th>
+			<th >19</th>
+			<th>20</th>
+			<th >21</th>
+			<th>22</th>
+			<th >23</th>
+			<th>24</th>
+			<th >25</th>
+			<th>26</th>
+			<th >27</th>
+			<th>28</th>
+			<th >29</th>
+			<th>30</th>
+			<th> Prop</th>
+			<th>Śr</th>
+			<th>Sem</th>
 		</tr>		
 		</thead>
 		<tbody>
 			<tr>
+				<td></td>
+				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -71,7 +122,92 @@
 			
 
 		</table>
-		</div>
+
+</div>
+<div id="tabs-2">
+
+<table class="lift:teacher.MarksSn.showTable">
+		<thead>
+		<tr>
+			<th>Nr</th>
+			<th>Nazwisko i imię</th>
+			<th>1</th>
+			<th >2</th>
+			<th>3</th>
+			<th >4</th>
+			<th>5</th>
+			<th >6</th>
+			<th>7</th>
+			<th >8</th>
+			<th>9</th>
+			<th >10</th>
+			<th>11</th>
+			<th >12</th>
+			<th>14</th>
+			<th >15</th>
+			<th>16</th>
+			<th >17</th>
+			<th>18</th>
+			<th >19</th>
+			<th>20</th>
+			<th >21</th>
+			<th>22</th>
+			<th >23</th>
+			<th>24</th>
+			<th >25</th>
+			<th>26</th>
+			<th >27</th>
+			<th>28</th>
+			<th >29</th>
+			<th>30</th>
+			<th> Prop</th>
+			<th>Śr</th>
+			<th>Sem</th>
+		</tr>		
+		</thead>
+		<tbody>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+			
+
+		</table>
+
+</div>
+</div>
+		<br  />
+	
 
 <br/>
 <br/>
@@ -82,7 +218,7 @@
 <input id="semestrCol" style="display:none;" />
 <input id="subjectIdCol" style="display:none;" />
 <input id="columnNrCol" style="display:none;" />
-<label for="weight"></label><select id="weight"><option>1</option></select><br/>
+<label for="weight"></label><input  id="weight" /> <br/>
 <label for="symbol">Symbol</label><input id="symbol" type="text"  maxlength="2" size="2"/><br/>
 <label for="description">Opis</label><input id="description" type="text"  maxlength="40"/><br/>
 <label>Kolor:</label><br/>

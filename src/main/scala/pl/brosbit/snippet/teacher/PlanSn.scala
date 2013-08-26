@@ -121,8 +121,8 @@ class PlanSn extends BaseTeacher {
    }
    
    def insertSelectSubject = {
-     val subjects = SubjectName.findAll.map(subject => subject.name)
-     "#editSubject *" #> subjects.map(subject => <option value={subject}>{subject}</option>)
+     val subjects = SubjectName.findAll.map(subject => subject.name.is)
+     "option" #> subjects.map(subject =>  <option value={subject}>{subject}</option>)
    }
 
 	private def getEmptyLessonList11 = {
