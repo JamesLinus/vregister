@@ -13,7 +13,6 @@ class MarkLine private() extends MongoRecord[MarkLine] with ObjectIdPk[MarkLine]
    override def meta = MarkLine   
    
   val pupilId = new LongField[MarkLine](this)
-  val pupilFullName = new StringField[MarkLine](this, 100)
   val sem = new StringField[MarkLine](this,1)
   val subjectId = new LongField[MarkLine](this)
   val marks = new MongoListField[MarkLine,List[Mark]](this)

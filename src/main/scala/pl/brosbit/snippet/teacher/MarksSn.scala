@@ -1,5 +1,6 @@
 package net.brosbit4u.snippet.teacher
 
+import java.util.Date
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.http.{ SHtml, S }
 import _root_.net.liftweb.common._
@@ -9,7 +10,12 @@ import net.brosbit4u.model._
 import net.liftweb.mongodb.record._
 
 class MarksSn extends BaseTeacher {
-  val classId = ClassChoose.is	
+  val classId = ClassChoose.is
+  val idSub = S.param("idS").openOr("-1")
+  val subject = SubjectName.find(idSub) match {
+      case Full(sub) => sub
+      case _ => SubjectName.findAll.headOption.getOrElse(SubjectName.create)
+  }
   
   def showTable() = {
     
@@ -50,7 +56,7 @@ class MarksSn extends BaseTeacher {
       val mark2 = Mark(2345423454L,"Nauczyciel onasz", "4+")
       val list = List(mark1, mark2)
       val listList = List(list)
-      MarkLine.createRecord.pupilFullName("Uczeń").pupilId(3454545L).sem("1")
+      MarkLine.createRecord.pupilId(3454545L).sem("1")
       	.subjectId(565L).marks(listList).save
     }
     val marks = (1 to 6).map(i => (i.toString, i.toString))
@@ -72,11 +78,9 @@ class MarksSn extends BaseTeacher {
     var weight = "1"
     
     def save() {
-      val mark1 = Mark(234545454L,"Nauczyciel nasz", "4+")
-      val mark2 = Mark(2345423454L,"Nauczyciel onasz", "4+")
-      val list = List(mark1, mark2)
+      val mark = Mark(new Date().getTime(),, "4+")
       val listList = List(list)
-      MarkLine.createRecord.pupilFullName("Uczeń").pupilId(3454545L).sem("1")
+      MarkLine.createRecord.pupilId(3454545L).sem("1")
       	.subjectId(565L).marks(listList).save
     }
     var weights = (1 to 9).map(i => (i.toString, i.toString))
@@ -85,7 +89,7 @@ class MarksSn extends BaseTeacher {
     "#columnNrCol" #> SHtml.text(columnId, columnId = _) &
     "#semestrCol" #> SHtml.text(semestr, semestr = _) &
     "#symbol" #> SHtml.text(symbol, symbol = _) &
-    "#weight" #> SHtml.select(weights, Full(weight), weight = _) &
+    "#weight" #> SHtml.text(weight,  weight = _) &
     "#userIdCol" #> SHtml.text(userId, userId = _) &
     "#saveHeader" #> SHtml.submit("OK", save)
   }
