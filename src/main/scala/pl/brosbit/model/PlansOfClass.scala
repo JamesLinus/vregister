@@ -3,8 +3,7 @@
  *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
  *   See: <http://www.gnu.org/licenses/>.
  */
-package net.brosbit4u {
-  package model {
+package pl.brosbit.model 
 
     
 import _root_.net.liftweb.mongodb._
@@ -27,5 +26,3 @@ case class PlansOfClass(var _id: ObjectId, var classId:Long, var dateStart:Long,
 }
 
 
-  }
-}

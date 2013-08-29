@@ -4,8 +4,7 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet {
+package pl.brosbit.snippet 
 
     import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
     import _root_.scala.xml.{ NodeSeq, Text, XML }
@@ -14,7 +13,7 @@ package net.brosbit4u {
     import _root_.net.liftweb.common._
     import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
     import Helpers._
-    import net.brosbit4u.model.{ User, SubjectName, SubjectChangeList }
+    import pl.brosbit.model.{ User, SubjectName, SubjectChangeList }
      import  _root_.net.liftweb.http.js.JsCmds._
   import  _root_.net.liftweb.http.js.JsCmd
   import  _root_.net.liftweb.http.js.JE._
@@ -80,6 +79,4 @@ package net.brosbit4u {
       
     }
 
-  }
-} // koniec packages
-
+ 

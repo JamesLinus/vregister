@@ -17,6 +17,7 @@ derby.log
 # eclipse conf file
 .settings
 .classpath
+.cache
 .project
 .manager
 # building

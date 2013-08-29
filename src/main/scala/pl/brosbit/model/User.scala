@@ -15,8 +15,7 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package model {
+package pl.brosbit.model 
 
     import _root_.net.liftweb.http.S
     import _root_.net.liftweb.mapper._
@@ -80,6 +79,3 @@ package net.brosbit4u {
       def shortInfo = getFullName + " [" + id.is.toString + "]"
 
     }
-
-  }
-}

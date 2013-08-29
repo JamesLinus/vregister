@@ -6,9 +6,10 @@
         <meta name="google-site-verification" content="EEiX1z6L82TAGPZIRItngiJ8yWZo4wAShblWrZ_h8Ak" />
         <title>Zespół Kształcenia Podstawowego i Gimnazjalnego nr 26 w Gdańsku, Gdańska Szkoła Floretu</title>
         <script type="text/javascript" src="/jquery/jquery.js"></script>		
-      
-         <script type="text/javascript" src="/jquery/jquery.nivo.slider.pack.js"></script>
-          <script type="text/javascript" src="/jquery/pineboxequalizer.js"></script>
+
+         <script type="text/javascript" src="/jquery/jquery.nivo.slider.js"></script>
+         <script type="text/javascript" src="/jquery/pineboxequalizer.js"></script>
+
          <link rel="stylesheet" href="/style/nivo-slider.css" type="text/css" media="screen" />
          <link rel="stylesheet" href="/style/reset.css" />
         <link rel="stylesheet" href="/style/960.css" />
@@ -18,11 +19,14 @@
          <script type="text/javascript">
         $(document).ready(function() {
     $('#slider').nivoSlider({
-    	 effect: 'random',
+    	effect: 'random',
     	animSpeed: 800, 
         pauseTime: 4000, 
         startSlide: 0
+        
     });
+    
+    runPineBoxEqualizer();
 });
 </script>
     </head>
@@ -51,12 +55,14 @@
             </div>
            
             <div  class="grid_12">
+            <div id="wrapper">
                 <div class="slider-wrapper theme-default">
                     <div id="slider" class="lift:page.MainSn.slides nivoSlider">
                             <img src="/style/images/fern.jpg" title="" alt="" />
                             
                     </div>
                 </div> 
+                </div>
                 <div id="htmlcaption" class="nivo-html-caption"><a href="#">a </a></div>
             </div>
          

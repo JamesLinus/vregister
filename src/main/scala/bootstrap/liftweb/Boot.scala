@@ -16,9 +16,9 @@ import _root_.net.liftweb.sitemap.Loc._
 import Helpers._
 import _root_.net.liftweb.mapper.{ DB, By, ConnectionManager, ConnectionIdentifier, Schemifier, DefaultConnectionIdentifier }
 import java.sql.{ Connection, DriverManager }
-import _root_.net.brosbit4u.model._
-import _root_.net.brosbit4u.api._
-import _root_.net.brosbit4u.lib.MailConfig
+import _root_.pl.brosbit.model._
+import _root_.pl.brosbit.api._
+import _root_.pl.brosbit.lib.MailConfig
 
 import _root_.net.liftweb.mongodb._
 
@@ -44,8 +44,8 @@ class Boot {
     MongoDB.defineDb(DefaultMongoIdentifier, MongoAddress(MongoHost("127.0.0.1", 27017), "vregister"))
 
     // where to search snippet
-    LiftRules.addToPackages("net.brosbit4u")
-    LiftRules.addToPackages("net.brosbit4u.snippet.page")
+    LiftRules.addToPackages("pl.brosbit")
+    LiftRules.addToPackages("pl.brosbit.snippet.page")
 
     Schemifier.schemify(true, Schemifier.infoF _, User, 
       ClassModel, MarkMap, SubjectName)

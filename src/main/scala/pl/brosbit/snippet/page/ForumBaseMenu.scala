@@ -1,8 +1,8 @@
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.mapper.{ Descending, OrderBy, By }
 import page._
 import Helpers._

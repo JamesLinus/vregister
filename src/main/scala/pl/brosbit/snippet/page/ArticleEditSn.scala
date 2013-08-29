@@ -5,13 +5,13 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
 import _root_.scala.xml.{ NodeSeq, Unparsed }
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.http.{ S, SHtml}
 import Helpers._
 import _root_.net.liftweb.json.JsonDSL._
@@ -30,6 +30,7 @@ class ArticleEditSn {
     var thumbnailLink = ""
     var introduction = ""
     var content = ""
+    var anounce = false
       
     if(id.length > 11) NewsHead.find(id)  match {
       case Some(newsHead) => {
@@ -40,6 +41,7 @@ class ArticleEditSn {
         thumbnailLink = newsHead.thumbnailLink
         introduction = newsHead.introduction
         content = articleContent.content
+        anounce = newsHead.anounce
       }
       case _ => 
     }
@@ -55,6 +57,8 @@ class ArticleEditSn {
         newsHead.tags = newTags
         updateNewsTags(toAddTags, toDeleteTags)
         newsHead.introduction = introduction
+         val user = User.currentUser.get
+         if(user.role == "a")  newsHead.anounce = anounce
         //println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
         newsHead.thumbnailLink = if(thumbnailLink == "" ) "/style/images/nothumb.png"
         						 else thumbnailLink
@@ -64,7 +68,7 @@ class ArticleEditSn {
         newsHead.content = articleContent._id
         if(newsHead.authorId == 0L){
             isNew = true
-            val user = User.currentUser.get
+           
             newsHead.authorId = user.id
             newsHead.authorName = user.getFullName
         }
@@ -88,6 +92,7 @@ class ArticleEditSn {
     
     "#id" #> SHtml.text(id, id = _, "style"->"display:none;") &
     "#title" #> SHtml.text(title, in => title = in.trim) &
+    "#anounceBox" #> SHtml.checkbox(anounce,anounce = _) &
     "#tags" #> SHtml.multiSelect(tagsList, tags , tags = _) &
     "#thumbnail" #> SHtml.text(thumbnailLink , in => thumbnailLink = in.trim, "style" -> "display:none;") &
     "#introduction" #> SHtml.textarea(introduction, in => introduction  = deleteBR(in.trim)) &
@@ -116,7 +121,7 @@ class ArticleEditSn {
  private def addNewsInfoOnMainPage(id:String, title:String){
     println("begin add news info")
     val fullLink = getFullLink(id)
-    //MainPageData.delete(("link" -> fullLink))
+    deleteIfToManyNewsInfoOnMainPage
     val mainPageData = MainPageData.create
     println("Keys news to String: " + Keys.news.toString)
     mainPageData.key = Keys.news.toString
@@ -161,6 +166,12 @@ class ArticleEditSn {
       toDeleteTags.foreach(tag => NewsTag.update(("tag" -> tag), decrease))
     }
 
+     def deleteIfToManyNewsInfoOnMainPage()   = {
+         val newInfo = MainPageData.findAll(("key" -> Keys.news.toString),("$orderby" -> ( "_id" -> -1) ))
+         println(newInfo.map(_._id.toString).mkString("\n"))
+         newInfo.drop(25).foreach(_.delete)
+         "p *" #> ""
+    }
 }
 
 

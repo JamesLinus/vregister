@@ -4,10 +4,10 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.lib
+package pl.brosbit.lib
 
-import _root_.net.brosbit4u.model.page._
-import net.brosbit4u.model._
+import _root_.pl.brosbit.model.page._
+import pl.brosbit.model._
 import java.net.URL
 import javax.mail._
 

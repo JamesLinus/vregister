@@ -1,4 +1,10 @@
-package net.brosbit4u.snippet.teacher
+/* Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
+ *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
+ *   See: <http://www.gnu.org/licenses/>.
+ */
+
+package pl.brosbit.snippet.teacher
 
 import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
 import _root_.scala.xml.{ NodeSeq, Text, XML }
@@ -7,7 +13,7 @@ import _root_.net.liftweb.util._
 import _root_.net.liftweb.http.{ SHtml, S }
 import _root_.net.liftweb.common._
 import Helpers._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model._
 import  _root_.net.liftweb.http.js.JsCmds._
  import  _root_.net.liftweb.http.js.JsCmd
  import  _root_.net.liftweb.http.js.JE._

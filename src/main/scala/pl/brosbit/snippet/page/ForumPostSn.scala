@@ -5,17 +5,17 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
 import scala.xml.{ NodeSeq, Unparsed }
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.http.{ S, SHtml, RequestVar }
 import Helpers._
 import java.util.Date
-import _root_.net.brosbit4u.lib.Formater
+import _root_.pl.brosbit.lib.Formater
 import _root_.net.liftweb.mongodb._
 import org.bson.types.ObjectId
 import _root_.net.liftweb.json.JsonDSL._

@@ -1,10 +1,10 @@
-package net.brosbit4u.lib
+package pl.brosbit.lib
 
 import javax.mail._
 import javax.mail.internet._
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.MapExtraData
+import _root_.pl.brosbit.model.MapExtraData
 
 
 class MailConfig {

@@ -15,13 +15,13 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
 import _root_.scala.xml.{ NodeSeq, Text }
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.http.{ S, SHtml, FileParamHolder, RequestVar }
 import _root_.net.liftweb.mapper.{ Ascending, OrderBy }
 import _root_.net.liftweb.http.js._
@@ -54,7 +54,7 @@ class FilesSn {
     def save() {
       if (isCorrect) {       
         val imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
-        val resizedImageBuf = resizeImageWithProportion(imageBuf, 600)
+        val resizedImageBuf = resizeImageWithProportion(imageBuf, 680)
         var outputStream = new ByteArrayOutputStream()
         ImageIO.write(resizedImageBuf, mimeType.substring(1), outputStream)
         val inputStream = new ByteArrayInputStream(outputStream.toByteArray())
@@ -82,7 +82,7 @@ class FilesSn {
     def save() {
       if (isCorrect) {
         val imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
-        val resizedImageBuf = resizeImageWithProportion(imageBuf, 100)
+        val resizedImageBuf = resizeImageWithProportion(imageBuf, 270)
         var outputStream = new ByteArrayOutputStream()
         ImageIO.write(resizedImageBuf, mimeType.substring(1), outputStream)
         val inputStream = new ByteArrayInputStream(outputStream.toByteArray())

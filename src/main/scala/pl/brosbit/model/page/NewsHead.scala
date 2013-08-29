@@ -5,7 +5,7 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.model.page
+package pl.brosbit.model.page
 
 import _root_.net.liftweb.mongodb._
 import java.util.Date
@@ -15,13 +15,14 @@ import org.bson.types.ObjectId
 object NewsHead extends MongoDocumentMeta[NewsHead] {
   override def collectionName = "newshead"
   override def formats = super.formats + new ObjectIdSerializer + new DateSerializer
-  def create = new NewsHead(ObjectId.get, "", "", 0L, Nil, "", "", new ObjectId("000000000000000000000000"))
+  def create = new NewsHead(ObjectId.get, "", "", 0L, Nil, "", "", 
+          new ObjectId("000000000000000000000000"), false)
 }
 
 case class NewsHead(var _id: ObjectId, var title:String,
 					 var authorName:String, var authorId:Long, var tags:List[String],
 					 var thumbnailLink:String, var introduction:String,
-					 var content:ObjectId )
+					 var content:ObjectId, var anounce:Boolean )
 					extends MongoDocument[NewsHead] {
   def meta = NewsHead
 }

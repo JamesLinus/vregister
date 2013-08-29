@@ -1,10 +1,10 @@
-package net.brosbit4u.api
+package pl.brosbit.api
 
 import net.liftweb._
 import common._
 import util._
 import http._
-import net.brosbit4u._
+import pl.brosbit._
 import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, File }
 import provider.servlet.HTTPServletContext
 import _root_.net.liftweb.mongodb.DefaultMongoIdentifier

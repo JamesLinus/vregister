@@ -4,17 +4,17 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
 import _root_.scala.xml.{ NodeSeq }
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.mapper.{ By }
 import _root_.net.liftweb.http.{ SHtml }
 import Helpers._
-import _root_.net.brosbit4u.lib.{ PicasaIndex }
+import _root_.pl.brosbit.lib.{ PicasaIndex }
 import _root_.net.liftweb.json.JsonDSL._
 
 class PicasaSn {

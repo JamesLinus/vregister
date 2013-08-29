@@ -5,15 +5,15 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
 import java.util.Date
 import _root_.scala.xml.{ NodeSeq, Unparsed, Text}
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
-import _root_.net.brosbit4u.lib._
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
+import _root_.pl.brosbit.lib._
 import _root_.net.liftweb.http.{ S }
 import Helpers._
 

@@ -23,7 +23,7 @@ package net.brosbit4u {
   import _root_.net.liftweb.http.{ SHtml, S }
   import _root_.net.liftweb.common._
   import _root_.java.util.{ Date, Random, GregorianCalendar, TimeZone }
-  import net.brosbit4u.model._
+  import pl.brosbit.model._
   import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
   import Helpers._
   import  _root_.net.liftweb.http.js.JsCmds._

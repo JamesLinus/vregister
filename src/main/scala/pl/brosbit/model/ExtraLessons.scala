@@ -4,7 +4,7 @@
  *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
  *   See: <http://www.gnu.org/licenses/>.
  */
-package net.brosbit4u.model
+package pl.brosbit.model
 
 import _root_.net.liftweb.mongodb._
 import java.util.Date

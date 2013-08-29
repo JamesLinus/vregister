@@ -3,8 +3,13 @@ function runPineBoxEqualizer() {
 	var $column1 = $('#column1');
 	var $column2 = $('#column2');
 	var $column3 = $('#column3');
-	
-	while(forRunner($column1, $column2, $column3)) {}
+
+var nr = 0;
+while (forRunner($column1, $column2, $column3)) {
+	nr++;
+	if (nr > 20)
+		break;
+}
 }
 
 
@@ -29,4 +34,5 @@ function forRunner($column1, $column2, $column3)
 		 return true;
 	}
 	else return false;
+	
 }

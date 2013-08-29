@@ -1,4 +1,4 @@
-package net.brosbit4u.model
+package pl.brosbit.model
 
 import _root_.net.liftweb.mongodb._
 import org.bson.types.ObjectId

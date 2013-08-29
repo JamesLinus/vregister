@@ -4,10 +4,10 @@
  *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
  *   See: <http://www.gnu.org/licenses/>.
  */
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.json.JsonDSL._
 
 trait UpdateMainPageInfo {

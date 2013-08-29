@@ -5,12 +5,12 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.model.page
+package pl.brosbit.model.page
 
 import _root_.net.liftweb.mongodb._
 import java.util.Date
 import org.bson.types.ObjectId
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.json.JsonDSL._
 import _root_.net.liftweb.util.Helpers._
 

@@ -15,8 +15,7 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package model {
+package pl.brosbit.model 
 
     import net.liftweb.mapper._
     import _root_.net.liftweb.util._
@@ -38,6 +37,4 @@ package net.brosbit4u {
     object UserChangeList extends UserChangeList with LongKeyedMetaMapper[UserChangeList] {
     }
 
-  }
-}
 

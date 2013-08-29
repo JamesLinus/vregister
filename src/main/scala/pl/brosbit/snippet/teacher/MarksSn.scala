@@ -1,4 +1,4 @@
-package net.brosbit4u.snippet.teacher
+package pl.brosbit.snippet.teacher
 
 import java.util.Date
 import _root_.net.liftweb.util._
@@ -6,91 +6,103 @@ import _root_.net.liftweb.http.{ SHtml, S }
 import _root_.net.liftweb.common._
 import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
 import Helpers._
-import net.brosbit4u.model._
-import net.liftweb.mongodb.record._
+import pl.brosbit.model._
+import org.bson.types.ObjectId
+import _root_.net.liftweb.json.JsonDSL._
+import _root_.net.liftweb.http.js.JsCmds._
+import _root_.net.liftweb.http.js.JsCmd
+import _root_.net.liftweb.http.js.JE._
 
 class MarksSn extends BaseTeacher {
-  val classId = ClassChoose.is
-  val idSub = S.param("idS").openOr("-1")
-  val subject = SubjectName.find(idSub) match {
-      case Full(sub) => sub
-      case _ => SubjectName.findAll.headOption.getOrElse(SubjectName.create)
-  }
-  
-  def showTable() = {
-    
-    "#thead" #> <tr><th>Nr</th><th>Nazwisko i imię</th>
-    			{}<th>Średnia</th><th>Semestr</th></tr> & 
-    "tbody *" #> <tr></tr> 
-  }
-  
-  def saveOneMark() = {
-    var mark = ""
-    var columnId = ""
-    var userId = ""
-    var semestr = ""
-    var subjectId = ""
-      
-    def save(){
-      
+    val classId = ClassChoose.is
+    val idSub = S.param("idS").openOr("-1")
+    val subject = SubjectName.find(idSub) match {
+        case Full(sub) => sub
+        case _ => SubjectName.findAll.headOption.getOrElse(SubjectName.create)
     }
-    
-    val form = "#subjectId" #> SHtml.text(subjectId, subjectId = _) &
-    "#semestr" #> SHtml.text(semestr, semestr = _) &
-    "#onemark" #> SHtml.text(mark, mark = _) &
-    "#columnNr" #> SHtml.text(columnId, columnId = _) &
-    "#userId" #> SHtml.text(userId, userId = _) &
-    "#saveMark" #> SHtml.submit("OK", save) andThen SHtml.makeFormsAjax
-    
-    "#form" #> (in => form(in)) 
-  }
-  
-  def saveSemestrMark() = {
-    var mark = ""
-    var userId = ""
-    var semestr = ""
-    var subjectId = ""
-      
-    def save(){
-      val mark1 = Mark(234545454L,"Nauczyciel nasz", "4+")
-      val mark2 = Mark(2345423454L,"Nauczyciel onasz", "4+")
-      val list = List(mark1, mark2)
-      val listList = List(list)
-      MarkLine.createRecord.pupilId(3454545L).sem("1")
-      	.subjectId(565L).marks(listList).save
-    }
-    val marks = (1 to 6).map(i => (i.toString, i.toString))
-    
-    "#subjectIdSem" #> SHtml.text(subjectId, subjectId = _) &
-    "#semestrSem" #> SHtml.text(semestr, semestr = _) &
-    "#semmark" #> SHtml.select(marks, Full(mark), mark = _) &
-    "#userIdSem" #> SHtml.text(userId, userId = _) &
-    "#saveMarkSem" #> SHtml.submit("OK", save)
-    
-  }
 
-  def saveTableHeader() = {
-    var subjectId = ""
-    var columnId = ""
-    var semestr = ""
-    var symbol = ""
-    var userId = ""
-    var weight = "1"
-    
-    def save() {
-      val mark = Mark(new Date().getTime(),, "4+")
-      val listList = List(list)
-      MarkLine.createRecord.pupilId(3454545L).sem("1")
-      	.subjectId(565L).marks(listList).save
+    def showTable() = {
+
+        "#thead" #> <tr>
+                        <th>Nr</th><th>Nazwisko i imię</th>
+                        {}<th>Średnia</th><th>Semestr</th>
+                    </tr> &
+            "tbody *" #> <tr></tr>
     }
-    var weights = (1 to 9).map(i => (i.toString, i.toString))
-    
-    "#subjectIdCol" #> SHtml.text(subjectId, subjectId = _) &
-    "#columnNrCol" #> SHtml.text(columnId, columnId = _) &
-    "#semestrCol" #> SHtml.text(semestr, semestr = _) &
-    "#symbol" #> SHtml.text(symbol, symbol = _) &
-    "#weight" #> SHtml.text(weight,  weight = _) &
-    "#userIdCol" #> SHtml.text(userId, userId = _) &
-    "#saveHeader" #> SHtml.submit("OK", save)
-  }
+
+    def saveOneMark() = {
+        var marksLineId = ""
+        var onemark = ""
+        var columnNr = ""
+        var isProp = false
+
+        def save() {
+            val mark = Mark(new Date().getTime, user.shortInfo, onemark.trim.slice(0, 2))
+                MarkLine.find(marksLineId) match {
+                    case Some(markLine) => {
+                         if (isProp) 
+                        MarkLine.update(("_id" -> markLine._id.toString), ("$addToSet" -> ("propMark" -> mark.mapString)))
+                        else {
+                            val markType = "marks." + columnNr.trim 
+                             MarkLine.update(("_id" -> markLine._id.toString), ("$addToSet" -> (markType -> mark.mapString)))
+                        }
+                        Alert("Dodano")
+                    }
+                    case _ => Alert("Błąd, nie można dodać oceny!")
+                }
+        }
+
+        val form = "#marksLineId" #> SHtml.text(marksLineId, marksLineId = _) &
+            "#isProp" #> SHtml.checkbox(isProp, isProp = _) &
+            "#onemark" #> SHtml.text(onemark, onemark = _) &
+            "#columnNr" #> SHtml.text(columnNr, columnNr = _) &
+            "#saveMark" #> SHtml.submit("OK", save) andThen SHtml.makeFormsAjax
+
+        "#form" #> (in => form(in))
+    }
+
+    def saveSemestrMark() = {
+        var semmark = ""
+        var marksLineId = ""
+
+        def save() {
+            val mark = Mark(new Date().getTime, user.shortInfo, semmark)
+            MarkLine.find(marksLineId) match {
+                case Some(markLine) => {
+                    MarkLine.update(("_id" -> markLine._id.toString), ("$addToSet" -> ("semMark" -> mark.mapString)))
+                    Alert("Dodano")
+                }
+                case _ => Alert("Błąd, nie można dodać oceny!")
+            }
+        }
+        val marks = (1 to 6).map(i => (i.toString, i.toString))
+
+        val form = "#markslineId" #> SHtml.text(marksLineId, marksLineId = _) &
+            "#semmark" #> SHtml.select(marks, Full(semmark), semmark = _) &
+            "#saveMarkSem" #> SHtml.ajaxSubmit("OK", save) andThen SHtml.makeFormsAjax
+
+        "form" #> (in => form(in))
+
+    }
+
+    def saveTableHeader() = {
+        var subjectId = ""
+        var columnId = ""
+        var semestr = ""
+        var symbol = ""
+        var userId = ""
+        var weight = "1"
+
+        def save() {
+
+        }
+
+        "#subjectIdCol" #> SHtml.text(subjectId, subjectId = _) &
+            "#columnNrCol" #> SHtml.text(columnId, columnId = _) &
+            "#semestrCol" #> SHtml.text(semestr, semestr = _) &
+            "#symbol" #> SHtml.text(symbol, symbol = _) &
+            "#weight" #> SHtml.text(weight, weight = _) &
+            "#userIdCol" #> SHtml.text(userId, userId = _) &
+            "#saveHeader" #> SHtml.submit("OK", save)
+    }
 }

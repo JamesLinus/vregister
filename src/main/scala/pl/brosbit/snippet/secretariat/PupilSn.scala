@@ -14,8 +14,8 @@ package net.brosbit4u {
     import _root_.net.liftweb.common._
     import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
     import Helpers._
-    import _root_.net.brosbit4u.model._
-    import _root_.net.brosbit4u.lib.Formater
+    import _root_.pl.brosbit.model._
+    import _root_.pl.brosbit.lib.Formater
     import  _root_.net.liftweb.http.js.JsCmds._
     import  _root_.net.liftweb.http.js.JsCmd
     import  _root_.net.liftweb.http.js.JE._

@@ -5,14 +5,14 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet.admin
+package pl.brosbit.snippet.admin
 
 import java.util.Date
 import scala.collection.mutable.Map
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
 import _root_.net.liftweb.http.{ S, SHtml }
 import Helpers._
 import org.bson.types.ObjectId

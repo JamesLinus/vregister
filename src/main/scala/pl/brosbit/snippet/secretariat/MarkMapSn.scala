@@ -23,7 +23,7 @@ package net.brosbit4u {
     import _root_.net.liftweb.http.{ SHtml, S }
     import _root_.net.liftweb.common._
     import _root_.java.util.{ Date, Random }
-    import net.brosbit4u.model.{ MarkMap }
+    import pl.brosbit.model.{ MarkMap }
     import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
     import Helpers._
 

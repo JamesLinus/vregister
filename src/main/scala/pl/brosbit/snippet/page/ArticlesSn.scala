@@ -5,16 +5,17 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u.snippet.page
+package pl.brosbit.snippet.page
 
 import java.util.Date
 import _root_.scala.xml.{ NodeSeq, Unparsed, Text}
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
-import _root_.net.brosbit4u.model.page._
-import _root_.net.brosbit4u.model._
-import _root_.net.brosbit4u.lib._
-import _root_.net.liftweb.mapper.{ OrderBy, By, Descending, Ascending }
+import _root_.pl.brosbit.model.page._
+import _root_.pl.brosbit.model._
+import _root_.pl.brosbit.lib._
+import _root_.net.liftweb.json.JsonDSL._
+import _root_.net.liftweb.json.JsonAST._
 import _root_.net.liftweb.http.{ S }
 import Helpers._
 
@@ -45,7 +46,7 @@ class ArticlesSn extends UsersOperations {
 
   
  private def showLastNews() = {
-   val lastNews = NewsHead.findAll.sortBy(n => - n._id.getTime()) //zastąpić natywnym mongo
+   val lastNews = NewsHead.findAll.sortBy(n => - n._id.getTime()) //zastąpić natywnym mongo???
    commonNewsShow(lastNews, "Aktualności")
  }
 
@@ -76,7 +77,7 @@ class ArticlesSn extends UsersOperations {
     var tag = S.param("tag").openOr("")
     if(tag == "") S.redirectTo("/articles?w=a")
     else {
-      val newsHeads = NewsHead.findAll("tags", tag).sortBy(n => - n._id.getTime()) //sort???
+      val newsHeads = NewsHead.findAll(("tags", tag),("$orederby"->("_id"-> -1))) //.sortBy(n => - n._id.getTime()) //sort???
       commonNewsShow(newsHeads, "Aktualności. Oznaczone jako: " + tag)
     }
   }

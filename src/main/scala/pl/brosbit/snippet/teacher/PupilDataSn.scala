@@ -4,8 +4,7 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet.teacher {
+package pl.brosbit.snippet.teacher 
 
 
  import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
@@ -15,8 +14,8 @@ package net.brosbit4u {
  import _root_.net.liftweb.common._
  import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
  import Helpers._
- import _root_.net.brosbit4u.model.{ User, ClassModel }
- import _root_.net.brosbit4u.lib.Formater
+ import _root_.pl.brosbit.model.{ User, ClassModel }
+ import _root_.pl.brosbit.lib.Formater
  import  _root_.net.liftweb.http.js.JsCmds._
  import  _root_.net.liftweb.http.js.JsCmd
  import  _root_.net.liftweb.http.js.JE._
@@ -31,7 +30,7 @@ class PupilDataSn extends BaseTeacher {
 	  case Full(theClass) => theClass
 	  case _ => S.redirectTo("teacher/index")
 	}
-    val pupils = User.findAll(By(User.classId, classModel))
+    val pupils = User.findAll(By(User.classId, classModel),By(User.role, "u"))
    
      "tr" #> pupils.map(pupil => {
           "tr [class]" #> { if (pupil.scratched.is)  "scratched" else "" } &
@@ -90,10 +89,7 @@ class PupilDataSn extends BaseTeacher {
 
       "form" #> (in => form(in))
    }
-  
-  
-      
+     
   
 }
 
-  }}

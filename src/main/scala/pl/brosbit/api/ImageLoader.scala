@@ -1,4 +1,4 @@
-package net.brosbit4u.api
+package pl.brosbit.api
 
 import net.liftweb._
 import common._

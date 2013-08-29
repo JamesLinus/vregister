@@ -1,22 +1,10 @@
-/*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
+/* Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *
- *   VRegister is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU AFFERO GENERAL PUBLIC LICENS Version 3
- *   as published by the Free Software Foundation
- *
- *   VRegister is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU AFFERO GENERAL PUBLIC LICENS
- *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
+ *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
+ *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet.teacher {
+package pl.brosbit.snippet.teacher 
 
 import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
 import _root_.scala.xml.{ NodeSeq, Text, XML }
@@ -25,7 +13,7 @@ import _root_.net.liftweb.http.{ SHtml, S }
 import _root_.net.liftweb.common._
 import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
 import Helpers._
-import _root_.net.brosbit4u.model._
+import _root_.pl.brosbit.model._
 import  _root_.net.liftweb.http.js.JsCmds._
  import  _root_.net.liftweb.http.js.JsCmd
  import  _root_.net.liftweb.http.js.JE._
@@ -39,7 +27,7 @@ class ParentDataSn extends BaseTeacher {
 	  case Full(theClass) => theClass
 	  case _ => S.redirectTo("/teacher/index")
 	}
-    val pupils = User.findAll(By(User.classId, classModel))
+    val pupils = User.findAll(By(User.classId, classModel),By(User.role, "u"))
    
      "tr" #> pupils.map(pupil => {
     	  val father = pupil.father.obj.getOrElse(User.create)
@@ -91,7 +79,7 @@ class ParentDataSn extends BaseTeacher {
          	email(emailMather.trim).lastName(lastNameMather.trim).
          	firstName(firstNameMather.trim).role("r").
          	scratched(false).save
-        pupil.father(father.id).mather(mather.id).save
+        pupil.father(father.id.is).mather(mather.id.is).save
           JsFunc("editForm.editRow", id).cmd
         }
         case _ => Alert("Nie ma takiego ucznia")
@@ -123,4 +111,3 @@ class ParentDataSn extends BaseTeacher {
    }
 }
 
-  }}

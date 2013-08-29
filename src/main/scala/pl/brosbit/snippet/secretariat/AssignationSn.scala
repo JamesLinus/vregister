@@ -28,7 +28,7 @@ package net.brosbit4u {
     import _root_.net.liftweb.common._
     import _root_.net.liftweb.mapper.{ By, OrderBy, Ascending }
     import Helpers._
-    import net.brosbit4u.model._
+    import pl.brosbit.model._
 
     class AssignationSn {
       /*
