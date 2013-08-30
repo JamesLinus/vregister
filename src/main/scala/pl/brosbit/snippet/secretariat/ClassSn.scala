@@ -15,8 +15,7 @@
  *   along with VRegister.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet {
+package pl.brosbit.snippet.secretariat
 
     import _root_.scala.xml.{ NodeSeq, Text, XML }
   import _root_.net.liftweb.util._
@@ -121,5 +120,4 @@ package net.brosbit4u {
     shortInfo.split('[').last.split(']').head
     
   }
-  }
-} //koniec packages
+ 

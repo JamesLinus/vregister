@@ -4,17 +4,20 @@
     <body class="lift:content_id=main">
         <div id="main" class="lift:surround?with=teacher;at=content">
             <head_merge>
-                <script type="text/javascript" charset="utf-8" src="/style/common_users.js"></script>
+             <script type="text/javascript" charset="utf-8" src="/jquery/dejavu.js"></script>
+                <script type="text/javascript" charset="utf-8" src="/jquery/marks.js"></script>
+                
                 <style>
-                	#marktable td, th {min-width: 20px;}
+                	#marktable td, th {min-width: 20px; border: solid 1px #fff;}
                 	#semmark {width: 20px;}
                 	#onemark {width: 20px;}
-                	td {width: 40px; }
                 </style>
                  <script>
+                 var marks = new Object();
 $(function() {
+	marks = new Marks();
 	 $( "#radio" ).buttonset();
-	 $( "#tabs" ).tabs();
+	 $( "#semestr" ).buttonset();
 });
 </script>
             </head_merge>
@@ -28,24 +31,17 @@ $(function() {
 <h1>Oceny</h1>
 		
 		
-	<div id="radio">
-        <input type="radio" id="radio1" name="radio" checked="checked" onclick="marks.redirectTo();" /><label for="radio1">Język Polski sem 2</label>
-        <input type="radio" id="radio2" name="radio"  onclick="marks.redirectTo();"/><label for="radio2">Język Polski sem 1 </label>
-         <input type="radio" id="radio3" name="radio"  onclick="marks.redirectTo();"/><label for="radio3">Język Polski sem 1 </label>
-          <input type="radio" id="radio4" name="radio"  onclick="marks.redirectTo();"/><label for="radio4">Język Polski sem 1 </label>
-           <input type="radio" id="radio5" name="radio"  onclick="marks.redirectTo();"/><label for="radio5">Język Polski sem 1 </label>
+	<div id="radio"  class="lift:teacher.MarksSn.showSubjects">
+        <input />
     </div>
 
+<hr/>
+<div id="semestr">
+	<input type="radio"  checked="checked" id="radioSem1" name="radioSem" /><label for="radioSem1">Semestr 1</label>
+	<input type="radio" id="radioSem2" name="radioSem" /><label for="radioSem2">Semestr 2</label>
+</div>
 
-<div id="tabs">
-<ul>
-<li><a href="#tabs-1">Semestr 1</a></li>
-<li><a href="#tabs-2">Semestr 2</a></li>
-
-</ul>
-<div id="tabs-1">
-
-<table class="lift:teacher.MarksSn.showSemOne">
+<table class="lift:teacher.MarksSn.showMarks">
 		<thead>
 		<tr>
 			<th>Nr</th>
@@ -82,10 +78,71 @@ $(function() {
 			<th> Prop</th>
 			<th>Śr</th>
 			<th>Sem</th>
+			<th>1</th>
+			<th >2</th>
+			<th>3</th>
+			<th >4</th>
+			<th>5</th>
+			<th >6</th>
+			<th>7</th>
+			<th >8</th>
+			<th>9</th>
+			<th >10</th>
+			<th>11</th>
+			<th >12</th>
+			<th>14</th>
+			<th >15</th>
+			<th>16</th>
+			<th >17</th>
+			<th>18</th>
+			<th >19</th>
+			<th>20</th>
+			<th >21</th>
+			<th>22</th>
+			<th >23</th>
+			<th>24</th>
+			<th >25</th>
+			<th>26</th>
+			<th >27</th>
+			<th>28</th>
+			<th >29</th>
+			<th>30</th>
+			<th> Prop</th>
+			<th>Śr</th>
+			<th>Kon</th>
 		</tr>		
 		</thead>
 		<tbody>
 			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
 				<td></td>
 				<td></td>
 				<td></td>
@@ -123,89 +180,6 @@ $(function() {
 
 		</table>
 
-</div>
-<div id="tabs-2">
-
-<table class="lift:teacher.MarksSn.showSemTwo">
-		<thead>
-		<tr>
-			<th>Nr</th>
-			<th>Nazwisko i imię</th>
-			<th>1</th>
-			<th >2</th>
-			<th>3</th>
-			<th >4</th>
-			<th>5</th>
-			<th >6</th>
-			<th>7</th>
-			<th >8</th>
-			<th>9</th>
-			<th >10</th>
-			<th>11</th>
-			<th >12</th>
-			<th>14</th>
-			<th >15</th>
-			<th>16</th>
-			<th >17</th>
-			<th>18</th>
-			<th >19</th>
-			<th>20</th>
-			<th >21</th>
-			<th>22</th>
-			<th >23</th>
-			<th>24</th>
-			<th >25</th>
-			<th>26</th>
-			<th >27</th>
-			<th>28</th>
-			<th >29</th>
-			<th>30</th>
-			<th> Prop</th>
-			<th>Śr</th>
-			<th>Sem</th>
-		</tr>		
-		</thead>
-		<tbody>
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</tbody>
-			
-
-		</table>
-
-</div>
-</div>
 		<br  />
 	
 
@@ -235,6 +209,7 @@ $(function() {
 <input id="semestr" style="display:none;" />
 <input id="subjectId" style="display:none;" />
 <input id="columnNr" style="display:none;" />
+<input id="isProp" style="display:none;" />
 <input id="userId" style="display:none;"  />
 <input id="onemark" type="text"  maxlength="2" size="2"/>
 <input type="submit" value="Zapisz" id="saveMark" style="display:none;"/>

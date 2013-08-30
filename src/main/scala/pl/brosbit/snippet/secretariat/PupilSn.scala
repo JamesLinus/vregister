@@ -4,8 +4,7 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package net.brosbit4u {
-  package snippet {
+package pl.brosbit.snippet.secretariat
 
     import java.util.{ Date, GregorianCalendar, TimeZone }
     import scala.xml.{ NodeSeq, Text, XML }
@@ -50,7 +49,7 @@ package net.brosbit4u {
       ClassModel.find(classId) match {
         case Full(classModel) => {
           pupil.classInfo(classModel.classString()).
-          	classId(classModel.id)
+          	classId(classModel.id.is)
         }
         case _ =>
       }
@@ -95,7 +94,4 @@ package net.brosbit4u {
    }
 
     }
-
-  }
-} // koniec packages
 

@@ -4,7 +4,7 @@
  *   See: <http://www.gnu.org/licenses/>.
  */
 
-package pl.brosbit.snippet 
+package pl.brosbit.snippet.secretariat
 
     import _root_.java.util.{ Date, GregorianCalendar, TimeZone }
     import _root_.scala.xml.{ NodeSeq, Text, XML }

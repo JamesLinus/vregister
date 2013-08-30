@@ -46,11 +46,13 @@ class Boot {
     // where to search snippet
     LiftRules.addToPackages("pl.brosbit")
     LiftRules.addToPackages("pl.brosbit.snippet.page")
+       LiftRules.addToPackages("pl.brosbit.snippet.teacher")
+          LiftRules.addToPackages("pl.brosbit.snippet.secretariat")
 
     Schemifier.schemify(true, Schemifier.infoF _, User, 
       ClassModel, MarkMap, SubjectName)
       
-     LiftRules.statelessDispatchTable.append({
+     LiftRules.statelessDispatch.append({
       case Req("img" :: id :: Nil, _, GetRequest) => () => ImageLoader.image(id)
       case Req("file" :: id :: Nil, _, GetRequest) => () => FileLoader.file(id)
       case Req("getdocument" :: id :: Nil, _, GetRequest) => () => TemplateDocumentCreater.create(id)
@@ -130,7 +132,7 @@ class Boot {
         Menu("Rodzice") / "teacher" / "parent_data"  >> LocGroup("teacher") >> isTeacher,
         //Menu("Tematy") / "teacher" / "themes" >> LocGroup("teacher") >> isTeacher,
         //Menu("Obecności") / "teacher" / "absents"  >> LocGroup("teacher") >> isTeacher,
-        Menu("Oceny") / "teacher" / "marks" >> LocGroup("teacher") >> isTeacher,
+        Menu("Oceny") / "teacher" / "marks"  / ** >> LocGroup("teacher") >> isTeacher,
         Menu("Ogłoszenia") / "teacher" / "anounces"  >> LocGroup("teacher") >> isTeacher,
         Menu("Uwagi") / "teacher" / "opinions"  >> LocGroup("teacher") >> isTeacher,
         Menu("Plan") / "teacher" / "class_plan"  >> LocGroup("teacher") >> isTeacher,
@@ -179,6 +181,10 @@ class Boot {
             ParsePath("teacher" :: "index" :: classSchool :: Nil, _, _,_), _, _) =>
           RewriteResponse(
             "teacher" :: "index" :: Nil, Map("class" -> classSchool)  )		
+        case RewriteRequest(
+            ParsePath("teacher" :: "marks" :: subjectId :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "teacher" :: "marks" :: Nil, Map("idS" -> subjectId  )	)
         case RewriteRequest(
             ParsePath("gsf" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(

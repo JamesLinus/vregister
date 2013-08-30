@@ -12,6 +12,7 @@ import _root_.net.liftweb.json.JsonDSL._
 import _root_.net.liftweb.http.js.JsCmds._
 import _root_.net.liftweb.http.js.JsCmd
 import _root_.net.liftweb.http.js.JE._
+import net.liftweb.http.SHtml
 
 class MarksSn extends BaseTeacher {
     val classId = ClassChoose.is
@@ -21,13 +22,30 @@ class MarksSn extends BaseTeacher {
         case _ => SubjectName.findAll.headOption.getOrElse(SubjectName.create)
     }
 
-    def showTable() = {
-
-        "#thead" #> <tr>
+    def showMarks() = {
+    	if(idSub == "-1") {
+    	    "table" #> <h1>Wybierz przedmiot</h1>
+    	}
+    	else {
+    	      "thead tr" #> <tr>
                         <th>Nr</th><th>Nazwisko i imię</th>
                         {}<th>Średnia</th><th>Semestr</th>
                     </tr> &
-            "tbody *" #> <tr></tr>
+            "tbody tr" #> <tr></tr>
+    	    
+    	}
+    	
+      
+    }
+    
+    def showSubjects() = {
+        var i = 0
+        "input" #> SubjectName.findAll(By(SubjectName.scratched, false)).map(s =>  {
+            val checked = if(subject.id.is == s.id.is) "checked" else ""
+            val radio = "radio" + s.id.is.toString
+           <input type="radio" id={radio}  checked={checked} onclick="marks.redirectSubject(this)" name="radio"  />  ++ <label for={radio}>{s.name} </label>
+        })
+        
     }
 
     def saveOneMark() = {
