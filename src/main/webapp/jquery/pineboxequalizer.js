@@ -22,7 +22,7 @@ function forRunner($column1, $column2, $column3)
 	var $longest = null
 		if(sizeCol1 > sizeCol2 && sizeCol1 > sizeCol3) $longest = $column1;
 		else if(sizeCol2 > sizeCol1 && sizeCol2 > sizeCol3) $longest = $column2;
-		else $logest = $column3;
+		else $longest = $column3;
 	var $shortest = null;
 	if(sizeCol1 < sizeCol2 && sizeCol1 < sizeCol3) $shortest = $column1;
 	else if(sizeCol2 < sizeCol1 && sizeCol2 < sizeCol3) $shortest = $column2;

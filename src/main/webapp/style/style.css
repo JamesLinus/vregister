@@ -133,7 +133,7 @@ h1.image-home {background:url(/style/images/home_32.png) no-repeat left center; 
 }
 
 .pageintroduction {
-	padding: 0;
+	padding: 0 0  0 290px;
 	font-weight: bold;
 }
 

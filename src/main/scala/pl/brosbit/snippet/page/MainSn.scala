@@ -61,8 +61,8 @@ class MainSn extends UsersOperations {
        val restNews = NewsHead.findAll(("anounce"->false),("_id" -> -1), Limit(27)) 
        val newsGroups = (anounces:::restNews).map(n => {i += 1; (i %3 , n)}).groupBy(n => n._1)
      val newsList1:List[NewsHead] = if(newsGroups.contains(0)) newsGroups(0).map(g => g._2) else Nil
-     val newsList2:List[NewsHead] =  if(newsGroups.contains(0)) newsGroups(1).map(g => g._2)else Nil
-     val newsList3:List[NewsHead] =  if(newsGroups.contains(0)) newsGroups(2).map(g => g._2) else Nil
+     val newsList2:List[NewsHead] =  if(newsGroups.contains(1)) newsGroups(1).map(g => g._2)else Nil
+     val newsList3:List[NewsHead] =  if(newsGroups.contains(2)) newsGroups(2).map(g => g._2) else Nil
  
       ".newsInfo" #> <div>  <div id="column1" class="grid_4">{newsList1.map(news => {
       <div class="pine-box new-bullet ">

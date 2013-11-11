@@ -23,11 +23,15 @@ class ArticlesSn extends UsersOperations {
 
 //tagi 
   def submenu() = {
-    "ul *" #> NewsTag.findAll.map(newsTag => <li>
-      <a href={"/articles?w=t&tag=" + newsTag.tag}>{newsTag.tag + " (" + newsTag.count.toString() + ")"  }</a></li>) &
-     "#adminmenu" #> <ul>
-                        { if (isTeacher) <li><a href="editarticle/0"><span>Dodaj artykuł</span></a></li> }
-                      </ul>
+      val tag = S.param("tag").getOrElse("")
+    ".extraTags" #> NewsTag.findAll.map(newsTag => 
+        { if(tag == newsTag.tag)
+            <option value={newsTag.tag} selected="selected"> {newsTag.tag + " (" + newsTag.count.toString() + ")"  } </option>
+        else 
+        <option value={newsTag.tag} > {newsTag.tag + " (" + newsTag.count.toString() + ")"  } </option>})&
+     "#adminmenu" #> <span>
+                        { if (isTeacher) <a href="editarticle/0"><img  title="Dodaj artykuł" src="/style/images/article.png" /></a> }
+                      </span>
   }
   //decyduje co pokazać
   def switchContent() = {
@@ -66,6 +70,7 @@ class ArticlesSn extends UsersOperations {
     	  else <span></span> }
     	  </p>
     	  <p class="pageintroduction">{Unparsed(newsHead.introduction)}</p>
+    	  <br/>
     	  <div class="pagebody">{Unparsed(contentOption.getOrElse(ArticleContent.create).content)}</div>
     	  </div>
       }
@@ -77,7 +82,7 @@ class ArticlesSn extends UsersOperations {
     var tag = S.param("tag").openOr("")
     if(tag == "") S.redirectTo("/articles?w=a")
     else {
-      val newsHeads = NewsHead.findAll(("tags", tag),("$orederby"->("_id"-> -1))) //.sortBy(n => - n._id.getTime()) //sort???
+      val newsHeads = NewsHead.findAll(("tags", tag),("$orderby"->("_id"-> -1))) //.sortBy(n => - n._id.getTime()) //sort???
       commonNewsShow(newsHeads, "Aktualności. Oznaczone jako: " + tag)
     }
   }
@@ -87,7 +92,7 @@ class ArticlesSn extends UsersOperations {
      if(word == "") S.redirectTo("/articles?w=a")
     else {
       //low performers????
-      val newsHeads = NewsHead.findAll.filter(newsHead => newsHead.title.toLowerCase.contains(word.toLowerCase())).
+      val newsHeads = NewsHead.findAll.sortBy(n => -n._id.getTime()).filter(newsHead => newsHead.title.toLowerCase.contains(word.toLowerCase())).
     		  sortBy(n => - n._id.getTime())
       commonNewsShow(newsHeads, "Aktualności. Szukane słowo: " + word)
     }
@@ -95,7 +100,6 @@ class ArticlesSn extends UsersOperations {
   
   private def commonNewsShow(newsHeads:List[NewsHead], info:String) = {
      val (latestNewses,oldNewses) = newsHeads.splitAt(30)
-    "#pagedepartment *" #> Text(info) &
     "#pagecontent *" #> latestNewses.map( newsHead => {
       val link = "/articles?w=w&id=" + newsHead._id.toString
      <div class="pageshort">

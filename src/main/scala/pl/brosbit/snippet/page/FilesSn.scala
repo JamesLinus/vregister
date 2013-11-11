@@ -82,7 +82,7 @@ class FilesSn {
     def save() {
       if (isCorrect) {
         val imageBuf: BufferedImage = ImageIO.read(new ByteArrayInputStream(fileHold.get.file))
-        val resizedImageBuf = resizeImageWithProportion(imageBuf, 270)
+        val resizedImageBuf = resizeImageWithFixWidth(imageBuf, 270)
         var outputStream = new ByteArrayOutputStream()
         ImageIO.write(resizedImageBuf, mimeType.substring(1), outputStream)
         val inputStream = new ByteArrayInputStream(outputStream.toByteArray())
@@ -156,6 +156,20 @@ class FilesSn {
       imageBufferOut = new BufferedImage(width, height, bufferedImageTYPE)
       imageBufferOut.getGraphics.drawImage(imageBuf, 0, 0, null)
     }
+    imageBufferOut
+  }
+  
+  private def resizeImageWithFixWidth(imageBuf: BufferedImage, maxWidth: Int): BufferedImage = {
+    val bufferedImageTYPE = getImageType
+    var imageBufferOut: BufferedImage = imageBuf
+    val width = imageBuf.getWidth
+    val height = imageBuf.getHeight
+        val image: java.awt.Image = imageBuf.getScaledInstance(maxWidth, 
+            (height.toDouble * maxWidth.toDouble / width.toDouble).toInt, Image.SCALE_SMOOTH)
+        imageBufferOut = new BufferedImage(maxWidth, 
+            (height.toDouble *maxWidth.toDouble / width.toDouble).toInt, bufferedImageTYPE)
+        imageBufferOut.getGraphics.drawImage(image, 0, 0, null)
+        //imageBuf = im.asInstanceOf[BufferedImage]
     imageBufferOut
   }
 
