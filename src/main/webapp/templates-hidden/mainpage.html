@@ -9,7 +9,8 @@
 
          <script type="text/javascript" src="/jquery/jquery.nivo.slider.js"></script>
          <script type="text/javascript" src="/jquery/pineboxequalizer.js"></script>
-
+         <script src="/jquery/jquery-ui.custom.min.js" ></script>
+     <link rel="stylesheet" type="text/css" href="/style/jqueryui/jquery-ui.custom.min.css" />
          <link rel="stylesheet" href="/style/nivo-slider.css" type="text/css" media="screen" />
          <link rel="stylesheet" href="/style/reset.css" />
         <link rel="stylesheet" href="/style/960.css" />
@@ -18,6 +19,13 @@
        
          <script type="text/javascript">
         $(document).ready(function() {
+        	$('#ajaxNews').dialog({
+                modal:true,
+                 autoOpen:false,
+                 width:800,
+                 height: 600
+            }); 	
+        	
     $('#slider').nivoSlider({
     	effect: 'random',
     	animSpeed: 800, 
@@ -39,7 +47,6 @@
                <div id="menu" class="grid_8 omega">
                     <ul id="nav">
                         <li><a href="/index"><img src="/style/images/home.png" title="Strona główna"/></a></li>
-            <li><a href="/articles"><img src="/style/images/pages.png" title="Artykuły"/></a></li>
              <li><a href="/bip"><img src="/style/images/bip.png" title="Biuletyn Informacji Publiczej"/></a></li>
              <li><a href="/gsf"><img src="/style/images/gsf.png" title="Gdańska Szkoła Floretu"/></a></li>
                         <li><a href="/forum"><img src="/style/images/forum.png" title="Forum"/></a></li>

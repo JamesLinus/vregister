@@ -1,30 +1,133 @@
 
 <div class="lift:surround?with=mainpage;at=content">
- <head_merge> 
- <style>
-  #forumWraper {background-color: #efefef; padding: 10px 0 10px 0; border-top: solid 2px #cecece;}
- .forumPosts ul li { display: inline-block; padding: 0 15px 0 15px;}
- </style>
- 
- </head_merge>
- 
- <div class="container_12">
+	<head_merge> 
+	<link rel="stylesheet" href="/style/pages.css" />
+	<script>     
+       function  redirectOnSearch() {
+    	   var word = $('#searchInput').val();
+           window.location = 'http://' + location.hostname + "/index/s?word=" + jQuery.trim(word.split(' ')[0])
+        }
+        
+     function redirectOnFilter() {
+         var tag = $('#filter option:selected').val(); 
+         if(tag == "Wszystkie artykuły")
+             window.location = 'http://' + location.hostname +  "/index/a";
+         else  
+             window.location = 'http://' + location.hostname +  "/index/t?tag=" + $('#filter option:selected').val();
+     }
+     
+   function showNews(id){
+             $('#hiddenAjaxText').val(id).trigger('blur');
+             $('#ajaxNews').empty();
+            $('#ajaxNews').dialog('open');
+            return false;
+         };
+     </script>
+	<style>
+#forumWraper {
+	background-color: #efefef;
+	padding: 10px 0 10px 0;
+	border-top: solid 2px #cecece;
+}
 
- 	<div class="lift:page.MainSn.lastInfo">
+.forumPosts ul li {
+	display: inline-block;
+	padding: 0 15px 0 15px;
+}
+
+#searchBox {
+	float: right;
+	vertical-align: middle;
+}
+
+#searchBox input[type=text] {
+	width: 250px;
+	height: 32px;
+	vertical-align: top;
+}
+
+.row {
+	padding: 5px 0 20px 0;
+	height: 32px;
+}
+
+label {
+	font-weight: bold;
+	font-size: 1.2em;
+	padding-right: 20px;
+}
+
+select {
+	background: white;
+	width: 320px;
+	padding: 6px;
+	font-size: 18px;
+	line-height: 1;
+	border: 1;
+	border-radius: 0;
+	height: 38px;
+	-webkit-appearance: none;
+}
+
+.linkNewsA {
+    padding: 5px 15px 5px 15px;
+    color: #2da8f8;
+}
+.readMore,  .pine-box h2 {color: #2da8f8;}
+.readMore:hover , .linkNewsA:hover,  .pine-box h2:hover {color:#FF0000;}
+
+</style>
+
+	</head_merge>
+
+	<div class="container_12">
+
 		<h1 id="mainanounces">Aktualności i ogłoszenia</h1>
-		<div class="newsInfo"></div>
+
+		<div class="row">
+			<div class="lift:page.MainSn.submenuArticles  grid_6">
+				<label for="filter">Filtruj:</label><select
+					onchange="redirectOnFilter();" id="filter">
+					<option>Wszystkie artykuły</option>
+					<option class="extraTags"></option>
+				</select> <span id="adminmenu"></span>
+			</div>
+			<div class="grid_6">
+				<div id="searchBox">
+					<input id="searchInput"  type="text" placeholder="Szukaj w tytule" /> 
+					<input id="searchSubmit" type="image" src="/style/images/search_32.png"  onclick="redirectOnSearch()" />
+				</div>
+			</div>
+		</div>
 	</div>
-	
- </div>       
-    
- 	<div class="clear"></div>
- 	<div id="forumWraper">
- 	<div class="container_12 forumPosts"> 
-		<h1 id="mainforum">Ostatnio na forum</h1> 
-        <ul class="lift:page.MainSn.lastForumPosts"><li></li></ul>
-    </div>
-    
-    </div>
-  
+
+	<div class="lift:page.MainSn.switchContent">
+		<div class="newsInfo  container_12"  ></div>
+		  <div class="clear"></div>
+		<div class="container_12"  style="background-color:#fcfcfc; padding: 10px; border: solid #f0f0f0;">
+		<h1>Starsze wpisy</h1>
+		<span class="linkNews"></span></div>
+	</div>
+
+
+	<div class="clear"></div>
+	<div id="forumWraper">
+		<div class="container_12 forumPosts">
+			<h1 id="mainforum" >Ostatnio na forum</h1>
+			<ul class="lift:page.MainSn.lastForumPosts">
+				<li></li>
+			</ul>
+		</div>
+
+	</div>
+	<div class="clear"></div>
+	<div id="oneNews"  class="lift:page.MainSn.showOneNews container_12" >
+	 <input id="hiddenAjaxText" style="display:none;"/>
+        <div id="ajaxNews" >
+        <br/>kdjfkdfjk
+            
+        </div>
+	</div>
+
 </div>
 

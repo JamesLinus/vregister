@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2012   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of VRegister (Virtual Register)
+*    Apache License Version 2.0, January 2004  http://www.apache.org/licenses/
+ */
+
 package pl.brosbit.lib
 
 import javax.mail._

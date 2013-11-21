@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
- *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
- *   See: <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2012   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of VRegister (Virtual Register)
+*    Apache License Version 2.0, January 2004  http://www.apache.org/licenses/
  */
 
 package pl.brosbit.snippet.page
@@ -33,7 +32,7 @@ class PageEditSn {
       
     if(id.length > 11) PageHead.find(id) match {
           case Some(pageHead) => {
-            val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
+            val articleContent = NewsContent.find(pageHead.content).getOrElse(NewsContent.create)
             title = pageHead.title
             department = pageHead.department
             authorId = pageHead.authorId
@@ -47,13 +46,13 @@ class PageEditSn {
       if(pageHead.authorId == 0L || isOwner(pageHead.authorId)){
           pageHead.title = title
           pageHead.department = department
-          val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
+          val articleContent = NewsContent.find(pageHead.content).getOrElse(NewsContent.create)
           articleContent.content = content
           articleContent.save
           pageHead.content = articleContent._id
           if(pageHead.authorId == 0L){
               val user = User.currentUser.get
-              pageHead.authorId = user.id
+              pageHead.authorId = user.id.is
               pageHead.authorName = user.getFullName
           }
          pageHead.save
@@ -83,7 +82,7 @@ class PageEditSn {
   private def deleteObjectById(id:String) {
         PageHead.find(id) match {
           case Some(pageHead) => {
-            val articleContentOpt = ArticleContent.find(pageHead.content)
+            val articleContentOpt = NewsContent.find(pageHead.content)
             if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
             pageHead.delete
           }

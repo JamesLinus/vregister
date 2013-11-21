@@ -14,6 +14,7 @@ import _root_.net.liftweb.json.JsonDSL._
 import _root_.net.liftweb.mongodb._
 import org.bson.types.ObjectId
 import com.mongodb.BasicDBObject
+import pl.brosbit.model.page._
 
 class Test {
 	
@@ -28,5 +29,6 @@ class Test {
      val text2 = format.format(fth2._id.toString, fth2.count)
      "#info" #> <p>Object: {idObjStr} <br/>{text1}<br/>{text2}</p>
   }
+  
 
 }

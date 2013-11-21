@@ -5,6 +5,7 @@ import net.liftweb.mapper.{ By, OrderBy, Ascending }
 import  net.liftweb.util.Helpers._
 import pl.brosbit.model._
 import org.bson.types.ObjectId
+import pl.brosbit.model.page._
 
 class TestData {
     
@@ -83,7 +84,26 @@ class TestData {
     
     private def randomName(size:Int) = capify( randomString(size).toLowerCase.filter(l => l.toByte > 57))
     
+    private def randomWord =   randomString((randomInt(16) +8)).toLowerCase.filter(l => l.toByte > 57)
+    
     private def randomNumbers(size:Int) = (1 to size).toList.map(c => randomInt(9).toString).mkString("")
+    
+    def createNewses(){
+        for(i <-  1 to 60 ) {
+            val newsH = NewsHead.create
+            newsH.authorId = 1
+            newsH.anounce = false
+            newsH.tags = List("Sport")
+            newsH.authorName = "Administrator"
+            newsH.title = (1 to 3).map(x => randomWord).mkString(" ").toUpperCase
+            newsH.introduction = (1 to 30).map(x => randomWord).mkString(" ")
+            val newsC = NewsContent.create
+            newsC .content = (1 to 80 ).map(x => randomWord).mkString(" ")
+            newsC.save
+            newsH.content = newsC._id
+            newsH.save
+        }
+    }
     
 
 }

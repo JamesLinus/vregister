@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
- *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
- *   See: <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2012   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of VRegister (Virtual Register)
+*    Apache License Version 2.0, January 2004  http://www.apache.org/licenses/
  */
 
 package bootstrap.liftweb
@@ -66,10 +65,10 @@ class Boot {
       u.lastName("Administrator").role("a").password("123qwerty").email("mail@mail.org").validated(true).save
     }
 
-    val loggedIn = If(() => User.loggedIn_? && User.currentUser.open_!.validated.is,
+    val loggedIn = If(() => User.loggedIn_? && User.currentUser.openOrThrowException("Not logged").validated.is,
       () => RedirectResponse("/user_mgt/login"))
       
-    val isAdmin = If(() => User.loggedIn_? && (User.currentUser.open_!.role.is == "a"),
+    val isAdmin = If(() => User.loggedIn_? && (User.currentUser.openOrThrowException("Not logged").role.is == "a"),
       () => RedirectResponse("/user_mgt/login"))
       
     val isSecretariat = If(() => {
@@ -95,8 +94,7 @@ class Boot {
     // Build SiteMap::
     def sitemap() = SiteMap(
       List(
-        Menu("Strona główna") / "index" >> LocGroup("public"), // Simple menu form
-        Menu("Artykuły") / "articles" >> LocGroup("public"),
+        Menu("Strona główna") / "index"  / ** >> LocGroup("public"), // Simple menu form
         Menu("Biuletyn Informacji Publicznej") / "bip" / ** >> LocGroup("public"),
         Menu("Galeria") / "gallery" / ** >> LocGroup("public"),
         Menu("Kontakt") / "contact" >> LocGroup("public"),
@@ -201,6 +199,10 @@ class Boot {
             ParsePath("teacher" :: "createtemplate" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(
            "teacher" :: "createtemplate"  :: Nil, Map("id" -> id)  )
+            case RewriteRequest(
+            ParsePath("index" :: w :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+           "index"  :: Nil, Map("w" -> w)  )
       })
 
     LiftRules.htmlProperties.default.set((r: Req) =>

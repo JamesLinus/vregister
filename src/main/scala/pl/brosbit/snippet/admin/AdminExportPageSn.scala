@@ -33,7 +33,7 @@ class AdminExportPageSn {
        def save(){
 	    val user = User.currentUser.get
 	    val pageHead = PageHead.create
-	    val pageContent = ArticleContent.create
+	    val pageContent = NewsContent.create
 	    pageContent.content = createPageContentSwitcher
 	    pageContent.save
 	    pageHead.title = title.trim

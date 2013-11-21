@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
- *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
- *   See: <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2012   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of VRegister (Virtual Register)
+*    Apache License Version 2.0, January 2004  http://www.apache.org/licenses/
  */
 
 package pl.brosbit.snippet.page
@@ -34,7 +33,7 @@ class ArticleEditSn {
       
     if(id.length > 11) NewsHead.find(id)  match {
       case Some(newsHead) => {
-        val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
+        val articleContent = NewsContent.find(newsHead.content).getOrElse(NewsContent.create)
         title = newsHead.title
         tags = newsHead.tags
         authorId = newsHead.authorId
@@ -62,30 +61,29 @@ class ArticleEditSn {
         //println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
         newsHead.thumbnailLink = if(thumbnailLink == "" ) "/style/images/nothumb.png"
         						 else thumbnailLink
-        val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
+        val articleContent = NewsContent.find(newsHead.content).getOrElse(NewsContent.create)
         articleContent.content = content
         articleContent.save
         newsHead.content = articleContent._id
         if(newsHead.authorId == 0L){
             isNew = true
            
-            newsHead.authorId = user.id
+            newsHead.authorId = user.id.is
             newsHead.authorName = user.getFullName
         }
         newsHead.save
-        if (isNew) addNewsInfoOnMainPage(newsHead._id.toString, newsHead.title)
       }
-      S.redirectTo("/articles?w=w&id=" + newsHead._id.toString)
+      S.redirectTo("/index/a")
     }
     
 
     def discard() {
-      S.redirectTo("/articles" )
+      S.redirectTo("/index" )
     }
     
     def delete(){
      {if(id.length > 11) if(isOwner(authorId))  deleteObjectById(id)}
-     S.redirectTo("/articles" )
+     S.redirectTo("/index" )
     }
     
      val tagsList =  NewsTag.findAll.map(newsTag => (newsTag.tag, newsTag.tag))
@@ -108,9 +106,8 @@ class ArticleEditSn {
   private def deleteObjectById(id:String) {
      NewsHead.find(id)  match {
       case Some(newsHead) => {
-        val articleContentOpt = ArticleContent.find(newsHead.content)
+        val articleContentOpt = NewsContent.find(newsHead.content)
         if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
-        deleteNewsInfoOnMainPage(newsHead._id.toString)
         this.updateNewsTags(Nil, newsHead.tags)
         newsHead.delete
       }
@@ -118,23 +115,8 @@ class ArticleEditSn {
     }
   }
   
- private def addNewsInfoOnMainPage(id:String, title:String){
-    println("begin add news info")
-    val fullLink = getFullLink(id)
-    deleteIfToManyNewsInfoOnMainPage
-    val mainPageData = MainPageData.create
-    println("Keys news to String: " + Keys.news.toString)
-    mainPageData.key = Keys.news.toString
-    println("MainPageData.key: " + mainPageData.key)
-    mainPageData.title = title
-    mainPageData.link = fullLink
-    mainPageData.save
-  }
   
-  private def deleteNewsInfoOnMainPage(id:String){
-    val fullLink = getFullLink(id)
-    MainPageData.delete(("key" -> Keys.news.toString) ~ ("link" -> fullLink))
-  }
+
   
   private def deleteBR(htmlText:String) = htmlText.replaceAll("<br>"," ").replaceAll("<br/>", " ")
 
@@ -145,7 +127,7 @@ class ArticleEditSn {
     }
   }
   
-    private def getFullLink(id:String) = "/articles?w=w&id=" + id
+    private def getFullLink(id:String) = "/index?w=w&id=" + id
     
     private def getToAddTagsByCompare(newTags:List[String], oldTags:List[String]):List[String] = {
       var toAddTags:List[String] = newTags
@@ -166,12 +148,6 @@ class ArticleEditSn {
       toDeleteTags.foreach(tag => NewsTag.update(("tag" -> tag), decrease))
     }
 
-     def deleteIfToManyNewsInfoOnMainPage()   = {
-         val newInfo = MainPageData.findAll(("key" -> Keys.news.toString),("$orderby" -> ( "_id" -> -1) ))
-         println(newInfo.map(_._id.toString).mkString("\n"))
-         newInfo.drop(25).foreach(_.delete)
-         "p *" #> ""
-    }
 }
 
 
