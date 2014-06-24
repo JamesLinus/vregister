@@ -1,3 +1,5 @@
+
+
 /*
  * Copyright (C) 2012   Mikołaj Sochacki mikolajsochacki AT gmail.com
  *   This file is part of VRegister (Virtual Register)
@@ -96,33 +98,33 @@ class MainSn extends UsersOperations {
             case _ => S.redirectTo("/index")
         }
     }
+    
+    def showAnounces = {
+          val anounces = NewsHead.findAll(("anounce" -> true), ("_id" -> -1))
+          
+          ".pine-box" #> anounces.map( anounce =>{
+              "h2 *" #>  anounce.title &
+              "h2 [onclick]" #> ("return showNews('"+anounce._id.toString + "')") &
+              ".date *" #> { Formater.formatDate(new Date(anounce._id.getTime())) } &
+              ".anunce-body" #> Unparsed(anounce.introduction) 
+          }  )
+          
+          
+    }
 
 
     def showNewses(newses: List[NewsHead]) = {
         var i = -1
-        val anounces = NewsHead.findAll(("anounce" -> true), ("_id" -> -1))
-        val (latestNewses, oldNewses) = (anounces ::: newses).splitAt(30)
-        val newsGroups = latestNewses.map(n => { i += 1; (i % 3, n) }).groupBy(n => n._1)
-        val newsList1: List[NewsHead] = if (newsGroups.contains(0)) newsGroups(0).map(g => g._2) else Nil
-        val newsList2: List[NewsHead] = if (newsGroups.contains(1)) newsGroups(1).map(g => g._2) else Nil
-        val newsList3: List[NewsHead] = if (newsGroups.contains(2)) newsGroups(2).map(g => g._2) else Nil
+      
+        val (latestNewses, oldNewses) = newses.splitAt(30)
 
         ".newsInfo" #> <div>
                            <div id="column1" class="grid_4">
                                {
-                                   newsList1.map(news => createPinBox(news))
+                                   latestNewses.map(news => createPinBox(news))
                                }
                            </div>
-                           <div id="column2" class="grid_4">
-                               {
-                                   newsList2.map(news =>  createPinBox(news))
-                               }
-                           </div>
-                           <div id="column3" class="grid_4">
-                               {
-                                   newsList3.map(news =>  createPinBox(news))
-                               }
-                           </div>
+           
                        </div> &
             ".linkNews" #> oldNewses.map(newsHead => {
                <span class="linkNews">|  <span  class="linkNewsA"  href="" onclick={"showNews('"+newsHead._id+"')"}>{ newsHead.title }</span>  |</span>
