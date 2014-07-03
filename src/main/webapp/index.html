@@ -22,6 +22,12 @@
             $('#ajaxNews').dialog('open');
             return false;
          };
+         
+ 
+         $(function() {
+         $( "#accordion" ).accordion();
+         });
+  
      </script>
 	<style>
 #forumWraper {
@@ -38,10 +44,11 @@
 #searchBox {
 	float: right;
 	vertical-align: middle;
+	margin-bottom: 10px;
 }
 
 #searchBox input[type=text] {
-	width: 250px;
+	width: 190px;
 	height: 32px;
 	vertical-align: top;
 }
@@ -80,64 +87,73 @@ select {
 
 	</head_merge>
 
-	<div class="container_12">
+    
+    <div class="clear"></div>
 
-		<h1 id="mainanounces">Aktualności</h1>
+<!--  do usunięcia  -->
+	<div class="container_12" style="margin-top: 10px;">
+    <div class="lift:page.MainSn.switchContent grid_9">
+  
+    <h1 id="departmentInfo"  style="margin: 10px; font-size:2em;">Aktualności</h1>
+        <div class="newsInfo "  ></div>
+          <div class="clear"></div>
+        <div class=""  style="background-color:#fcfcfc; padding: 10px; margin: 3px 0  5px 0; border: solid #f0f0f0;">
+        <h1>Starsze wpisy</h1>
+        <span class="linkNews"></span></div>
+    
+    
+    </div>
+    <div class="grid_3">
+    <div id="searchBox">
+                    <input id="searchInput"  type="text" placeholder="Szukaj w tytule" /> 
+                    <input id="searchSubmit" type="image" src="/style/images/search_32.png"  onclick="redirectOnSearch()" />
+       </div>
+       <div>
+        <h1 style="margin: 10px; font-size:2em;">Menu:</h1>
+        
+        <div id="accordion"  class="lift:page.MainSn.submenuArticles">
+<h3>Aktualności</h3>
+<div >
+<ul  >
+<li class="articleLi"></li>
+</ul>
+<span id="adminmenu"></span>
+</div>
 
-		<div class="row">
-			<div class="lift:page.MainSn.submenuArticles  grid_6">
-				<label for="filter">Filtruj:</label><select
-					onchange="redirectOnFilter();" id="filter">
-					<option>Wszystkie artykuły</option>
-					<option class="extraTags"></option>
-				</select> <span id="adminmenu"></span>
-			</div>
-			<div class="grid_6">
-				<div id="searchBox">
-					<input id="searchInput"  type="text" placeholder="Szukaj w tytule" /> 
-					<input id="searchSubmit" type="image" src="/style/images/search_32.png"  onclick="redirectOnSearch()" />
-				</div>
-			</div>
-		</div>
+<h3 class="bipH3">Section 2</h3>
+<div >
+<ul>
+<li class="bipLi"></li>
+</ul>
+</div>
+
+
+</div>
+        
+        
+        
+        
+       </div>
+                
+    
+    </div>
+		
+
 	</div>
 	
 
-     <div class="lift:page.MainSn.showAnounces anounces containter_12">
-        <div class="pine-box new-bullet ">
-                                           <h2 onclick=""></h2>
-                                           <p class="pageinfo">
-                                               <span class="date"></span>
-                                           </p>
-                                           <div class="anounce-body">Brak ogłoszeń</div>
-                                     
-        </div>
-        </div>
+  
 
 
-	<div class="lift:page.MainSn.switchContent">
-		<div class="newsInfo  container_12"  ></div>
-		  <div class="clear"></div>
-		<div class="container_12"  style="background-color:#fcfcfc; padding: 10px; border: solid #f0f0f0;">
-		<h1>Starsze wpisy</h1>
-		<span class="linkNews"></span></div>
-	</div>
+	
 
 
-	<div class="clear"></div>
-	<div id="forumWraper">
-		<div class="container_12 forumPosts">
-			<h1 id="mainforum" >Ostatnio na forum</h1>
-			<ul class="lift:page.MainSn.lastForumPosts">
-				<li></li>
-			</ul>
-		</div>
 
-	</div>
 	<div class="clear"></div>
 	<div id="oneNews"  class="lift:page.MainSn.showOneNews container_12" >
 	 <input id="hiddenAjaxText" style="display:none;"/>
         <div id="ajaxNews" >
-        <br/>kdjfkdfjk
+        <br/>
             
         </div>
 	</div>

@@ -14,7 +14,7 @@
 */
 
 body {
-	min-width: 960px;
+	min-width: 1008px;
 }
 
 /* `Containers
@@ -24,7 +24,7 @@ body {
 .container_16 {
 	margin-left: auto;
 	margin-right: auto;
-	width: 960px;
+	width: 1008px;
 }
 
 /* `Grid >> Global
@@ -72,25 +72,25 @@ body {
 
 .container_12 .grid_3,
 .container_16 .grid_4 {
-	width: 220px;
+	width: 232px;
 }
 
 .container_12 .grid_6,
 .container_16 .grid_8 {
-	width: 460px;
+	width: 504px;
 }
 
 .container_12 .grid_9,
 .container_16 .grid_12 {
-	width: 700px;
+	width: 736px;
 }
 
 .container_12 .grid_12,
 .container_16 .grid_16 {
-	width: 940px;
+	width: 988px;
 }
 
-/* `Grid >> Children (Alpha ~ First, Omega ~ Last)
+/* `Grid >> Children (Alpha ~ First, Omega ~ Last) dotąd przeliczone dalej nie 960 -> 1008 (+48)
 ----------------------------------------------------------------------------------------------------*/
 
 .alpha {

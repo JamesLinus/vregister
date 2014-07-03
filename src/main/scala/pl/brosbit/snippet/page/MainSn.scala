@@ -57,18 +57,14 @@ class MainSn extends UsersOperations {
     def logInfo() = super.loginInfo
 
     def submenuArticles() = {
-        val tag = S.param("tag").getOrElse("")
-        ".extraTags" #> NewsTag.findAll.map(newsTag =>
-            {
-                if (tag == newsTag.tag)
-                    <option value={ newsTag.tag } selected="selected"> { newsTag.tag + " (" + newsTag.count.toString() + ")" } </option>
-                else
-                    <option value={ newsTag.tag }> { newsTag.tag + " (" + newsTag.count.toString() + ")" } </option>
-            }) &
+            "articleLi *" #> NewsTag.findAll.map(tag => <a href="">{tag.tag + " (" + tag.count.toString() + ")" }</a> ) &
             "#adminmenu" #> <span>
-                                { if (isTeacher) <a href="editarticle/0"><img title="Dodaj artykuł" src="/style/images/article.png"/></a> }
-                            </span>
+                                { if (isTeacher) <a href="editarticle/0"><img title="Dodaj artykuł" src="/style/images/article.png"/> Dodaj artykuł</a> }
+                           </span> &
+                           "" #> ""
     }
+    
+  
 
     def switchContent() = {
         var what = S.param("w") openOr "a"
@@ -118,14 +114,7 @@ class MainSn extends UsersOperations {
       
         val (latestNewses, oldNewses) = newses.splitAt(30)
 
-        ".newsInfo" #> <div>
-                           <div id="column1" class="grid_4">
-                               {
-                                   latestNewses.map(news => createPinBox(news))
-                               }
-                           </div>
-           
-                       </div> &
+        ".newsInfo" #> <div>  {  latestNewses.map(news => createPinBox(news)) }    </div> &
             ".linkNews" #> oldNewses.map(newsHead => {
                <span class="linkNews">|  <span  class="linkNewsA"  href="" onclick={"showNews('"+newsHead._id+"')"}>{ newsHead.title }</span>  |</span>
             })

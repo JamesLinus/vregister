@@ -95,11 +95,12 @@ class Boot {
     def sitemap() = SiteMap(
       List(
         Menu("Strona główna") / "index"  / ** >> LocGroup("public"), // Simple menu form
-        Menu("Biuletyn Informacji Publicznej") / "bip" / ** >> LocGroup("public"),
+        //Menu("Biuletyn Informacji Publicznej") / "bip" / ** >> LocGroup("public"),
         Menu("Galeria") / "gallery" / ** >> LocGroup("public"),
         Menu("Kontakt") / "contact" >> LocGroup("public"),
-        Menu("Forum") / "forum" >> LocGroup("public"),
-        Menu("GSF") / "gsf" / ** >> LocGroup("public"),
+        //Menu("Forum") / "forum" >> LocGroup("public"),
+        //Menu("GSF") / "gsf" / ** >> LocGroup("public"),
+        Menu("SPS Szermierz") / "sps"  / **  >> LocGroup("public"),
         Menu("Edycja wątku") / "editthread" / ** >> LocGroup("extra") >> loggedIn,
         Menu("Forum Post") / "forumpost" / ** >> LocGroup("extra"),
         Menu("Dziennik") / "vregister" >> LocGroup("public"),
@@ -187,6 +188,10 @@ class Boot {
             ParsePath("gsf" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(
             "gsf"  :: Nil, Map("id" -> id)  )	
+         case RewriteRequest(
+            ParsePath("sps" :: id :: Nil, _, _,_), _, _) =>
+          RewriteResponse(
+            "sps"  :: Nil, Map("id" -> id)  )	
         case RewriteRequest(
             ParsePath("gsfedit" :: id :: Nil, _, _,_), _, _) =>
           RewriteResponse(
