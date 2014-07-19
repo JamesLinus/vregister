@@ -30,5 +30,10 @@ class Test {
      "#info" #> <p>Object: {idObjStr} <br/>{text1}<br/>{text2}</p>
   }
   
+  def test2() = {
+      (new pl.brosbit.lib.TestData).createData
+       "#info" #> <p>Data Created!</p>
+  }
+  
 
 }

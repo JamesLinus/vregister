@@ -6,7 +6,7 @@
 
 package pl.brosbit.snippet.page
 
-import _root_.scala.xml.{ NodeSeq, Unparsed }
+import _root_.scala.xml.{ NodeSeq, Unparsed, Null }
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
 import _root_.pl.brosbit.model.page._
@@ -14,8 +14,11 @@ import _root_.pl.brosbit.model._
 import _root_.net.liftweb.http.{ S, SHtml}
 import Helpers._
 import _root_.net.liftweb.json.JsonDSL._
+import scala.xml.UnprefixedAttribute
 
 class ArticleEditSn {
+    
+    val pageTypes = Map(true -> "Aktualności",false ->  "Artykuły")
 
   def editPage() = {
     val departmentTuples = ("Aktualności","Aktualności")::PageDepartment.findAll.map(department => {
@@ -26,48 +29,61 @@ class ArticleEditSn {
     var title = ""
     var authorId = 0L
     var tags:List[String] = Nil
+    var depart = ""
     var thumbnailLink = ""
     var introduction = ""
     var content = ""
-    var anounce = false
+    var news  = true
+    var pageType = ""
       
-    if(id.length > 11) NewsHead.find(id)  match {
+    if(id.length > 11) ArticleHead.find(id)  match {
       case Some(newsHead) => {
-        val articleContent = NewsContent.find(newsHead.content).getOrElse(NewsContent.create)
+        val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
         title = newsHead.title
         tags = newsHead.tags
+        depart = newsHead.department
         authorId = newsHead.authorId
         thumbnailLink = newsHead.thumbnailLink
         introduction = newsHead.introduction
         content = articleContent.content
-        anounce = newsHead.anounce
+        news = newsHead.news
+        pageType = pageTypes(news)
       }
-      case _ => 
+      case _ => {
+        pageType = pageTypes(true)
+        thumbnailLink = "/style/images/nothumb.png"
+      }
+    }
+    else {
+        pageType = pageTypes(true)
+        thumbnailLink = "/style/images/nothumb.png"
     }
     
     def save() {
       var isNew = false
-      val newsHead = NewsHead.find(id).getOrElse(NewsHead.create)
+      val newsHead = ArticleHead.find(id).getOrElse(ArticleHead.create)
       if(newsHead.authorId == 0L || isOwner(newsHead.authorId)){
         newsHead.title = title
         val newTags = tags.take(3)
-        val toAddTags = getToAddTagsByCompare(newTags, newsHead.tags)
-        val toDeleteTags = getToDeleteTagsByCompare(newTags, newsHead.tags)
-        newsHead.tags = newTags
-        updateNewsTags(toAddTags, toDeleteTags)
-        newsHead.introduction = introduction
-         val user = User.currentUser.get
-         if(user.role == "a")  newsHead.anounce = anounce
-        //println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
-        newsHead.thumbnailLink = if(thumbnailLink == "" ) "/style/images/nothumb.png"
+       news = if(pageType == pageTypes(true)) true else false
+       newsHead.news = news
+       if(news) {
+           val toAddTags = getToAddTagsByCompare(newTags, newsHead.tags)
+           val toDeleteTags = getToDeleteTagsByCompare(newTags, newsHead.tags)
+           newsHead.tags = newTags
+            updateNewsTags(toAddTags, toDeleteTags)
+            newsHead.introduction = introduction
+             newsHead.thumbnailLink = if(thumbnailLink == "" ) "/style/images/nothumb.png"
         						 else thumbnailLink
-        val articleContent = NewsContent.find(newsHead.content).getOrElse(NewsContent.create)
+           //println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
+       }  else newsHead.department = depart  
+         val user = User.currentUser.get
+        val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
         articleContent.content = content
         articleContent.save
         newsHead.content = articleContent._id
         if(newsHead.authorId == 0L){
-            isNew = true
-           
+            isNew = true       
             newsHead.authorId = user.id.is
             newsHead.authorName = user.getFullName
         }
@@ -85,17 +101,26 @@ class ArticleEditSn {
      {if(id.length > 11) if(isOwner(authorId))  deleteObjectById(id)}
      S.redirectTo("/index" )
     }
-    
+
      val tagsList =  NewsTag.findAll.map(newsTag => (newsTag.tag, newsTag.tag))
+     val departList = PageDepartment.findAll.map(dep => (dep.name, dep._id.toString))
+     val typePages = pageTypes.values.toList
+     var nrRadios = 0;
+    val choicePage = SHtml.radio(typePages, Full(pageType), pageType = _, "onclick"-> "editArticle.switchTagsDepart(this)").map(item => {
+       nrRadios += 1
+     var elem:scala.xml.Elem = <input></input>
+      elem =  elem %  item.xhtml.head.attributes.append(new UnprefixedAttribute("id" , ("radio" + nrRadios), Null))
+      elem ++ <label for={"radio"+ nrRadios} >{item.key.toString}</label> ++ <br/> })
     
     "#id" #> SHtml.text(id, id = _, "style"->"display:none;") &
     "#title" #> SHtml.text(title, in => title = in.trim) &
-    "#anounceBox" #> SHtml.checkbox(anounce,anounce = _) &
+    "#typePage" #> <div id="typePage"> { choicePage } </div> &
     "#tags" #> SHtml.multiSelect(tagsList, tags , tags = _) &
+    "#departs" #> SHtml.select(departList, Full(depart), depart = _) &
     "#thumbnail" #> SHtml.text(thumbnailLink , in => thumbnailLink = in.trim, "style" -> "display:none;") &
-    "#introduction" #> SHtml.textarea(introduction, in => introduction  = deleteBR(in.trim)) &
+    "#introduction" #> SHtml.text(introduction, in => introduction  = deleteBR(in.trim)) &
     "#editor" #> SHtml.textarea(content, in => content = in.trim) &
-    "#save" #> SHtml.submit("Zapisz", save, "onclick"->"return isValid()") &
+    "#save" #> SHtml.submit("Zapisz", save, "onclick"->"return editArticle.beforeSubmit()") &
     "#delete" #> SHtml.submit("Usuń", delete,  "onclick"->"return confirm('Na pewno usunąć wpis?');") &
     "#discard" #> SHtml.submit("Porzuć", discard, "onclick"->"return confirm('Na pewno porzucić bez zapisu?');") 
      
@@ -106,7 +131,7 @@ class ArticleEditSn {
   private def deleteObjectById(id:String) {
      NewsHead.find(id)  match {
       case Some(newsHead) => {
-        val articleContentOpt = NewsContent.find(newsHead.content)
+        val articleContentOpt = ArticleContent.find(newsHead.content)
         if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
         this.updateNewsTags(Nil, newsHead.tags)
         newsHead.delete

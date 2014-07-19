@@ -32,7 +32,7 @@ class PageEditSn {
       
     if(id.length > 11) PageHead.find(id) match {
           case Some(pageHead) => {
-            val articleContent = NewsContent.find(pageHead.content).getOrElse(NewsContent.create)
+            val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
             title = pageHead.title
             department = pageHead.department
             authorId = pageHead.authorId
@@ -46,7 +46,7 @@ class PageEditSn {
       if(pageHead.authorId == 0L || isOwner(pageHead.authorId)){
           pageHead.title = title
           pageHead.department = department
-          val articleContent = NewsContent.find(pageHead.content).getOrElse(NewsContent.create)
+          val articleContent = ArticleContent.find(pageHead.content).getOrElse(ArticleContent.create)
           articleContent.content = content
           articleContent.save
           pageHead.content = articleContent._id
@@ -82,7 +82,7 @@ class PageEditSn {
   private def deleteObjectById(id:String) {
         PageHead.find(id) match {
           case Some(pageHead) => {
-            val articleContentOpt = NewsContent.find(pageHead.content)
+            val articleContentOpt = ArticleContent.find(pageHead.content)
             if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
             pageHead.delete
           }

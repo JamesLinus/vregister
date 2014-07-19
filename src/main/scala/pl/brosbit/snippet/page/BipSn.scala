@@ -3,6 +3,8 @@
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
  *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
  *   See: <http://www.gnu.org/licenses/>.
+ *   
+ *   Obecnie nie używana do skasowania
  */
 
 package pl.brosbit.snippet.page
@@ -56,11 +58,11 @@ class BipSn extends UsersOperations {
       }
     }
     
-     val contentOption = NewsContent.find(pageHead.content)
+     val contentOption = ArticleContent.find(pageHead.content)
         "#pagedepartment *" #> Text(pageHead.department) &
         "#pagecontent" #> <div id="pagecontent">
         					<h1>{pageHead.title}</h1>
-        					<div id="pagebody">{Unparsed(contentOption.getOrElse(NewsContent.create).content)}</div>
+        					<div id="pagebody">{Unparsed(contentOption.getOrElse(ArticleContent.create).content)}</div>
         					<hr/>
         					<p id="pageinfo"><span class="fullname">{pageHead.authorName}</span>
         					<span class="date">{Formater.formatTime(new Date(pageHead._id.getTime()))}</span>

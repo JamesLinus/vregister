@@ -3,6 +3,8 @@
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
  *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
  *   See: <http://www.gnu.org/licenses/>.
+ *   
+ *   Eksportowanie z dziennika do artykułu różnych elementów
  */
 
 package pl.brosbit.snippet.admin
@@ -32,17 +34,18 @@ class AdminExportPageSn {
 	  
        def save(){
 	    val user = User.currentUser.get
-	    val pageHead = PageHead.create
-	    val pageContent = NewsContent.create
-	    pageContent.content = createPageContentSwitcher
-	    pageContent.save
-	    pageHead.title = title.trim
-	    pageHead.authorName = user.getFullName
-	    pageHead.authorId = user.id.is
-	    pageHead.department = department
-	    pageHead.content = pageContent._id
-	    pageHead.save
-	    S.redirectTo("/bip/" + pageHead._id)
+	    val articleHead = ArticleHead.create
+	    val articleContent = ArticleContent.create
+	    articleContent.content = createPageContentSwitcher
+	    articleContent.save
+	    articleHead.title = title.trim
+	    articleHead.authorName = user.getFullName
+	    articleHead.authorId = user.id.is
+	    articleHead.department = department
+	    articleHead.news = false
+	    articleHead.content = articleContent._id
+	    articleHead.save
+	    S.redirectTo("/bip/" + articleHead._id)
 	  }   
          
 	  val departments = PageDepartment.findAll.map(department => (department.name, department.name))

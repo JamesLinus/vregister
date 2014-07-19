@@ -1,7 +1,7 @@
-/* Copyright (C) 2011   Mikołaj Sochacki mikolajsochacki AT gmail.com
- *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
- *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
- *   See: <http://www.gnu.org/licenses/>.
+/*
+ * Copyright (C) 2012   Mikołaj Sochacki mikolajsochacki AT gmail.com
+ *   This file is part of VRegister (Virtual Register)
+*    Apache License Version 2.0, January 2004  http://www.apache.org/licenses/
  */
 package pl.brosbit.model.page
 

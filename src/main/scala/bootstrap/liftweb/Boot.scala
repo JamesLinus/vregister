@@ -98,7 +98,7 @@ class Boot {
         //Menu("Biuletyn Informacji Publicznej") / "bip" / ** >> LocGroup("public"),
         Menu("Galeria") / "gallery" / ** >> LocGroup("public"),
         Menu("Kontakt") / "contact" >> LocGroup("public"),
-        //Menu("Forum") / "forum" >> LocGroup("public"),
+        Menu("Forum") / "forum" >> LocGroup("public"),
         //Menu("GSF") / "gsf" / ** >> LocGroup("public"),
         Menu("SPS Szermierz") / "sps"  / **  >> LocGroup("public"),
         Menu("Edycja wątku") / "editthread" / ** >> LocGroup("extra") >> loggedIn,

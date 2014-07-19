@@ -9,12 +9,14 @@ import pl.brosbit.model.page._
 
 class TestData {
     
+    
     def createData() {
         createTeachers
         createClasses
         createPupils
         createSubjects
         createOneMarkLine
+        createNewses
     }
     
     
@@ -90,14 +92,14 @@ class TestData {
     
     def createNewses(){
         for(i <-  1 to 60 ) {
-            val newsH = NewsHead.create
+            val newsH = ArticleHead.create
             newsH.authorId = 1
-            newsH.anounce = false
+            newsH.news = true
             newsH.tags = List("Sport")
             newsH.authorName = "Administrator"
             newsH.title = (1 to 3).map(x => randomWord).mkString(" ").toUpperCase
             newsH.introduction = (1 to 30).map(x => randomWord).mkString(" ")
-            val newsC = NewsContent.create
+            val newsC = ArticleContent.create
             newsC .content = (1 to 80 ).map(x => randomWord).mkString(" ")
             newsC.save
             newsH.content = newsC._id

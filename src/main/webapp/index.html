@@ -1,13 +1,8 @@
 
 <div class="lift:surround?with=mainpage;at=content">
-	<head_merge> 
+	<head_merge>
 	<link rel="stylesheet" href="/style/pages.css" />
 	<script>     
-       function  redirectOnSearch() {
-    	   var word = $('#searchInput').val();
-           window.location = 'http://' + location.hostname + "/index/s?word=" + jQuery.trim(word.split(' ')[0])
-        }
-        
      function redirectOnFilter() {
          var tag = $('#filter option:selected').val(); 
          if(tag == "Wszystkie artykuły")
@@ -19,11 +14,16 @@
    function showNews(id){
              $('#hiddenAjaxText').val(id).trigger('blur');
              $('#ajaxNews').empty();
-            $('#ajaxNews').dialog('open');
+             $(".newsInfo").hide();
+            $('#ajaxNews').show();
             return false;
          };
          
- 
+         function closeNews() {
+        	 $('#ajaxNews').hide();
+        	 $(".newsInfo").show();
+         };
+         
          $(function() {
          $( "#accordion" ).accordion();
          });
@@ -40,6 +40,19 @@
 	display: inline-block;
 	padding: 0 15px 0 15px;
 }
+
+.linkNews, .linkNewsImg {
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 1.5em;
+}
+
+.pagersNews ul {
+    margin: auto;
+    text-align: center;
+}
+
 
 #searchBox {
 	float: right;
@@ -64,99 +77,95 @@ label {
 	padding-right: 20px;
 }
 
-select {
-	background: white;
-	width: 320px;
-	padding: 6px;
-	font-size: 18px;
-	line-height: 1;
-	border: 1;
-	border-radius: 0;
-	height: 38px;
-	-webkit-appearance: none;
+.gsc-control-cse,.gsc-control-cse-pl {
+	padding: 0 !important;
+}
+
+#pagecontent {
+	margin-bottom: 50px;
 }
 
 .linkNewsA {
-    padding: 5px 15px 5px 15px;
-    color: #2da8f8;
+	padding: 5px 15px 5px 15px;
+	color: #2da8f8;
 }
-.readMore,  .pine-box h2 {color: #2da8f8;}
-.readMore:hover , .linkNewsA:hover,  .pine-box h2:hover {color:#FF0000;}
 
+.readMore,.pine-box h2 {
+	color: #2da8f8;
+}
+
+.readMore:hover,.linkNewsA:hover,.pine-box h2:hover {
+	color: #FF0000;
+}
 </style>
 
 	</head_merge>
 
-    
-    <div class="clear"></div>
 
-<!--  do usunięcia  -->
+	<div class="clear"></div>
+
+	<!--  do usunięcia  -->
 	<div class="container_12" style="margin-top: 10px;">
-    <div class="lift:page.MainSn.switchContent grid_9">
-  
-    <h1 id="departmentInfo"  style="margin: 10px; font-size:2em;">Aktualności</h1>
-        <div class="newsInfo "  ></div>
-          <div class="clear"></div>
-        <div class=""  style="background-color:#fcfcfc; padding: 10px; margin: 3px 0  5px 0; border: solid #f0f0f0;">
-        <h1>Starsze wpisy</h1>
-        <span class="linkNews"></span></div>
-    
-    
-    </div>
-    <div class="grid_3">
-    <div id="searchBox">
-                    <input id="searchInput"  type="text" placeholder="Szukaj w tytule" /> 
-                    <input id="searchSubmit" type="image" src="/style/images/search_32.png"  onclick="redirectOnSearch()" />
-       </div>
-       <div>
-        <h1 style="margin: 10px; font-size:2em;">Menu:</h1>
-        
-        <div id="accordion"  class="lift:page.MainSn.submenuArticles">
-<h3>Aktualności</h3>
-<div >
-<ul  >
-<li class="articleLi"></li>
-</ul>
-<span id="adminmenu"></span>
-</div>
+		<div class="lift:page.MainSn.switchContent grid_9">
 
-<h3 class="bipH3">Section 2</h3>
-<div >
-<ul>
-<li class="bipLi"></li>
-</ul>
-</div>
+			<h1 id="departmentInfo" style="margin: 15px; font-size: 2em;">Aktualności</h1>
+			<div class="newsInfo "></div>
+			<div class="clear"></div>
+			<div id="oneNews" class="lift:page.MainSn.showOneNews">
+				<input id="hiddenAjaxText" style="display: none;" />
+				<div id="ajaxNews">
+					<br />
+
+				</div>
+			</div>
+			<div class="pagersNews" style="padding: 10px;;">
+			<ul>
+			    <li class="linkNewsImg">Strony:</li>
+				<li class="linkNews"></li>
+				</ul>
+			</div>
 
 
-</div>
-        
-        
-        
-        
-       </div>
-                
-    
-    </div>
-		
+		</div>
+		<div class="grid_3">
 
+			<div id="searchBox">
+				<script>
+  (function() {
+    var cx = '007556354535223111716:qx20werf1d8';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+				<gcse:search></gcse:search>
+
+			</div>
+			<div>
+				<h1 style="margin: 10px; font-size: 2em;">Menu:</h1>
+				<div class="lift:page.MainSn.submenuArticles">
+
+					<div id="accordion">
+						<h3>Aktualności</h3>
+						<div>
+							<ul>
+								<li></li>
+							</ul>
+						</div>
+					</div>
+                <p><span id="addArticleMenu"></span></p>
+				</div>
+			</div>
+		</div>
 	</div>
-	
-
-  
-
-
-	
-
 
 
 	<div class="clear"></div>
-	<div id="oneNews"  class="lift:page.MainSn.showOneNews container_12" >
-	 <input id="hiddenAjaxText" style="display:none;"/>
-        <div id="ajaxNews" >
-        <br/>
-            
-        </div>
-	</div>
+
 
 </div>
 
