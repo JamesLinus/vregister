@@ -59,12 +59,28 @@ class AdminAddTagsSn {
       "#delete" #> SHtml.submit("Usuń!", delete, 
           "onclick" -> "return confirm('Na pewno chcesz usunąć tag?');")
   }
+  
+  def indexTags = {
+      def mkIndex()   {
+          ArticleHead.findAll(("news"-> true)).map(artHead => {artHead.tags})
+      }
+       "#save" #> SHtml.submit("Wykonaj ponowne indeksowanie!", mkIndex)
+  }
 
   def tags  = {
     val newsTags = NewsTag.findAll
     "tr" #> newsTags.map(newsTag =>{
        <tr ondblclick={ "setData(this)" } id={newsTag._id.toString()} >
           <td>{newsTag.tag}</td>
+        </tr>
+    })
+  }
+  
+  def tagsList = {
+       val newsTags = NewsTag.findAll
+    "tr" #> newsTags.map(newsTag =>{
+       <tr >
+          <td>{newsTag.tag + " (" + newsTag.count.toString +")"}</td>
         </tr>
     })
   }

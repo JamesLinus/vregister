@@ -1,0 +1,8 @@
+
+#add nr property to pagedepartment
+
+db.pagedepartment.update({},{$set: {"nr": 88}}, false, true);
+
+#update articleshead push department id insted name
+
+db.articlehead.update({"news":false},{$set:{"departmentId":ObjectId("53b424ad44aef2e4d4064003")}}, true, true)

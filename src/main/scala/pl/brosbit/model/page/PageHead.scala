@@ -3,6 +3,9 @@
  *   This file is part of VRegister (Virtual Register - Wirtualny Dziennik)
  *   LICENCE: GNU AFFERO GENERAL PUBLIC LICENS Version 3 (AGPLv3)
  *   See: <http://www.gnu.org/licenses/>.
+ *   
+ *   
+ *   do usunięcia!
  */
 package pl.brosbit.model.page
 

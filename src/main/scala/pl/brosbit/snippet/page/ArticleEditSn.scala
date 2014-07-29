@@ -29,7 +29,7 @@ class ArticleEditSn {
     var title = ""
     var authorId = 0L
     var tags:List[String] = Nil
-    var depart = ""
+    var departId = ""
     var thumbnailLink = ""
     var introduction = ""
     var content = ""
@@ -41,7 +41,7 @@ class ArticleEditSn {
         val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
         title = newsHead.title
         tags = newsHead.tags
-        depart = newsHead.department
+        departId = newsHead.departmentId.toString
         authorId = newsHead.authorId
         thumbnailLink = newsHead.thumbnailLink
         introduction = newsHead.introduction
@@ -76,7 +76,9 @@ class ArticleEditSn {
              newsHead.thumbnailLink = if(thumbnailLink == "" ) "/style/images/nothumb.png"
         						 else thumbnailLink
            //println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
-       }  else newsHead.department = depart  
+       }  else {
+            if(departId.length() == 24) newsHead.departmentId = new org.bson.types.ObjectId(departId) 
+       }
          val user = User.currentUser.get
         val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
         articleContent.content = content
@@ -116,7 +118,7 @@ class ArticleEditSn {
     "#title" #> SHtml.text(title, in => title = in.trim) &
     "#typePage" #> <div id="typePage"> { choicePage } </div> &
     "#tags" #> SHtml.multiSelect(tagsList, tags , tags = _) &
-    "#departs" #> SHtml.select(departList, Full(depart), depart = _) &
+    "#departs" #> SHtml.select(departList, Full(departId), departId = _) &
     "#thumbnail" #> SHtml.text(thumbnailLink , in => thumbnailLink = in.trim, "style" -> "display:none;") &
     "#introduction" #> SHtml.text(introduction, in => introduction  = deleteBR(in.trim)) &
     "#editor" #> SHtml.textarea(content, in => content = in.trim) &

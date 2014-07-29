@@ -14,10 +14,10 @@ import org.bson.types.ObjectId
 object PageDepartment extends MongoDocumentMeta[PageDepartment] {
   override def collectionName = "pagedepartment"
   override def formats = super.formats + new ObjectIdSerializer + new DateSerializer
-  def create = PageDepartment(ObjectId.get, "")
+  def create = PageDepartment(ObjectId.get, "", 99)
 }
 
-case class PageDepartment(var _id: ObjectId, var name:String)
+case class PageDepartment(var _id: ObjectId, var name:String, var nr:Int)
 					extends MongoDocument[PageDepartment] {
   def meta = PageDepartment
 }

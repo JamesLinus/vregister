@@ -59,16 +59,13 @@ class MainSn extends UsersOperations {
     def submenuArticles() = {
         val allTag = <a href="/index/a">Wszystkie</a>
         val newsTags = allTag::NewsTag.findAll.map(tag => <a href={"/index/t?tag=" + tag.tag}>{ tag.tag + " (" + tag.count.toString() + ")" }</a>).toList
-        val menuNews = Map("Aktualności" ->  newsTags )
+        val menuNews = List(("Aktualności",  newsTags ))
         val pages = ArticleHead.findAll("news" -> false)
- 
-        val menuDep = PageDepartment.findAll.map(pageDep => {
-        	(pageDep.name,  { val ns:NodeSeq =  pages.filter(p => p.department == pageDep._id).map(page =>
-                	<a href={"/index?b=" + page._id}>{ page.title}</a> ).toSeq
-                	ns
+        val menuDep = PageDepartment.findAll(Nil, ("nr" -> 1)).map(pageDep => {
+        	(pageDep.name,  pages.filter(p => p.departmentId == pageDep._id).map(page =>
+                	<a href={"/index/b?i=" + page._id}>{ page.title}</a> ))
             })
-        }).toMap
-        val menu = menuNews ++  menuDep
+        val menu = menuNews:::menuDep
         
         "#addArticleMenu" #>  <span>
                                 { if (isTeacher) <a href="/editarticle/0"><img title="Dodaj artykuł" src="/style/images/article.png"/> Dodaj artykuł</a> }
@@ -94,7 +91,7 @@ class MainSn extends UsersOperations {
                 if (tag == "") S.redirectTo("/index")
                 else {
                     val newsHeads = ArticleHead.findAll(("news" -> true)~("tags", tag), ("_id" -> -1)) 
-                    showNewses(newsHeads, "tag")
+                    showNewses(newsHeads, tag)
                 }
             }
             case "b" => {
@@ -119,7 +116,7 @@ class MainSn extends UsersOperations {
         val beginNews = if(endNews - 30 < 0) 0 else endNews - 30
         
         val toShowNewses = newses.slice(beginNews,  endNews)
-        val choiceContent = if(tag == "") "a?p=" else "t/?tag=" + tag + "&p="
+        val choiceContent = if(tag == "") "a?p=" else "t?tag=" + tag + "&p="
         ".newsInfo" #> <div>  { toShowNewses.map(news => createPinBox(news)) }    </div> &
             ".linkNews" #>  (1 to pages).map(p => {
                 <li>{ if(p == pageInt) <span>{p.toString}</span> else <a href={"/index/" + choiceContent + p.toString} >{ p.toString }</a>} </li>
@@ -188,24 +185,27 @@ class MainSn extends UsersOperations {
     
      private def pageContent(id:String) = {
     val pageHead = ArticleHead.find(id) match {
-      case Some(pageHead) => pageHead
+      case Some(page) => page
       case _ => {
           val ph = ArticleHead.create
           ph.title = "BŁĄD - brak strony"
           ph    
       }
+     
     }
     
      val contentOption = ArticleContent.find(pageHead.content)
-        "#pagecontent" #> <div id="pagecontent">
+        "#departmentInfo" #> <span></span> &
+       ".newsInfo" #> <div id="pagecontent">
         					<h1>{pageHead.title}</h1>
         					<div id="pagebody">{Unparsed(contentOption.getOrElse(ArticleContent.create).content)}</div>
         					<hr/>
         					<p id="pageinfo"><span class="fullname">{pageHead.authorName}</span>
         					<span class="date">{Formater.formatTime(new Date(pageHead._id.getTime()))}</span>
-        					{if(isOwner(pageHead.authorId)) <span class="edit"><a href={"/editpage/"+pageHead._id.toString}>Edytuj</a></span> 
+        					{if(isOwner(pageHead.authorId)) <span class="edit"><a href={"/editarticle/"+pageHead._id.toString}>Edytuj</a></span> 
         					else <span></span> } </p>
-        				  </div>
+        				  </div> &
+        				  ".pagersNews" #> <span></span>
     }
 
 }

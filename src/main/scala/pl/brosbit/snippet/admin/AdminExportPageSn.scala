@@ -41,14 +41,14 @@ class AdminExportPageSn {
 	    articleHead.title = title.trim
 	    articleHead.authorName = user.getFullName
 	    articleHead.authorId = user.id.is
-	    articleHead.department = department
+	    if(department.length() == 24) articleHead.departmentId = new org.bson.types.ObjectId(department)
 	    articleHead.news = false
 	    articleHead.content = articleContent._id
 	    articleHead.save
 	    S.redirectTo("/bip/" + articleHead._id)
 	  }   
          
-	  val departments = PageDepartment.findAll.map(department => (department.name, department.name))
+	  val departments = PageDepartment.findAll.map(department => (department.name, department._id.toString))
 	  val actions = List(("p","Plan lekcji"),("e","Zajęcia pozalekcyjne"),("l","Lista nauczycieli"))
 	  "#what" #> SHtml.select(actions, Full(actions.head._1) , what = _) &
 	  "#department" #> SHtml.select(departments, Full(""), department = _ ) &

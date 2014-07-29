@@ -20,17 +20,20 @@ class AdminDepartmentsSn {
 
    def addDepartment() = {
     var id = ""
+    var nrStr = ""
     var name = ""
 
     def addDepartment() {
        PageDepartment.find(id.trim) match {
         case Some(pageDepartment) => {
           pageDepartment.name = name
+          pageDepartment.nr = tryo(nrStr.toInt).openOr(99)
           pageDepartment.save
         }
         case _ => {
           val pageDepartment = PageDepartment.create
           pageDepartment.name = name
+          pageDepartment.nr = tryo(nrStr.toInt).openOr(99)
           pageDepartment.save
         }
       }
@@ -47,6 +50,7 @@ class AdminDepartmentsSn {
     }
 
     "#id" #> SHtml.text(id, x => id = x, "style" -> "display:none;", "id" -> "id") &
+    "#order" #> SHtml.text(nrStr, x => nrStr= x.trim, "maxlength" -> "2") &
       "#name" #> SHtml.text(name, x => name = x.trim, "maxlength" -> "30", "id" -> "name") &
       "#save" #> SHtml.submit("Zapisz!", addDepartment, "onclick" -> "return validateForm()") &
       "#delete" #> SHtml.submit("Usuń!", delDepartment, 
@@ -58,7 +62,7 @@ class AdminDepartmentsSn {
     var node: NodeSeq = <tbody>{
       for (department <- departments) yield {
         <tr ondblclick={ "setData(this)" } id={department._id.toString()} >
-          <td>{department.name}</td>
+          <td>{department.nr.toString}</td><td>{department.name}</td>
         </tr>
       }
     }</tbody>
