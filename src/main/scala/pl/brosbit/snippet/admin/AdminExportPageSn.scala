@@ -45,10 +45,10 @@ class AdminExportPageSn {
 	    articleHead.news = false
 	    articleHead.content = articleContent._id
 	    articleHead.save
-	    S.redirectTo("/bip/" + articleHead._id)
+	    S.redirectTo("/index/b?i=" + articleHead._id)
 	  }   
          
-	  val departments = PageDepartment.findAll.map(department => (department.name, department._id.toString))
+	  val departments = PageDepartment.findAll.map(department => (department._id.toString, department.name))
 	  val actions = List(("p","Plan lekcji"),("e","Zajęcia pozalekcyjne"),("l","Lista nauczycieli"))
 	  "#what" #> SHtml.select(actions, Full(actions.head._1) , what = _) &
 	  "#department" #> SHtml.select(departments, Full(""), department = _ ) &
@@ -62,7 +62,7 @@ class AdminExportPageSn {
 	  what match {
 	    case "p" => createPageContentForPlan
 	    case "e" => createPageContentForExtraLessons
-	    case "l" => createPageContentForTecherList
+	    case "l" => createPageContentForTeacherList
 	    case _ => "BŁĄD!!!"
 	  }
 	}
@@ -108,7 +108,7 @@ class AdminExportPageSn {
 	    
 	}
 	
-	private def createPageContentForTecherList = {
+	private def createPageContentForTeacherList = {
 	  val row = """<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>"""
 	  val themesPlans = ThemesPlan.findAll
 	  var map:scala.collection.mutable.Map[String,SubjectAndClass] = scala.collection.mutable.Map.empty

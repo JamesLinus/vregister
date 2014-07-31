@@ -77,7 +77,7 @@ class ArticleEditSn {
         						 else thumbnailLink
            //println("Save news with origin link: %s, and new %s".format(newsHead.thumbnailLink,thumbnailLink))
        }  else {
-            if(departId.length() == 24) newsHead.departmentId = new org.bson.types.ObjectId(departId) 
+            if(departId.length() > 20) newsHead.departmentId = new org.bson.types.ObjectId(departId) 
        }
          val user = User.currentUser.get
         val articleContent = ArticleContent.find(newsHead.content).getOrElse(ArticleContent.create)
@@ -94,7 +94,6 @@ class ArticleEditSn {
       S.redirectTo("/index/a")
     }
     
-
     def discard() {
       S.redirectTo("/index" )
     }
@@ -105,7 +104,7 @@ class ArticleEditSn {
     }
 
      val tagsList =  NewsTag.findAll.map(newsTag => (newsTag.tag, newsTag.tag))
-     val departList = PageDepartment.findAll.map(dep => (dep.name, dep._id.toString))
+     val departList = PageDepartment.findAll.map(dep => ( dep._id.toString, dep.name))
      val typePages = pageTypes.values.toList
      var nrRadios = 0;
     val choicePage = SHtml.radio(typePages, Full(pageType), pageType = _, "onclick"-> "editArticle.switchTagsDepart(this)").map(item => {
@@ -131,12 +130,12 @@ class ArticleEditSn {
   
   
   private def deleteObjectById(id:String) {
-     NewsHead.find(id)  match {
-      case Some(newsHead) => {
-        val articleContentOpt = ArticleContent.find(newsHead.content)
+     ArticleHead.find(id)  match {
+      case Some(articleHead) => {
+        val articleContentOpt = ArticleContent.find(articleHead.content)
         if (!articleContentOpt.isEmpty) articleContentOpt.get.delete
-        this.updateNewsTags(Nil, newsHead.tags)
-        newsHead.delete
+        if(articleHead.news) this.updateNewsTags(Nil, articleHead.tags)
+        articleHead.delete
       }
       case _ => 
     }
@@ -173,6 +172,11 @@ class ArticleEditSn {
       val decrease = ("$inc" -> ("count" -> -1))
       toAddTags.foreach(tag => NewsTag.update(("tag" -> tag), increase))
       toDeleteTags.foreach(tag => NewsTag.update(("tag" -> tag), decrease))
+    }
+    
+    private def createThumbnail(url:String) = {
+        //do implementacji z wykorzystaniem FilesSn  i wykorzystania przy zapisie
+        url
     }
 
 }

@@ -22,6 +22,9 @@ import JE._
 import Helpers._
 import org.bson.types.ObjectId
 import _root_.net.liftweb.json.JsonDSL._
+import net.liftweb.mongodb.UpdateOption
+import net.liftweb.mongodb.Upsert
+import net.liftweb.mongodb.Multi
 
 class AdminAddTagsSn {
   
@@ -62,7 +65,17 @@ class AdminAddTagsSn {
   
   def indexTags = {
       def mkIndex()   {
-          ArticleHead.findAll(("news"-> true)).map(artHead => {artHead.tags})
+          var map:scala.collection.mutable.Map[String, Int] = scala.collection.mutable.Map()
+          ArticleHead.findAll(("news"-> true)).map(artHead => {
+              artHead.tags.foreach(tag => {
+                  if(map.contains(tag)) map(tag) += 1
+                  else map += (tag -> 1)
+              	})
+            })
+            NewsTag.update(Nil,  ("$set"-> ("count" -> 0)), Multi)
+            map.keys.foreach(key => {
+                NewsTag.update(("tag"-> key),  ("$set"-> ("count" -> map(key))))
+            })
       }
        "#save" #> SHtml.submit("Wykonaj ponowne indeksowanie!", mkIndex)
   }

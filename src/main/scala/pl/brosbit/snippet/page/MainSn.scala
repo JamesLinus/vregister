@@ -107,13 +107,13 @@ class MainSn extends UsersOperations {
 
 
     def showNewses(newses: List[ArticleHead], tag:String) = {
-        val sizeP = 30
+        val sizeP = 20
         var page = S.param("p").getOrElse("1")
         val pageInt = tryo(page.toInt).getOrElse(1)
-        val pages = newses.size / 30 + (if(newses.size % 30 > 0) 1 else 0)
+        val pages = newses.size / sizeP + (if(newses.size % sizeP > 0) 1 else 0)
         
         val endNews = if(sizeP*pageInt > newses.size) newses.size else sizeP*pageInt
-        val beginNews = if(endNews - 30 < 0) 0 else endNews - 30
+        val beginNews = if(endNews - sizeP < 0) 0 else endNews - sizeP
         
         val toShowNewses = newses.slice(beginNews,  endNews)
         val choiceContent = if(tag == "") "a?p=" else "t?tag=" + tag + "&p="

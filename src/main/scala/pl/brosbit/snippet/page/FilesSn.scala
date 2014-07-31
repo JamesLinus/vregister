@@ -103,6 +103,25 @@ class FilesSn {
       "#linkpath" #> <span id="linkpath" style="display:none;">{linkpath.is}</span>
   }
   
+  //do tworzenia ikonek wpisu w celu pomniejszania ich
+  def refreshThumbnail(url:String) = {
+      val splitURL = url.split("/")
+      var newURL = url;
+      if(splitURL.length == 2 && splitURL.head == ""  && splitURL(1) == "img") {
+          MongoDB.use(DefaultMongoIdentifier) { db =>
+          val fs = new GridFS(db)
+          //pobrać plik i sprawdzić wymiary jeśli ma szerokość 270px nic nie robić
+          //gdy ma mniej zeskalować i zapisać.
+//          val inputFile = fs.createFile(inputStream)
+//          inputFile.setContentType(mimeTypeFull)
+//          inputFile.setFilename(fullFileName)
+//          inputFile.save
+//          newURL = "/img/" + inputFile.getId().toString() + mimeType
+        }
+      }    
+      newURL
+  }
+  
   private def readImage():Boolean =  {
     fileHold match {
       case Full(FileParamHolder(_, mime, _, data)) => {

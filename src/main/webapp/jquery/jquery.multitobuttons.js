@@ -16,6 +16,7 @@ jQuery.fn.multiToButtons = function(options) {
 	plugin.working = false;
 
 	plugin.selectedValue = new Array();
+    plugin.mapOfTagValue = new Object();
 	plugin.multiSelect = plugin.children('select').first();
 
 	plugin.init = function() {
@@ -31,70 +32,76 @@ jQuery.fn.multiToButtons = function(options) {
 
 		plugin.multiSelect.hide();
 
-		plugin.multiSelect.children('option').each(
-				function() {
-					var tab = document.createElement('span');
-					var option = $(this);
-					var value = option.val();
-					var addClass = "";
+        plugin.makeMapOfSelect();
 
-					if (option.attr('selected') != undefined
-							&& option.attr('selected') == 'selected') {
-						addClass = plugin.settings.activeClass;
-						plugin.selectedValue.push(value);
-					} else
-						addClass = plugin.settings.inactiveClass;
+		plugin.multiSelect.children('option').each( function() {
+			var tab = document.createElement('span');
+			var option = $(this);
+			var value = option.val();
+			var label= option.text();
+			var addClass = "";
+			if (option.attr('selected') != undefined && option.attr('selected') == 'selected') {
+				addClass = plugin.settings.activeClass;
+				plugin.selectedValue.push(value);
+			} else
+				addClass = plugin.settings.inactiveClass;
+				$(tab).html(label).addClass(addClass);
+				plugin.append(tab);
+		});
 
-					$(tab).html(value).addClass(addClass);
-					plugin.append(tab);
-				});
-		plugin.children('span').each(
-						function() {
-							$(this).click(
-											function() {
-												var $span = $(this);
-												var tag = $span.html();
-												if ($span.hasClass('selectedTag')) {
-													$span.removeClass('selectedTag').addClass('unselectedTag');
-													var i = plugin.selectedValue.indexOf(tag);
-													if (i > -1)	plugin.selectedValue.splice(i, 1);
-													plugin.unmarkSelected(tag);
-												} else {
-													if(plugin.selectedValue.length >= plugin.settings.maxSelection) {
-														var toRemoveSpan = plugin.children('span.selectedTag').first();
-														toRemoveSpan.removeClass('selectedTag').addClass('unselectedTag');
-														var toRemoveTag = toRemoveSpan.html();
-														var i = plugin.selectedValue.indexOf(toRemoveTag);
-														if (i > -1)	plugin.selectedValue.splice(i, 1);
-														plugin.unmarkSelected(toRemoveTag);
-													}
-														plugin.selectedValue.push(tag);
-														$span.removeClass('unselectedTag').addClass('selectedTag');
-														plugin.markSelected(tag);
-													
-												}
-											});
-						});
+		plugin.children('span').each( function() {
+			$(this).click(function() {
+				var $span = $(this);
+				var tag = $span.html();
+                var ID = plugin.mapOfTagValue[tag];
+               
+				if ($span.hasClass('selectedTag')) {
+					$span.removeClass('selectedTag').addClass('unselectedTag');
+					var i = plugin.selectedValue.indexOf(tag);
+					if (i > -1)	plugin.selectedValue.splice(i, 1);
+					plugin.unmarkSelected(ID);
+				} else {
+					if(plugin.selectedValue.length >= plugin.settings.maxSelection) {
+						var toRemoveSpan = plugin.children('span.selectedTag').first();
+						toRemoveSpan.removeClass('selectedTag').addClass('unselectedTag');
+						var toRemoveTag = toRemoveSpan.html();
+                        var toRemoveID = plugin.mapOfTagValue[toRemoveTag];
+						var i = plugin.selectedValue.indexOf(toRemoveTag);
+						if (i > -1)	plugin.selectedValue.splice(i, 1);
+						plugin.unmarkSelected(toRemoveID);
+			        }
+				    plugin.selectedValue.push(tag);
+    			    $span.removeClass('unselectedTag').addClass('selectedTag');
+				    plugin.markSelected(ID);		
+			    }
+			});
+		});
 
 	}
 
-	plugin.markSelected = function(tag) {
+	plugin.markSelected = function(value) {
 		plugin.multiSelect.children('option').each(function() {
-			if (this.value == tag) {
+			if (this.value == value) {
 				//alert("Found tag " + tag + " and add selected");
 				$(this).attr('selected', "selected");
 			}
 		});
 	}
 
-	plugin.unmarkSelected = function(tag) {
+	plugin.unmarkSelected = function(value) {
 		plugin.multiSelect.children('option').each(function() {
-			if (this.value == tag) {
+			if (this.value == value) {
 				//alert("Found tag " + tag + " and remove selected");
 				$(this).removeAttr('selected');
 			}
 		});
 	}
+
+    plugin.makeMapOfSelect = function() {
+        plugin.multiSelect.children("option").each(function(){
+            plugin.mapOfTagValue[this.innerHTML] = this.value;
+        });
+    }
 
 	plugin.init();
 
